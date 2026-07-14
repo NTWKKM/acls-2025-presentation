@@ -10,9 +10,9 @@
   <style>
     /* === ROOT VARIABLES === */
     :root {
-      --navy: #0f1e3d;
+      --navy: #0f1e3d;  /* now used as content/text color */
       --navy-light: #1a2d52;
-      --smokewhite: #f4f4f6;
+      --smokewhite: #f4f4f6;  /* now used as background */
       --blue: #2563eb;
       --blue-light: #3b82f6;
       --red: #dc2626;
@@ -26,16 +26,16 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%; min-height: 100vh;
-      background: var(--navy);
-      color: var(--text-on-navy);
+      background: #f4f4f6;
+      color: var(--navy);
       font-family: 'DM Sans', sans-serif;
       overflow-x: hidden;
     }
     body {
       background: 
-        radial-gradient(ellipse at 20% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
-        var(--navy);
+        radial-gradient(ellipse at 20% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(37, 99, 235, 0.04) 0%, transparent 50%),
+        #f4f4f6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -49,8 +49,8 @@
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(15,30,61,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,30,61,0.04) 1px, transparent 1px);
       background-size: 60px 60px;
       pointer-events: none;
       z-index: 0;
@@ -84,7 +84,7 @@
       font-size: clamp(2.5rem, 6vw, 4.5rem);
       line-height: 1.1;
       margin-bottom: 16px;
-      background: linear-gradient(135deg, #e8eaf0 0%, #93c5fd 100%);
+      background: linear-gradient(135deg, #0f1e3d 0%, #2563eb 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -93,12 +93,12 @@
       font-family: 'DM Sans', sans-serif;
       font-size: clamp(1rem, 2vw, 1.4rem);
       font-weight: 400;
-      color: var(--text-muted);
+      color: #6b7280;
       margin-bottom: 48px;
       line-height: 1.6;
     }
     .subtitle strong {
-      color: var(--text-on-navy);
+      color: var(--navy);
       font-weight: 600;
     }
     /* === CARDS === */
@@ -109,14 +109,14 @@
       margin-bottom: 48px;
     }
     .card {
-      background: var(--smokewhite);
+      background: var(--navy);
       border-radius: 16px;
       padding: 40px 32px;
       text-align: left;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
       text-decoration: none;
-      color: var(--text-on-white);
+      color: #e8eaf0;
       display: flex;
       flex-direction: column;
       min-height: 280px;
@@ -125,7 +125,7 @@
     }
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 20px 60px rgba(15, 30, 61, 0.2);
     }
     .card::before {
       content: '';
@@ -145,7 +145,7 @@
       width: 56px;
       height: 56px;
       border-radius: 12px;
-      background: var(--navy);
+      background: #f4f4f6;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -153,26 +153,26 @@
       font-family: 'Sora', sans-serif;
       font-weight: 700;
       font-size: 1.5rem;
-      color: var(--blue-light);
+      color: var(--navy);
     }
     .card h2 {
       font-family: 'Sora', sans-serif;
       font-weight: 700;
       font-size: 1.5rem;
       margin-bottom: 12px;
-      color: var(--text-on-white);
+      color: #ffffff;
     }
     .card h2 span {
       display: block;
       font-size: 0.9rem;
       font-weight: 400;
-      color: var(--text-muted);
+      color: #93c5fd;
       margin-top: 4px;
     }
     .card p {
       font-size: 0.95rem;
       line-height: 1.6;
-      color: #4b5563;
+      color: #cbd5e1;
       flex-grow: 1;
     }
     .card .card-footer {
@@ -181,17 +181,17 @@
       justify-content: space-between;
       margin-top: 24px;
       padding-top: 20px;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
     .card .card-tag {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.75rem;
-      color: var(--blue);
+      color: #60a5fa;
       font-weight: 500;
     }
     .card .card-arrow {
       font-size: 1.2rem;
-      color: var(--blue);
+      color: #60a5fa;
       transition: transform 0.3s ease;
     }
     .card:hover .card-arrow {
@@ -205,8 +205,8 @@
       flex-wrap: wrap;
       margin-bottom: 32px;
       padding: 24px 32px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 30, 61, 0.04);
+      border: 1px solid rgba(15, 30, 61, 0.1);
       border-radius: 12px;
     }
     .info-item {
@@ -218,21 +218,21 @@
       font-family: 'Sora', sans-serif;
       font-weight: 800;
       font-size: 1.8rem;
-      color: var(--blue-light);
+      color: var(--navy);
     }
     .info-item .info-label {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #6b7280;
       margin-top: 4px;
     }
     /* === FOOTER === */
     .footer {
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #6b7280;
       line-height: 1.6;
     }
     .footer a {
-      color: var(--blue-light);
+      color: var(--navy);
       text-decoration: none;
       font-weight: 500;
     }

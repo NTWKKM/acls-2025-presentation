@@ -10,17 +10,17 @@
 <style>
 /* === ROOT VARIABLES === */
 :root {
-  --navy:#0f1e3d; --navy-light:#1a2d52; --smokewhite:#f4f4f6;
+  --navy:#0f1e3d;  /* now used as content/card color */ --navy-light:#1a2d52; --smokewhite:#f4f4f6;  /* now used as background */
   --blue:#2563eb; --blue-light:#3b82f6; --red:#dc2626; --green:#16a34a; --amber:#d97706;
   --text-on-navy:#e8eaf0; --text-on-white:#1a1a2e; --text-muted:#6b7280;
   --card-radius:14px;
   --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
 }
 /* === VIEWPORT BASE (mandatory) === */
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--navy);}
-.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--navy);}
-.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--navy);}
-.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--navy);}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f4f4f6;}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:#f4f4f6;}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:#f4f4f6;}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:#f4f4f6;}
 .slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
 img,video,canvas,svg{max-width:100%;max-height:100%;}
 .deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
@@ -35,27 +35,27 @@ img,video,canvas,svg{max-width:100%;max-height:100%;}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.2s!important;}}
 
 /* === DESIGN SYSTEM === */
-body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
+body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 /* Slide layout */
 .slide-content{position:relative;width:100%;height:100%;padding:60px 80px;display:flex;flex-direction:column;}
 /* Section badge */
-.section-badge{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue-light);margin-bottom:12px;}
+.section-badge{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;}
 /* Slide title */
-.slide-title{font-family:'Sora',sans-serif;font-weight:700;font-size:2.4rem;line-height:1.2;margin-bottom:24px;color:#fff;}
-.slide-title span{display:block;font-size:1.1rem;font-weight:400;color:var(--text-muted);margin-top:4px;}
+.slide-title{font-family:'Sora',sans-serif;font-weight:700;font-size:2.4rem;line-height:1.2;margin-bottom:24px;color:var(--navy);}
+.slide-title span{display:block;font-size:1.1rem;font-weight:400;color:#6b7280;margin-top:4px;}
 /* Cards */
-.card{background:var(--smokewhite);border-radius:var(--card-radius);padding:32px;color:var(--text-on-white);}
-.card-title{font-family:'Sora',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:16px;color:var(--navy);}
+.card{background:var(--navy);border-radius:var(--card-radius);padding:32px;color:#e8eaf0;}
+.card-title{font-family:'Sora',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:16px;color:#ffffff;}
 /* Grid layouts */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-grow:1;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;flex-grow:1;}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex-grow:1;}
 /* Bullet lists */
 .bullets{list-style:none;padding:0;margin:0;}
-.bullets li{padding:10px 0 10px 28px;position:relative;font-size:0.95rem;line-height:1.5;color:#374151;border-bottom:1px solid #e5e7eb;}
+.bullets li{padding:10px 0 10px 28px;position:relative;font-size:0.95rem;line-height:1.5;color:#cbd5e1;border-bottom:1px solid rgba(255,255,255,0.08);}
 .bullets li:last-child{border-bottom:none;}
 .bullets li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-weight:700;}
-.bullets li strong{color:var(--navy);}
+.bullets li strong{color:#93c5fd;}
 /* Mono text */
 .mono{font-family:'JetBrains Mono',monospace;}
 /* Flow boxes (for algorithms) */
@@ -63,12 +63,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 .flow-box.red{border-color:var(--red);}
 .flow-box.green{border-color:var(--green);}
 .flow-box.amber{border-color:var(--amber);}
-.flow-arrow{font-size:1.2rem;color:var(--blue-light);text-align:center;margin:6px 0;}
+.flow-arrow{font-size:1.2rem;color:var(--navy);text-align:center;margin:6px 0;}
 /* Tables */
 .data-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
 .data-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;}
-.data-table td{padding:10px 14px;border-bottom:1px solid #e5e7eb;color:var(--text-on-white);}
-.data-table tr:nth-child(even) td{background:#f9fafb;}
+.data-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.08);color:#cbd5e1;}
+.data-table tr:nth-child(even) td{background:rgba(255,255,255,0.04);}
 /* COR badges */
 .cor-badge{display:inline-block;padding:2px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;}
 .cor-1{background:#dcfce7;color:#15803d;}
@@ -76,15 +76,15 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 .cor-2b{background:#fef3c7;color:#b45309;}
 .cor-3{background:#fee2e2;color:#b91c1c;}
 /* Slide number */
-.slide-num{position:absolute;top:24px;right:32px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-muted);}
+.slide-num{position:absolute;top:24px;right:32px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#6b7280;}
 /* Section indicator */
-.section-ind{position:absolute;top:24px;left:32px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--blue-light);letter-spacing:0.1em;text-transform:uppercase;}
+.section-ind{position:absolute;top:24px;left:32px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--navy);letter-spacing:0.1em;text-transform:uppercase;}
 /* Progress bar */
 .progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--blue);z-index:9999;transition:width 0.3s ease;}
 /* Nav controls */
-.nav-btn{background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;margin:0 4px;transition:background 0.2s;}
+.nav-btn{background:var(--navy);border:1px solid var(--blue);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;margin:0 4px;transition:background 0.2s;}
 .nav-btn:hover{background:rgba(37,99,235,0.4);}
-.nav-counter{font-family:'JetBrains Mono',monospace;color:#fff;font-size:0.85rem;padding:0 12px;}
+.nav-counter{font-family:'JetBrains Mono',monospace;color:var(--navy);font-size:0.85rem;padding:0 12px;}
 /* Reveal animations */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s var(--ease-out-expo),transform 0.6s var(--ease-out-expo);}
 .visible .reveal{opacity:1;transform:translateY(0);}
@@ -93,17 +93,17 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 .visible .reveal:nth-child(4){transition-delay:0.3s;}
 .visible .reveal:nth-child(5){transition-delay:0.4s;}
 /* Drug dose box */
-.drug-box{background:#eff6ff;border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
-.drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:var(--navy);}
-.drug-box .drug-dose{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#1d4ed8;margin-top:4px;}
+.drug-box{background:rgba(37,99,235,0.12);border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+.drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#ffffff;}
+.drug-box .drug-dose{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#60a5fa;margin-top:4px;}
 /* Key takeaway */
-.takeaway{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-radius:var(--card-radius);padding:24px 32px;color:#fff;border:1px solid rgba(37,99,235,0.3);}
-.takeaway-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--blue-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.takeaway{background:linear-gradient(135deg,var(--navy-light) 0%,var(--navy) 100%);border-radius:var(--card-radius);padding:24px 32px;color:#fff;border:1px solid rgba(37,99,235,0.4);}
+.takeaway-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
 /* Title slide specific */
 .title-slide-content{align-items:center;justify-content:center;text-align:center;}
-.title-main{font-family:'Sora',sans-serif;font-weight:800;font-size:4.5rem;background:linear-gradient(135deg,#e8eaf0 0%,#93c5fd 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
-.title-sub{font-size:1.6rem;color:var(--text-muted);margin-bottom:32px;}
-.title-meta{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--blue-light);letter-spacing:0.1em;}
+.title-main{font-family:'Sora',sans-serif;font-weight:800;font-size:4.5rem;background:linear-gradient(135deg,#0f1e3d 0%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
+.title-sub{font-size:1.6rem;color:#6b7280;margin-bottom:32px;}
+.title-meta{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--navy);letter-spacing:0.1em;}
 /* Inline editing */
 .edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
 .edit-toggle{position:fixed;top:16px;left:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:10001;background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;}
@@ -130,7 +130,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 <div class="slide-content title-slide-content">
 <div class="section-ind">ACLS 2025</div>
 <div class="slide-num">01 / 44</div>
-<div class="badge" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;color:var(--blue-light);padding:8px 20px;border:1px solid rgba(37,99,235,0.4);border-radius:100px;background:rgba(37,99,235,0.1);margin-bottom:32px;">AHA 2025 GUIDELINES · BILINGUAL TH/EN</div>
+<div class="badge" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;color:var(--navy);padding:8px 20px;border:1px solid rgba(37,99,235,0.3);border-radius:100px;background:rgba(37,99,235,0.06);margin-bottom:32px;">AHA 2025 GUIDELINES · BILINGUAL TH/EN</div>
 <h1 class="title-main reveal">ACLS 2025</h1>
 <p class="title-sub reveal" style="transition-delay:0.15s;">การกู้ชีพผู้ใหญ่ขั้นสูง<br><span style="font-size:1.1rem;color:var(--text-muted);">Adult Advanced Life Support</span></p>
 <p class="title-meta reveal" style="transition-delay:0.3s;">BLS → ALS → ROSC + SPECIAL CONDITIONS<br>Based on AHA 2025 Guidelines — Parts 7, 9, 10, 11</p>
@@ -210,7 +210,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 </ul>
 <div class="takeaway" style="margin-top:16px;">
 <div class="takeaway-label">Key Point</div>
-<p style="font-size:0.9rem;line-height:1.5;">BLS คือรากฐาน — ถ้า BLS ไม่ดี ALS จะไม่ได้ผลเต็มที่</p>
+<p style="font-size:0.9rem;line-height:1.5;color:#e8eaf0;">BLS คือรากฐาน — ถ้า BLS ไม่ดี ALS จะไม่ได้ผลเต็มที่</p>
 </div>
 </div>
 </div>
@@ -843,7 +843,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 <div class="drug-box"><div class="drug-name">Amiodarone — 2nd dose</div><div class="drug-dose">150 mg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 1st dose</div><div class="drug-dose">1-1.5 mg/kg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 2nd dose</div><div class="drug-dose">0.5-0.75 mg/kg IV/IO</div></div>
-<p style="font-size:0.85rem;color:#4b5563;margin-top:12px;"><span class="cor-badge cor-2b">Class 2b</span> — May be considered for VF/pVT unresponsive to defibrillation</p>
+<p style="font-size:0.85rem;color:#cbd5e1;margin-top:12px;"><span class="cor-badge cor-2b">Class 2b</span> — May be considered for VF/pVT unresponsive to defibrillation</p>
 </div>
 <div class="card reveal" style="transition-delay:0.3s;">
 <div class="card-title">NOT Recommended (Routine)</div>
@@ -1738,7 +1738,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 <div class="grid-3">
 <div class="card reveal" style="transition-delay:0.2s;">
 <div class="card-title">BLS TOR Rule <span class="cor-badge cor-1">Class 1</span></div>
-<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">สำหรับ BLS providers (no ALS available):</p>
+<p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">สำหรับ BLS providers (no ALS available):</p>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>Arrest <strong>not witnessed</strong> by EMS</li>
 <li><strong>No ROSC</strong> before transport</li>
@@ -1749,7 +1749,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 </div>
 <div class="card reveal" style="transition-delay:0.3s;">
 <div class="card-title">ALS TOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
-<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">สำหรับ ALS providers:</p>
+<p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">สำหรับ ALS providers:</p>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>Arrest <strong>not witnessed</strong></li>
 <li><strong>No bystander CPR</strong></li>
@@ -1761,7 +1761,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 </div>
 <div class="card reveal" style="transition-delay:0.4s;">
 <div class="card-title">UTOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
-<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">Tiered (BLS+ALS) system:</p>
+<p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">Tiered (BLS+ALS) system:</p>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>ใช้ BLS criteria + ALS support</li>
 <li>Specificity >99% after ~15 min</li>
@@ -1849,10 +1849,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
 <div class="card reveal" style="transition-delay:0.4s;margin-top:20px;">
 <div class="card-title">Post-Arrest Care Bundle</div>
 <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">90-98%</div><div style="font-size:0.75rem;color:#4b5563;">SpO₂ Target</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">35-45</div><div style="font-size:0.75rem;color:#4b5563;">PaCO₂ mmHg</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥65</div><div style="font-size:0.75rem;color:#4b5563;">MAP mmHg</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥36h</div><div style="font-size:0.75rem;color:#4b5563;">Temp Control</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">90-98%</div><div style="font-size:0.75rem;color:#cbd5e1;">SpO₂ Target</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">35-45</div><div style="font-size:0.75rem;color:#cbd5e1;">PaCO₂ mmHg</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥65</div><div style="font-size:0.75rem;color:#cbd5e1;">MAP mmHg</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥36h</div><div style="font-size:0.75rem;color:#cbd5e1;">Temp Control</div></div>
 </div>
 </div>
 </div>

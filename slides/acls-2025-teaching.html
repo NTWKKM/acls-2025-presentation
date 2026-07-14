@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACLS 2025 Teaching Slides</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* === ROOT VARIABLES === */
+:root {
+  --navy:#0f1e3d; --navy-light:#1a2d52; --smokewhite:#f4f4f6;
+  --blue:#2563eb; --blue-light:#3b82f6; --red:#dc2626; --green:#16a34a; --amber:#d97706;
+  --text-on-navy:#e8eaf0; --text-on-white:#1a1a2e; --text-muted:#6b7280;
+  --card-radius:14px;
+  --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+}
+/* === VIEWPORT BASE (mandatory) === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--navy);}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--navy);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--navy);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--navy);}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+img,video,canvas,svg{max-width:100%;max-height:100%;}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
+  .deck-viewport{position:static;overflow:visible;background:#fff;}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none;}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide:last-child{break-after:auto;page-break-after:auto;}
+  .deck-controls{display:none!important;}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.2s!important;}}
+
+/* === DESIGN SYSTEM === */
+body{font-family:'DM Sans',sans-serif;color:var(--text-on-navy);}
+/* Slide layout */
+.slide-content{position:relative;width:100%;height:100%;padding:60px 80px;display:flex;flex-direction:column;}
+/* Section badge */
+.section-badge{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--blue-light);margin-bottom:12px;}
+/* Slide title */
+.slide-title{font-family:'Sora',sans-serif;font-weight:700;font-size:2.4rem;line-height:1.2;margin-bottom:24px;color:#fff;}
+.slide-title span{display:block;font-size:1.1rem;font-weight:400;color:var(--text-muted);margin-top:4px;}
+/* Cards */
+.card{background:var(--smokewhite);border-radius:var(--card-radius);padding:32px;color:var(--text-on-white);}
+.card-title{font-family:'Sora',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:16px;color:var(--navy);}
+/* Grid layouts */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-grow:1;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;flex-grow:1;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex-grow:1;}
+/* Bullet lists */
+.bullets{list-style:none;padding:0;margin:0;}
+.bullets li{padding:10px 0 10px 28px;position:relative;font-size:0.95rem;line-height:1.5;color:#374151;border-bottom:1px solid #e5e7eb;}
+.bullets li:last-child{border-bottom:none;}
+.bullets li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-weight:700;}
+.bullets li strong{color:var(--navy);}
+/* Mono text */
+.mono{font-family:'JetBrains Mono',monospace;}
+/* Flow boxes (for algorithms) */
+.flow-box{background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;text-align:center;font-size:0.9rem;font-weight:600;border:2px solid var(--blue);}
+.flow-box.red{border-color:var(--red);}
+.flow-box.green{border-color:var(--green);}
+.flow-box.amber{border-color:var(--amber);}
+.flow-arrow{font-size:1.2rem;color:var(--blue-light);text-align:center;margin:6px 0;}
+/* Tables */
+.data-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+.data-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;}
+.data-table td{padding:10px 14px;border-bottom:1px solid #e5e7eb;color:var(--text-on-white);}
+.data-table tr:nth-child(even) td{background:#f9fafb;}
+/* COR badges */
+.cor-badge{display:inline-block;padding:2px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;}
+.cor-1{background:#dcfce7;color:#15803d;}
+.cor-2a{background:#dbeafe;color:#1d4ed8;}
+.cor-2b{background:#fef3c7;color:#b45309;}
+.cor-3{background:#fee2e2;color:#b91c1c;}
+/* Slide number */
+.slide-num{position:absolute;top:24px;right:32px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-muted);}
+/* Section indicator */
+.section-ind{position:absolute;top:24px;left:32px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--blue-light);letter-spacing:0.1em;text-transform:uppercase;}
+/* Progress bar */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--blue);z-index:9999;transition:width 0.3s ease;}
+/* Nav controls */
+.nav-btn{background:rgba(37,99,235,0.2);border:1px solid rgba(37,99,235,0.4);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;margin:0 4px;transition:background 0.2s;}
+.nav-btn:hover{background:rgba(37,99,235,0.4);}
+.nav-counter{font-family:'JetBrains Mono',monospace;color:#fff;font-size:0.85rem;padding:0 12px;}
+/* Reveal animations */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s var(--ease-out-expo),transform 0.6s var(--ease-out-expo);}
+.visible .reveal{opacity:1;transform:translateY(0);}
+.visible .reveal:nth-child(2){transition-delay:0.1s;}
+.visible .reveal:nth-child(3){transition-delay:0.2s;}
+.visible .reveal:nth-child(4){transition-delay:0.3s;}
+.visible .reveal:nth-child(5){transition-delay:0.4s;}
+/* Drug dose box */
+.drug-box{background:#eff6ff;border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
+.drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:var(--navy);}
+.drug-box .drug-dose{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#1d4ed8;margin-top:4px;}
+/* Key takeaway */
+.takeaway{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-light) 100%);border-radius:var(--card-radius);padding:24px 32px;color:#fff;border:1px solid rgba(37,99,235,0.3);}
+.takeaway-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--blue-light);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+/* Title slide specific */
+.title-slide-content{align-items:center;justify-content:center;text-align:center;}
+.title-main{font-family:'Sora',sans-serif;font-weight:800;font-size:4.5rem;background:linear-gradient(135deg,#e8eaf0 0%,#93c5fd 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
+.title-sub{font-size:1.6rem;color:var(--text-muted);margin-bottom:32px;}
+.title-meta{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--blue-light);letter-spacing:0.1em;}
+/* Inline editing */
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
+.edit-toggle{position:fixed;top:16px;left:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:10001;background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
+.edit-toggle.active{background:var(--green);}
+[contenteditable]{outline:2px dashed var(--blue);outline-offset:4px;border-radius:4px;}
+[contenteditable]:focus{outline-color:var(--green);background:rgba(37,99,235,0.05);}
+</style>
+</head>
+<body>
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar" style="width:0%"></div>
+
+<!-- Inline editing hotzone + toggle -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle">✎ Edit Mode</button>
+
+<!-- Deck viewport -->
+<div class="deck-viewport" id="deckViewport">
+<div class="deck-stage" id="deckStage">
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<div class="slide active" data-slide="0">
+<div class="slide-content title-slide-content">
+<div class="section-ind">ACLS 2025</div>
+<div class="slide-num">01 / 44</div>
+<div class="badge" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;color:var(--blue-light);padding:8px 20px;border:1px solid rgba(37,99,235,0.4);border-radius:100px;background:rgba(37,99,235,0.1);margin-bottom:32px;">AHA 2025 GUIDELINES · BILINGUAL TH/EN</div>
+<h1 class="title-main reveal">ACLS 2025</h1>
+<p class="title-sub reveal" style="transition-delay:0.15s;">การกู้ชีพผู้ใหญ่ขั้นสูง<br><span style="font-size:1.1rem;color:var(--text-muted);">Adult Advanced Life Support</span></p>
+<p class="title-meta reveal" style="transition-delay:0.3s;">BLS → ALS → ROSC + SPECIAL CONDITIONS<br>Based on AHA 2025 Guidelines — Parts 7, 9, 10, 11</p>
+</div>
+</div>
+
+<!-- ========== SLIDE 2: OVERVIEW ========== -->
+<div class="slide" data-slide="1">
+<div class="slide-content">
+<div class="section-ind">Section 1 · Introduction</div>
+<div class="slide-num">02 / 44</div>
+<div class="section-badge reveal">ภาพรวม</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาพรวม ACLS 2025<span>What's New in 2025 Guidelines</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">สิ่งใหม่ใน ACLS 2025</div>
+<ul class="bullets">
+<li><strong>Higher first-shock energy ≥200J</strong> for AF/flutter cardioversion (Class 2a, B-R)</li>
+<li><strong>Updated TOR rules</strong> — based on EMS scope of practice (BLS/ALS/UTOR); ETCO₂ not used alone</li>
+<li><strong>Vector change & DSD</strong> — usefulness not established for persisting VF (Class 2b)</li>
+<li><strong>Head-up CPR discouraged</strong> outside clinical trials (Class 3: No Benefit)</li>
+<li><strong>POCUS</strong> may be considered for reversible causes — must not interrupt CPR</li>
+<li><strong>Polymorphic VT</strong> — always unstable, immediate unsynchronized shock</li>
+<li><strong>IV access first-line</strong> (Class 1, LOE A); IO reasonable alternative (Class 2a)</li>
+<li>Endotracheal drug route <strong>removed</strong> from guidelines — low/unpredictable absorption</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">วัตถุประสงค์การเรียน</div>
+<ul class="bullets">
+<li>เข้าใจ <strong>Chain of Survival 2025</strong> และ 2030 Impact Goals</li>
+<li>ปฏิบัติ <strong>Adult BLS</strong> ได้ถูกต้องตาม algorithm</li>
+<li>ใช้ <strong>Cardiac Arrest Algorithm</strong> สำหรับ VF/pVT และ Asystole/PEA</li>
+<li>ใช้ยาและ <strong>defibrillation</strong> ตามขีดจำกัดและระยะห่างที่แนะนำ</li>
+<li>จัดการ <strong>arrhythmia</strong> ทั้ง bradycardia และ tachyarrhythmia ได้</li>
+<li>รู้จัก <strong>reversible causes</strong> (H's & T's) และรักษาได้ทันที</li>
+<li>ดูแลผู้ป่วย <strong>post-ROSC</strong> ครบทั้ง oxygen, BP, temperature, seizure</li>
+<li>ตัดสินใจ <strong>termination of resuscitation</strong> ตามกฎที่ถูกต้อง</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 3: CHAIN OF SURVIVAL ========== -->
+<div class="slide" data-slide="2">
+<div class="slide-content">
+<div class="section-ind">Section 1 · Introduction</div>
+<div class="slide-num">03 / 44</div>
+<div class="section-badge reveal">Chain of Survival</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Chain of Survival 2025<span>5 Links & 2030 Impact Goals</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">5 Links of Chain of Survival</div>
+<div style="display:flex;flex-direction:column;gap:10px;">
+<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">1. Recognition & Activation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Recognize cardiac arrest, activate emergency response</span></div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">2. High-Quality CPR</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Push hard, push fast, minimize interruptions</span></div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">3. Rapid Defibrillation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">AED as soon as available</span></div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">4. Advanced Resuscitation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">ALS interventions, drugs, advanced airway</span></div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box green" style="text-align:left;padding:14px 20px;"><strong style="color:#86efac;">5. Post-Arrest Care</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Targeted temp, oxygenation, hemodynamics, neuroprognostication</span></div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">2030 Impact Goals</div>
+<ul class="bullets">
+<li>เพิ่ม <strong>bystander CPR rate >50%</strong> สำหรับ adult OHCA</li>
+<li>เพิ่ม <strong>public AED use >20%</strong> ก่อน EMS มาถึง</li>
+<li>OHCA incidence: <strong>83 per 100,000</strong> ต่อปี (US data)</li>
+<li>Survival to discharge OHCA: <strong>10.5%</strong> (CARES 2024)</li>
+<li>Favorable neurological outcome: <strong>8.2%</strong></li>
+<li>IHCA survival: <strong>23.6%</strong> (2023, ปี GWTG-R)</li>
+<li>เน้นเรื่อง <strong>equity</strong> — ลดช่องว่างด้าน race/sex/socioeconomic</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Key Point</div>
+<p style="font-size:0.9rem;line-height:1.5;">BLS คือรากฐาน — ถ้า BLS ไม่ดี ALS จะไม่ได้ผลเต็มที่</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 4: RECOGNITION ========== -->
+<div class="slide" data-slide="3">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">04 / 44</div>
+<div class="section-badge reveal">Adult BLS · Recognition</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจำแนกและประเมินหยุดหัวใจ<span>Recognition of Cardiac Arrest</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">การประเมินผู้ใหญ่ที่ไม่ตอบสนอง</div>
+<ul class="bullets">
+<li><strong>Verify scene safety</strong> — ตรวจสอบความปลอดภัยก่อนเข้าไป</li>
+<li><strong>Check responsiveness</strong> — เรียก กระตุ้น ไม่ตอบสนอง</li>
+<li><strong>Shout for help</strong> — ตะโกนขอความช่วยเหลือ</li>
+<li><strong>Activate emergency response</strong> — lone rescuer: โทรเรียกก่อนแล้ว CPR</li>
+<li><strong>Send for AED</strong> — ให้คนไปหา AED/defibrillator</li>
+<li>ตรวจ <strong>breathing & pulse พร้อมกัน</strong> (≤10 วินาที)</li>
+<li>หาก <strong>no breathing หรือ gasping + ไม่มี pulse</strong> → เริ่ม CPR</li>
+<li>หากมี <strong>pulse + หายใจผิดปกติ</strong> → ให้ 1 breath/6s (10/min)</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Agonal Breathing & Pitfalls</div>
+<ul class="bullets">
+<li><strong>Agonal breathing/gasping</strong> พบใน 40-60% ของ OHCA</li>
+<li>คนทั่วไปมักเข้าใจผิดว่า "ยังหายใจ" → ไม่เริ่ม CPR</li>
+<li><strong>Gasping ≠ การหายใจปกติ</strong> — ให้เริ่ม CPR ถ้าไม่แน่ใจ</li>
+<li>การกดหน้าอกในคนที่ไม่หัวใจหยุด <strong>มีอันตรายน้อยมาก</strong></li>
+<li>ผู้ใหญ่ที่มี <strong>signs of puberty</strong> → ใช้ Adult BLS algorithm</li>
+<li>ถ้าสงสัย <strong>opioid overdose</strong> → ให้ naloxone ถ้ามี</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home Message #2</div>
+<p style="font-size:0.9rem;">Lone rescuer: <strong>activate emergency response ก่อน</strong> แล้วค่อยเริ่ม CPR</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 5: BLS ALGORITHM ========== -->
+<div class="slide" data-slide="4">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">05 / 44</div>
+<div class="section-badge reveal">BLS Algorithm</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Adult BLS Algorithm for HCPs<span>สำหรับ Healthcare Professionals</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Algorithm Flow</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">Verify scene safety</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Check responsiveness → Shout for help</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Activate emergency response → Send for AED</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Check breathing + pulse (≤10s simultaneously)</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box green" style="flex:1;font-size:0.75rem;">Normal breathing + pulse felt → Monitor, check pulse q2min</div>
+<div class="flow-box red" style="flex:1;font-size:0.75rem;">No breathing/gasping + no pulse → Start CPR</div>
+</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box">CPR 30:2 → Use AED ASAP</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box red" style="flex:1;font-size:0.75rem;">Shockable → Shock → Resume CPR 2min</div>
+<div class="flow-box" style="flex:1;font-size:0.75rem;">Non-shockable → Resume CPR 2min</div>
+</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Points for HCPs</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li>HCPs ให้ <strong>compressions + ventilations</strong> สำหรับทุกสาเหตุ (Class 2a)</li>
+<li>ให้ <strong>1 breath every 6 seconds</strong> สำหรับผู้ที่มี pulse แต่หายใจผิดปกติ (Class 2a)</li>
+<li>ตำแหน่งผู้ป่วย: <strong>ลำตัวระดับเข่าของผู้กด</strong> (Take-Home #3)</li>
+<li>ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย (Take-Home #1)</li>
+<li>ใช้ <strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a) — Take-Home #10</li>
+<li>หากสงสัย opioid → <strong>naloxone</strong> (ดู Part 10)</li>
+</ul>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">Ventilation Rate (with pulse)</div>
+<div class="drug-dose">1 breath / 6 seconds (10 breaths/min)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 6: HIGH-QUALITY CPR ========== -->
+<div class="slide" data-slide="5">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">06 / 44</div>
+<div class="section-badge reveal">High-Quality CPR</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การกดหน้าอกคุณภาพสูง<span>High-Quality Chest Compressions</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">5 Key Metrics</div>
+<table class="data-table">
+<thead><tr><th>Metric</th><th>Target</th></tr></thead>
+<tbody>
+<tr><td><strong>Rate</strong></td><td class="mono">100-120 /min</td></tr>
+<tr><td><strong>Depth</strong></td><td class="mono">≥ 2 inches (5 cm)</td></tr>
+<tr><td><strong>Recoil</strong></td><td>Full chest recoil ทุกครั้ง</td></tr>
+<tr><td><strong>Interruptions</strong></td><td>Minimize — หลีกเลี่ยงหยุด</td></tr>
+<tr><td><strong>Ventilation</strong></td><td>Avoid excessive ventilation</td></tr>
+</tbody>
+</table>
+<div style="margin-top:16px;">
+<div class="drug-box">
+<div class="drug-name">Compression:Ventilation Ratio</div>
+<div class="drug-dose">30 : 2 (no advanced airway)</div>
+</div>
+<div class="drug-box">
+<div class="drug-name">With Advanced Airway</div>
+<div class="drug-dose">1 breath / 6s + continuous compressions</div>
+</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Additional Considerations</div>
+<ul class="bullets">
+<li>เปลี่ยน <strong>compressor ทุก 2 นาที</strong> หรือเร็วกว่าถ้าเหนื่อย</li>
+<li>ผู้ป่วย <strong>obesity</strong> — ใช้เทคนิคเดียวกับน้ำหนักปกติ (Take-Home #8)</li>
+<li><strong>Mechanical CPR</strong> — ไม่แนะนำให้ใช้เป็นประจำ (Class 3: No Benefit)</li>
+<li><strong>ETCO₂ monitoring</strong> — ใช้ประเมินคุณภาพ CPR (≥10 mmHg, ideal ≥20 mmHg)</li>
+<li>กดกลางหน้าอก ที่ <strong>lower half of sternum</strong></li>
+<li>หลีกเลี่ยงการกด <strong>xiphoid process</strong> หรือ ribs</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home #3</div>
+<p style="font-size:0.9rem;">ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong> เพื่อให้กดได้มีประสิทธิภาพ</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 7: VENTILATION ========== -->
+<div class="slide" data-slide="6">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">07 / 44</div>
+<div class="section-badge reveal">Ventilation</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การช่วยหายใจ<span>Ventilation During CPR</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Ventilation Strategy</div>
+<table class="data-table">
+<thead><tr><th>Situation</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td>No advanced airway</td><td class="mono">30:2 ratio (compression:ventilation)</td></tr>
+<tr><td>Advanced airway in place</td><td class="mono">1 breath / 6s (10/min) + continuous compressions</td></tr>
+<tr><td>Pulse present, not breathing normally</td><td class="mono">1 breath / 6s (10/min)</td></tr>
+<tr><td>Tidal volume</td><td>Enough for <strong>visible chest rise</strong></td></tr>
+</tbody>
+</table>
+<ul class="bullets" style="margin-top:12px;font-size:0.85rem;">
+<li>หลีกเลี่ยงทั้ง <strong>hypoventilation</strong> และ <strong>hyperventilation</strong> (Take-Home #5)</li>
+<li><strong>Hyperventilation</strong> เพิ่ม intrathoracic pressure → ลด cardiac output</li>
+<li>ใช้ <strong>100% oxygen</strong> ขณะ CPR ถ้ามี (Class 2b)</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Bag-Mask Ventilation Technique</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li><strong>EC-CLAMP technique</strong> — มือที่ไม่ถนัดจับ mask (C-E clamp), มือถนัดบีบ bag</li>
+<li>ให้แต่ละ breath ใน <strong>1 วินาที</strong> — ไม่เร็วเกินไป</li>
+<li>ดู <strong>chest rise</strong> เป็น indicator ของ adequate ventilation</li>
+<li>ถ้ามี <strong>2 rescuers</strong> — คนหนึ่งจับ mask อีกคนบีบ bag</li>
+<li><strong>Oral airway</strong> ช่วยถ้าผู้ป่วย unconscious</li>
+<li><strong>Nasal airway</strong> ถ้ามี facial trauma / trismus</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home #5</div>
+<p style="font-size:0.9rem;">ให้ tidal volume พอ <strong>เห็น chest rise</strong> — หลีกเลี่ยง hypo/hyperventilation</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 8: AED ========== -->
+<div class="slide" data-slide="7">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">08 / 44</div>
+<div class="section-badge reveal">AED Use</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การใช้ AED<span>Automated External Defibrillator</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">AED Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">Attach AED pads to bare chest</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Stop CPR — AED analyzes rhythm</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box red" style="flex:1;font-size:0.75rem;">Shockable (VF/pVT) → Clear → Press Shock</div>
+<div class="flow-box" style="flex:1;font-size:0.75rem;">Non-shockable → Resume CPR immediately</div>
+</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box green">Resume CPR immediately for 2 minutes</div><div class="flow-arrow">↓</div>
+<div class="flow-box">AED prompts rhythm check → Repeat cycle</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key AED Principles</div>
+<ul class="bullets">
+<li><strong>Single shock strategy</strong> — ไม่ stack shocks (Class 2a, B-R)</li>
+<li>หลัง shock → <strong>resume CPR ทันที</strong> ไม่ตรวจ pulse ก่อน</li>
+<li>ลด <strong>interruptions</strong> — เป้าหมาย chest compression fraction >80%</li>
+<li><strong>Bystander AED</strong> ใช้ใน 7.9% ของ OHCA (CARES 2024)</li>
+<li>ปีก่อน EMS มาถึง → 2030 goal: <strong>>20%</strong></li>
+</ul>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">Defibrillation Energy (Biphasic)</div>
+<div class="drug-dose">Manufacturer recommended (120-200J initial)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 9: FBAO ========== -->
+<div class="slide" data-slide="8">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">09 / 44</div>
+<div class="section-badge reveal">FBAO</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Foreign-Body Airway Obstruction<span>การสำลักวัตถุแปลกปลอมในทางเดินหายใจ</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">FBAO Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">Check for signs of severe FBAO</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box green" style="flex:1;font-size:0.75rem;">Mild: Can cough → Encourage cough</div>
+<div class="flow-box red" style="flex:1;font-size:0.75rem;">Severe: Cannot breathe/speak → Act!</div>
+</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box amber">5 Back Blows + 5 Abdominal Thrusts</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Repeat until object expelled OR patient becomes unresponsive</div><div class="flow-arrow">↓</div>
+<div class="flow-box red">If unresponsive → Start CPR (begin with compressions)</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Check mouth before breaths → Repeat cycle</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Points</div>
+<ul class="bullets">
+<li><strong>5 back blows</strong> (slaps between shoulder blades) + <strong>5 abdominal thrusts</strong> (Heimlich) — Take-Home #9</li>
+<li>เมื่อผู้ป่วย <strong>unresponsive</strong> → เริ่ม CPR ด้วย compressions (ไม่ใช่ breaths)</li>
+<li>ตรวจ <strong>visible object</strong> ในปากก่อนให้ breaths — อย่า blind finger sweep</li>
+<li>ผู้ป่วย <strong>late pregnancy</strong> หรือ rescuer ไม่สามารถ encircle abdomen → ใช้ <strong>chest thrusts</strong> แทน</li>
+<li>หลัง FBAO resolved → ส่งประเมิน <strong>internal injuries</strong> (abdominal thrusts อาจทำร้ายอวัยวะ)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 10: BLS SPECIAL ========== -->
+<div class="slide" data-slide="9">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">10 / 44</div>
+<div class="section-badge reveal">BLS Special Considerations</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ประเด็นพิเศษใน BLS<span>Special Considerations</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Obesity</div>
+<ul class="bullets" style="font-size:0.8rem;">
+<li>ใช้ <strong>เทคนิคเดียวกับ</strong> น้ำหนักปกติ (Take-Home #8)</li>
+<li>อาจต้อง <strong>reposition</strong> มือให้สูงขึ้นบน sternum</li>
+<li>ลำบากกดลึก — ใช้น้ำหนักตัวมากขึ้น</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">PPE & Safety</div>
+<ul class="bullets" style="font-size:0.8rem;">
+<li><strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a) — Take-Home #10</li>
+<li>Face mask/shield ลดการแพร่เชื้o</li>
+<li>Bag-mask ปลอดภัยกว่า mouth-to-mouth</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">Opioid Overdose</div>
+<ul class="bullets" style="font-size:0.8rem;">
+<li>สงสัย opioid → <strong>naloxone</strong> (ถ้ามี)</li>
+<li>ให้ระหว่าง CPR ได้ถ้า respiratory/cardiac arrest</li>
+<li>ขนาด: <strong class="mono">0.4-0.8 mg IM/IN</strong></li>
+</ul>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:24px;">
+<div class="takeaway-label">Summary</div>
+<p style="font-size:0.95rem;line-height:1.6;">ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย (Take-Home #1) · ใช้ PPE (Take-Home #10) · Naloxone สำหรับ suspected opioid · เทคนิคเดียวกันสำหรับ obesity</p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 11: POSITIONING ========== -->
+<div class="slide" data-slide="10">
+<div class="slide-content">
+<div class="section-ind">Section 2 · Adult BLS</div>
+<div class="slide-num">11 / 44</div>
+<div class="section-badge reveal">Positioning</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การวางตำแหน่งและสภาพแวดล้อม<span>Patient Positioning & Environment</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Positioning Principles</div>
+<ul class="bullets">
+<li>ทำ CPR ที่ <strong>จุดที่พบผู้ป่วย</strong> (Take-Home #1) — ถ้าทำได้ปลอดภัย</li>
+<li>ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong> (Take-Home #3)</li>
+<li>ผู้ป่วยบน <strong>พื้นแข็ง</strong> — ไม่ใช่เตียงนุ่ม (ลดประสิทธิภาพการกด)</li>
+<li>ถ้าบนเตียง → ใช้ <strong>backboard</strong> หรือ log-roll ลงพื้น</li>
+<li>หากผู้ป่วย <strong>pregnant</strong> — เอนเป็นด้านซ้าย หรือ manual left uterine displacement</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Scene & Safety</div>
+<ul class="bullets">
+<li><strong>Verify scene safety</strong> ก่อนเข้าใกล้ — เป็นขั้นตอนแรกของ algorithm</li>
+<li>ประเมิน <strong>danger</strong>: ไฟฟ้า น้ำ ก๊าซ ควัน จราจร</li>
+<li><strong>Telecommunicator CPR (T-CPR)</strong> — คำแนะนำทางโทรศัพท์สำคัญมาก</li>
+<li>T-CPR: ให้ <strong>compression-only</strong> instructions แก่ lay rescuer</li>
+<li>High-performance CPR ใน EMS — ทีมออกซิเจน + team leader + roles</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 12: CARDIAC ARREST ALGORITHM ========== -->
+<div class="slide" data-slide="11">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">12 / 44</div>
+<div class="section-badge reveal">ALS Algorithm</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Adult Cardiac Arrest Algorithm<span>ภาพรวม Algorithm แบบ Circular</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Algorithm Overview</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div class="flow-box">Start CPR · Give O₂ · Attach monitor/defibrillator</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Rhythm check — Shockable?</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box red" style="flex:1;font-size:0.72rem;"><strong>VF / pVT</strong><br>Shock → CPR 2min → IV/IO → Epi q3-5min → Shock → Antiarrhythmic → CPR 2min → Shock → Treat causes</div>
+<div class="flow-box" style="flex:1;font-size:0.72rem;"><strong>Asystole / PEA</strong><br>CPR 2min → IV/IO → Epi ASAP → CPR 2min → Rhythm check → Treat reversible causes</div>
+</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box green">ROSC → Go to Post-Cardiac Arrest Care</div>
+<div class="flow-arrow">↓</div>
+<div class="flow-box">If no ROSC → Consider appropriateness of continued resuscitation</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Differences</div>
+<table class="data-table">
+<thead><tr><th>Feature</th><th>Shockable</th><th>Non-shockable</th></tr></thead>
+<tbody>
+<tr><td>Rhythm</td><td>VF / pVT</td><td>Asystole / PEA</td></tr>
+<tr><td>First action</td><td><strong>Shock</strong></td><td><strong>Epinephrine ASAP</strong></td></tr>
+<tr><td>Epi timing</td><td>After initial defib fails</td><td>As soon as feasible</td></tr>
+<tr><td>Antiarrhythmic</td><td>Amiodarone/Lidocaine</td><td>Not indicated</td></tr>
+<tr><td>Reversible causes</td><td>Check H's & T's</td><td>Check H's & T's — critical</td></tr>
+</tbody>
+</table>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home #1 (ALS)</div>
+<p style="font-size:0.9rem;">ประเมิน <strong>clinical stability</strong> ก่อนเลือก treatment pathway</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 13: SHOCKABLE RHYTHM ========== -->
+<div class="slide" data-slide="12">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">13 / 44</div>
+<div class="section-badge reveal">Shockable Rhythm</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Shockable Rhythm (VF / pVT)<span>วิธีจัดการ Ventricular Fibrillation</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">VF/pVT Algorithm Steps</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
+<div class="flow-box">Shock (1st) → Resume CPR 2 min</div><div class="flow-arrow">↓</div>
+<div class="flow-box">IV/IO access → Epinephrine 1mg</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Rhythm check → Shock (2nd) → CPR 2 min</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Epinephrine q3-5 min → Consider advanced airway</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Rhythm check → Shock (3rd) → CPR 2 min</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Amiodarone 300mg OR Lidocaine 1-1.5 mg/kg</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Rhythm check → Shock (4th) → Treat reversible causes</div><div class="flow-arrow">↓</div>
+<div class="flow-box green">If no ROSC → Consider appropriateness / ECPR / TOR</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Drug Doses</div>
+<div class="drug-box"><div class="drug-name">Epinephrine</div><div class="drug-dose">1 mg IV/IO · q3-5 min · Class 1 (B-R)</div></div>
+<div class="drug-box"><div class="drug-name">Amiodarone — 1st dose</div><div class="drug-dose">300 mg IV/IO bolus</div></div>
+<div class="drug-box"><div class="drug-name">Amiodarone — 2nd dose</div><div class="drug-dose">150 mg IV/IO</div></div>
+<div class="drug-box"><div class="drug-name">Lidocaine — 1st dose</div><div class="drug-dose">1-1.5 mg/kg IV/IO</div></div>
+<div class="drug-box"><div class="drug-name">Lidocaine — 2nd dose</div><div class="drug-dose">0.5-0.75 mg/kg IV/IO</div></div>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Take-Home #4 (ALS)</div>
+<p style="font-size:0.85rem;">Epi <strong>หลัง initial defib ไม่สำเร็จ</strong> — not before first shock</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 14: NON-SHOCKABLE ========== -->
+<div class="slide" data-slide="13">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">14 / 44</div>
+<div class="section-badge reveal">Non-Shockable Rhythm</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Non-Shockable Rhythm (Asystole / PEA)<span>การจัดการ Asystole และ Pulseless Electrical Activity</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Asystole/PEA Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div class="flow-box">Start CPR · Give O₂ · Attach monitor</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Rhythm check — Non-shockable (Asystole/PEA)</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Resume CPR 2 min → IV/IO access → <strong>Epinephrine ASAP</strong></div><div class="flow-arrow">↓</div>
+<div class="flow-box">Consider advanced airway → Capnography</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Rhythm check → If shockable → switch to shockable pathway</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Treat Reversible Causes (H's & T's) — สำคัญมาก!</div><div class="flow-arrow">↓</div>
+<div class="flow-box green">ROSC → Post-arrest care | If no ROSC → Consider TOR</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Differences from VF/pVT</div>
+<ul class="bullets">
+<li><strong>Epinephrine ASAP</strong> — ให้เร็วที่สุดเท่าที่ทำได้ (Class 2a, B-NR)</li>
+<li><strong>ไม่ใช่ shock</strong> — ไม่มี defibrillation ใน pathway นี้</li>
+<li><strong>ไม่ใช้ antiarrhythmic</strong> — ไม่มีบทบาทใน asystole/PEA</li>
+<li><strong>Reversible causes</strong> สำคัญที่สุด — PEA มักมี secondary cause</li>
+<li>ถ้า rhythm เปลี่ยนเป็น <strong>VF/pVT</strong> → เปลี่ยนเป็น shockable pathway</li>
+</ul>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">Epinephrine timing (non-shockable)</div>
+<div class="drug-dose">As soon as feasible — Class 2a (B-NR)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 15: DEFIBRILLATION ========== -->
+<div class="slide" data-slide="14">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">15 / 44</div>
+<div class="section-badge reveal">Defibrillation</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การกระตุ้นหัวใจด้วยไฟฟ้า<span>Defibrillation Energy & Strategy</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Energy Settings</div>
+<table class="data-table">
+<thead><tr><th>Waveform</th><th>Initial Energy</th><th>Subsequent</th></tr></thead>
+<tbody>
+<tr><td><strong>Biphasic</strong> <span class="cor-badge cor-2a">2a</span></td><td class="mono">Manufacturer recommended<br>(120-200 J)</td><td>Equivalent or higher</td></tr>
+<tr><td><strong>Monophasic</strong></td><td class="mono">360 J</td><td class="mono">360 J</td></tr>
+<tr><td><strong>Unknown biphasic</strong></td><td class="mono">Max available</td><td>—</td></tr>
+</tbody>
+</table>
+<div style="margin-top:16px;">
+<div class="card-title" style="font-size:0.95rem;">Key Recommendations</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li><strong>Biphasic preferred</strong> over monophasic <span class="cor-badge cor-2a">Class 2a</span></li>
+<li><strong>Single shock strategy</strong> — ไม่ stack shocks <span class="cor-badge cor-2a">Class 2a</span></li>
+<li>หลัง shock → <strong>resume CPR ทันที</strong> 2 นาที ก่อน rhythm check</li>
+<li>Escalating energy อาจพิจารณาถ้า shock แรกไม่สำเร็จ <span class="cor-badge cor-2b">Class 2b</span></li>
+</ul>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Why Single Shock?</div>
+<ul class="bullets">
+<li>Biphasic shock <strong>first-shock success >75%</strong></li>
+<li>Stacked shocks → <strong>prolonged CPR interruption</strong> → ลด survival</li>
+<li>VF ที่เห็นหลัง shock มักเป็น <strong>recurrent VF</strong> ไม่ใช่ incessant VF (~80%)</li>
+<li>เปลี่ยนคำว่า "shock-refractory" → <strong>"persisting VF/pVT"</strong> หลัง ≥3 shocks</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home #2 (ALS)</div>
+<p style="font-size:0.9rem;">Higher first-shock <strong>≥200J</strong> สำหรับ AF/flutter cardioversion</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 16: VECTOR CHANGE & DSD ========== -->
+<div class="slide" data-slide="15">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">16 / 44</div>
+<div class="section-badge reveal">VC & DSD</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Vector Change & Double Sequential Defibrillation<span>สำหรับ Persisting VF หลัง ≥3 Shocks</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">What is VC & DSD?</div>
+<ul class="bullets">
+<li><strong>Vector Change (VC)</strong> — ย้ายตำแหน่ง defib pads เพื่อเปลี่ยนทิศทาง current</li>
+<li><strong>Double Sequential Defibrillation (DSD)</strong> — 2 defibrillators → 2 ชุด pads → shock ติดต่อกันใกล้เคียง</li>
+<li>ใช้สำหรับ <strong>persisting VF/pVT หลัง ≥3 consecutive shocks</strong></li>
+<li><span class="cor-badge cor-2b">Class 2b</span> — <strong>usefulness not established</strong> ทั้ง VC และ DSD</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">DOSE-VF Trial Evidence</div>
+<ul class="bullets">
+<li>VC และ DSD <strong>improved survival to discharge</strong> ใน intention-to-treat analysis</li>
+<li>แต่ <strong>ไม่ significant</strong> เมื่อวิเคราะห์ตาม treatment ที่ได้จริง</li>
+<li>DSD benefit พบเฉพาะ <strong>incessant VF (17%)</strong> — ไม่ใช่ recurrent VF (83%)</li>
+<li><strong>Timing ระหว่าง double shocks</strong> ต้องแม่นมาก (milliseconds) — ยากที่ทำได้ด้วยมือ</li>
+<li>ต้องการ <strong>เทคโนโลยีใหม่</strong> เพื่อ optimize shock delivery</li>
+</ul>
+<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway-label">Take-Home #4</div>
+<p style="font-size:0.9rem;">VC/DSD ยัง <strong>ไม่ established</strong> — ต้องวิจัยต่อ</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 17: VASCULAR ACCESS ========== -->
+<div class="slide" data-slide="16">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">17 / 44</div>
+<div class="section-badge reveal">Vascular Access</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การเข้าเส้นเลือด<span>Vascular Access During Cardiac Arrest</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">IV Access <span class="cor-badge cor-1">Class 1</span></div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>First-line</strong> — พยายามก่อน</li>
+<li><strong>Peripheral IV</strong> — เร็วที่สุด</li>
+<li>Pharmacokinetics ของ emergency drugs ศึกษาใน IV route</li>
+<li>LOE A — หลักฐานคุณภาพสูง</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">IO Access <span class="cor-badge cor-2a">Class 2a</span></div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Reasonable alternative</strong> ถ้า IV ไม่ได้</li>
+<li>3 RCTs: <strong>no difference</strong> IO vs IV (OHCA)</li>
+<li>IO มี sustained ROSC ต่ำกว่า IV เล็กน้อย (OR 0.89)</li>
+<li>Tibial หรือ humeral — ยังไม่รู้ optimal site</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">Central Venous <span class="cor-badge cor-2b">Class 2b</span></div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>พิจารณาถ้า <strong>IV และ IO ไม่ได้</strong></li>
+<li>ต้องมี <strong>training</strong> และ expertise</li>
+<li><strong>ห้ามหยุด CPR</strong> หรือ delay defib เพื่อ placed</li>
+<li>Faster circulation, higher plasma conc.</li>
+</ul>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
+<div class="takeaway-label">Take-Home #9</div>
+<p style="font-size:0.95rem;">IV first <span class="cor-badge cor-1">Class 1</span> → IO if IV fails <span class="cor-badge cor-2a">Class 2a</span> → Central venous if IV+IO fail <span class="cor-badge cor-2b">Class 2b</span> · Endotracheal route <strong>REMOVED</strong> from guidelines</p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 18: VASOPRESSOR ========== -->
+<div class="slide" data-slide="17">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">18 / 44</div>
+<div class="section-badge reveal">Vasopressor</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ยากระตุ้นหัวใจ<span>Vasopressor Medications</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Epinephrine Recommendations</div>
+<table class="data-table">
+<thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td><span class="cor-badge cor-1">1</span></td><td>B-R</td><td>Epinephrine is recommended for adult cardiac arrest</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>1 mg q3-5 min</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-NR</td><td>Non-shockable: epinephrine as soon as feasible</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-NR</td><td>Shockable: epinephrine after initial defib attempts fail</td></tr>
+<tr><td><span class="cor-badge cor-3">3</span></td><td>B-R</td><td>Vasopressin alone or + epi = no advantage over epi alone</td></tr>
+<tr><td><span class="cor-badge cor-3">3</span></td><td>B-R</td><td>High-dose epinephrine not recommended for routine use</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Evidence</div>
+<ul class="bullets">
+<li><strong>PARAMEDIC2</strong> — RCT: epi vs placebo → ROSC ↑, survival to admission ↑</li>
+<li>แต่ <strong>ไม่ improve survival with favorable neurologic outcome</strong></li>
+<li>Epi effectiveness ลดลงเมื่อ >20 min ของ pulselessness</li>
+<li>Hospital ที่ให้ epi <strong>ก่อน first defib</strong> → survival ต่ำกว่า 10%</li>
+<li><strong>Shockable</strong>: ให้ epi <strong>หลัง initial defib</strong> พยายามแล้วไม่สำเร็จ</li>
+<li><strong>Non-shockable</strong>: ให้ epi <strong>ASAP</strong></li>
+</ul>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">Epinephrine</div>
+<div class="drug-dose">1 mg IV/IO · every 3-5 min · max: no defined max</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 19: ANTIARRHYTHMICS ========== -->
+<div class="slide" data-slide="18">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">19 / 44</div>
+<div class="section-badge reveal">Antiarrhythmics</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ยาต้านอาการหัวใจเต้นผิดจังหวะ<span>Antiarrhythmic Medications</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Amiodarone & Lidocaine</div>
+<div class="drug-box"><div class="drug-name">Amiodarone — 1st dose</div><div class="drug-dose">300 mg IV/IO bolus</div></div>
+<div class="drug-box"><div class="drug-name">Amiodarone — 2nd dose</div><div class="drug-dose">150 mg IV/IO</div></div>
+<div class="drug-box"><div class="drug-name">Lidocaine — 1st dose</div><div class="drug-dose">1-1.5 mg/kg IV/IO</div></div>
+<div class="drug-box"><div class="drug-name">Lidocaine — 2nd dose</div><div class="drug-dose">0.5-0.75 mg/kg IV/IO</div></div>
+<p style="font-size:0.85rem;color:#4b5563;margin-top:12px;"><span class="cor-badge cor-2b">Class 2b</span> — May be considered for VF/pVT unresponsive to defibrillation</p>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">NOT Recommended (Routine)</div>
+<table class="data-table">
+<thead><tr><th>Drug</th><th>COR</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Calcium</td><td><span class="cor-badge cor-3">3</span></td><td>ไม่ improve survival · ยกเว้น hyperkalemia</td></tr>
+<tr><td>Sodium Bicarbonate</td><td><span class="cor-badge cor-3">3</span></td><td>ไม่ routine · ยกเว้น hyperkalemia/TCA OD</td></tr>
+<tr><td>Magnesium</td><td><span class="cor-badge cor-3">3</span></td><td>ไม่ routine · ยกเว้น torsades (long QT)</td></tr>
+<tr><td>Steroids</td><td><span class="cor-badge cor-2b">2b</span></td><td>Uncertain benefit</td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;">Evidence (ROC trial)</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li>Amiodarone & Lidocaine → <strong>survival to admission ↑</strong> vs placebo</li>
+<li>ไม่ improve <strong>survival to discharge</strong></li>
+<li>Subgroup: <strong>bystander-witnessed arrest</strong> → improved survival</li>
+<li>Amiodarone within 8 min → improved survival & functional outcome</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 20: ADVANCED AIRWAY ========== -->
+<div class="slide" data-slide="19">
+<div class="slide-content">
+<div class="section-ind">Section 4 · Airway & Monitoring</div>
+<div class="slide-num">20 / 44</div>
+<div class="section-badge reveal">Advanced Airway</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจัดการทางเดินหายใจ<span>Advanced Airway Placement</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Decision Framework</div>
+<table class="data-table">
+<thead><tr><th>Setting</th><th>ETI Success</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td><strong>OHCA — Low ETI success</strong></td><td>Low</td><td>Supraglottic airway <span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td><strong>OHCA — High ETI success</strong></td><td>High</td><td>SGA or ETI <span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td><strong>IHCA — Expert providers</strong></td><td>High</td><td>SGA or ETI <span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td>Any setting</td><td>—</td><td>BMV or advanced airway <span class="cor-badge cor-2b">2b</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Principles</div>
+<ul class="bullets">
+<li><strong>Defer advanced airway</strong> ถ้าจะหยุด chest compressions — จนกว่า initial CPR + defib ไม่สำเร็จ <span class="cor-badge cor-1">Class 1</span></li>
+<li><strong>Frequent retraining</strong> สำหรับผู้ทำ intubation <span class="cor-badge cor-1">Class 1</span></li>
+<li><strong>Waveform capnography</strong> — ยืนยันตำแหน่ง ET tube <span class="cor-badge cor-1">Class 1</span></li>
+<li>หากมี advanced airway → <strong>1 breath / 6s</strong> + continuous compressions</li>
+<li>EMS ที่ intubate → <strong>quality improvement program</strong> <span class="cor-badge cor-1">Class 1</span></li>
+<li>BMV vs ETI — <strong>no survival difference</strong> ใน RCT (physician-based EMS)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 21: ETCO2 ========== -->
+<div class="slide" data-slide="20">
+<div class="slide-content">
+<div class="section-ind">Section 4 · Airway & Monitoring</div>
+<div class="slide-num">21 / 44</div>
+<div class="section-badge reveal">ETCO₂ Monitoring</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การตรวจ ETCO₂<span>Capnography During Cardiac Arrest</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Confirm Tube</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>100% specific</strong> สำหรับ ET tube placement</li>
+<li>Sensitivity ลดลงใน prolonged arrest</li>
+<li>Confirm + monitor ตลอด</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">CPR Quality</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>ETCO₂ reflects <strong>cardiac output</strong></li>
+<li><strong><10 mmHg</strong> → poor outcomes</li>
+<li><strong>≥20 mmHg</strong> → ↑ ROSC rate</li>
+<li>Target compressions ให้ ETCO₂ ≥10</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">Detect ROSC</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Abrupt rise >10 mmHg</strong> → น่าจะ ROSC</li>
+<li>ใช้ร่วมกับ pulse check</li>
+<li>Arterial line waveform = ROSC confirmation</li>
+</ul>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
+<div class="takeaway-label">TOR & ETCO₂</div>
+<p style="font-size:0.95rem;line-height:1.6;">ใน intubated patients: ETCO₂ <strong><10 mmHg after 20 min</strong> อาจพิจารณาเป็น <strong>ส่วนหนึ่ง</strong>ของ multimodal TOR decision <span class="cor-badge cor-2b">Class 2b</span> · <strong>ไม่ใช้ ETCO₂ อย่างเดียว</strong> เพื่อ stop resuscitation <span class="cor-badge cor-3">Class 3: Harm</span></p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 22: POCUS & ADJUNCTS ========== -->
+<div class="slide" data-slide="21">
+<div class="slide-content">
+<div class="section-ind">Section 4 · Airway & Monitoring</div>
+<div class="slide-num">22 / 44</div>
+<div class="section-badge reveal">POCUS & Adjuncts</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">POCUS & CPR Adjuncts<span>Point-of-Care Ultrasound & Other Adjuncts</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">POCUS During Cardiac Arrest</div>
+<ul class="bullets">
+<li><span class="cor-badge cor-2b">Class 2b</span> — พิจารณาใช้เพื่อ <strong>diagnose reversible causes</strong> (PE, tamponade, hypovolemia)</li>
+<li><strong>ต้องไม่หยุด CPR</strong> — ใช้ระหว่าง rhythm check หรือ pulse check</li>
+<li>POCUS → <strong>longer CPR interruptions</strong> ในบางการศึกษา (risk!)</li>
+<li>Assess cardiac activity → <strong>ไม่ใช่</strong> standalone indication for TOR</li>
+<li>TEE (transesophageal) — ภาพดีกว่า ไม่หยุด CPR แต่ยังเป็น knowledge gap</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Other Adjuncts</div>
+<table class="data-table">
+<thead><tr><th>Adjunct</th><th>COR</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td>Arterial blood gas</td><td><span class="cor-badge cor-2b">2b</span></td><td>Uncertain benefit</td></tr>
+<tr><td>Arterial line</td><td><span class="cor-badge cor-2b">2b</span></td><td>Detect ROSC via waveform</td></tr>
+<tr><td>Max O₂ during CPR</td><td><span class="cor-badge cor-2b">2b</span></td><td>Max feasible FiO₂</td></tr>
+<tr><td>Diastolic BP monitoring</td><td><span class="cor-badge cor-2b">2b</span></td><td>Optimize CPR quality</td></tr>
+<tr><td><strong>Head-up CPR</strong></td><td><span class="cor-badge cor-3">3</span></td><td><strong>Not recommended</strong> outside trials</td></tr>
+</tbody>
+</table>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Take-Home #5</div>
+<p style="font-size:0.9rem;"><strong>Head-up CPR</strong> discouraged outside rigorous clinical trials</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 23: REVERSIBLE CAUSES ========== -->
+<div class="slide" data-slide="22">
+<div class="slide-content">
+<div class="section-ind">Section 5 · Reversible Causes</div>
+<div class="slide-num">23 / 44</div>
+<div class="section-badge reveal">Reversible Causes</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Reversible Causes — H's & T's<span>สาเหตุที่สามารถรักษาได้</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">The H's</div>
+<table class="data-table">
+<thead><tr><th>Cause</th><th>Key Intervention</th></tr></thead>
+<tbody>
+<tr><td><strong>Hypovolemia</strong></td><td>IV fluids, blood transfusion</td></tr>
+<tr><td><strong>Hypoxia</strong></td><td>100% O₂, adequate ventilation</td></tr>
+<tr><td><strong>Hydrogen ion (acidosis)</strong></td><td>Hyperventilate, consider bicarb (special cases)</td></tr>
+<tr><td><strong>Hypokalemia</strong></td><td>Potassium replacement</td></tr>
+<tr><td><strong>Hyperkalemia</strong></td><td>Calcium, insulin+glucose, bicarb (see Part 10)</td></tr>
+<tr><td><strong>Hypothermia</strong></td><td>Active rewarming (see Part 10)</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">The T's</div>
+<table class="data-table">
+<thead><tr><th>Cause</th><th>Key Intervention</th></tr></thead>
+<tbody>
+<tr><td><strong>Tension pneumothorax</strong></td><td>Needle decompression → chest tube</td></tr>
+<tr><td><strong>Tamponade, cardiac</strong></td><td>Pericardiocentesis</td></tr>
+<tr><td><strong>Toxins</strong></td><td>Specific antidotes (see Part 10)</td></tr>
+<tr><td><strong>Thrombosis, pulmonary</strong></td><td>Fibrinolytics, surgical embolectomy</td></tr>
+<tr><td><strong>Thrombosis, coronary</strong></td><td>PCI, fibrinolytics</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
+<div class="takeaway-label">Critical Concept</div>
+<p style="font-size:0.95rem;line-height:1.6;">ใน <strong>PEA และ Asystole</strong> — การหาและรักษา reversible cause สำคัญที่สุด · PEA มักเป็น <strong>secondary arrest</strong> จาก underlying condition</p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 24: TACHYARRHYTHMIA OVERVIEW ========== -->
+<div class="slide" data-slide="23">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">24 / 44</div>
+<div class="section-badge reveal">Tachyarrhythmia</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Tachyarrhythmia Algorithm<span>ภาพรวมการจัดการ Tachyarrhythmia</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Assess Stability</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">Assess appropriateness of HR for clinical condition</div><div class="flow-arrow">↓</div>
+<div class="flow-box">HR typically ≥150/min if tachyarrhythmia</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Signs of instability?</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">YES → Synchronized cardioversion (sedate if feasible)</div>
+<div class="flow-box" style="flex:1;font-size:0.72rem;">NO → Vagal/Adenosine → Antiarrhythmic → Expert consult</div>
+</div>
+</div>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.9rem;">Signs of Instability</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>Hypotension</li>
+<li>Acutely altered mental status</li>
+<li>Signs of shock</li>
+<li>Ischemic chest discomfort</li>
+<li>Acute heart failure</li>
+</ul>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Synchronized Cardioversion Energy</div>
+<table class="data-table">
+<thead><tr><th>Rhythm</th><th>Initial Energy (biphasic)</th></tr></thead>
+<tbody>
+<tr><td><strong>Atrial Fibrillation</strong></td><td class="mono">≥ 200 J</td></tr>
+<tr><td><strong>Atrial Flutter</strong></td><td class="mono">200 J</td></tr>
+<tr><td><strong>Narrow-complex tach</strong></td><td class="mono">100 J</td></tr>
+<tr><td><strong>Monomorphic VT</strong></td><td class="mono">100 J</td></tr>
+<tr><td><strong>Polymorphic VT</strong></td><td class="mono">Unsynchronized — max energy (defib)</td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="drug-box">
+<div class="drug-name">Adenosine</div>
+<div class="drug-dose">6 mg rapid IV push → 12 mg if needed</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 25: NARROW-COMPLEX TACH ========== -->
+<div class="slide" data-slide="24">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">25 / 44</div>
+<div class="section-badge reveal">Narrow-Complex Tach</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Narrow-Complex Tachycardia<span>Regular NCT — SVT</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Treatment Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">Stable? → 12-lead ECG, IV access, O₂</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Vagal maneuvers (Valsalva, carotid massage)</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Adenosine 6 mg rapid IV push → 12 mg</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Diltiazem/Verapamil OR Beta-blocker</div><div class="flow-arrow">↓</div>
+<div class="flow-box red">If unstable → Synchronized cardioversion 100 J</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Drug Details</div>
+<div class="drug-box"><div class="drug-name">Adenosine</div><div class="drug-dose">6 mg → 12 mg rapid IV push + NS flush</div></div>
+<div class="drug-box"><div class="drug-name">Diltiazem</div><div class="drug-dose">0.25 mg/kg IV bolus over 2 min → 5-10 mg/h</div></div>
+<div class="drug-box"><div class="drug-name">Verapamil</div><div class="drug-dose">0.075-0.15 mg/kg IV over 2 min</div></div>
+<div class="drug-box"><div class="drug-name">Metoprolol</div><div class="drug-dose">2.5-5 mg IV over 2 min, up to 3 doses</div></div>
+<ul class="bullets" style="font-size:0.82rem;margin-top:8px;">
+<li>Vagal: 20-30% success; modified Valsalva → up to 50%</li>
+<li>Adenosine: up to 98% conversion for AVNRT/AVRT</li>
+<li><strong>Caution</strong>: Adenosine → bronchospasm in asthma</li>
+<li>Central line/post-transplant → <strong>1 mg adenosine</strong> อาจพอ</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 26: WIDE-COMPLEX TACH ========== -->
+<div class="slide" data-slide="25">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">26 / 44</div>
+<div class="section-badge reveal">Wide-Complex Tach</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Wide-Complex Tachycardia<span>QRS ≥ 0.12s, HR >150/min</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Treatment</div>
+<table class="data-table">
+<thead><tr><th>Situation</th><th>Treatment</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td><strong>Unstable (any WCT)</strong></td><td>Synchronized cardioversion</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Stable, vagal/med failed</strong></td><td>Synchronized cardioversion</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Stable — antiarrhythmic</strong></td><td>Amiodarone, Procainamide, or Sotalol</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+<tr><td><strong>Regular monomorphic</strong></td><td>Adenosine (diagnostic/therapeutic)</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+<tr><td><strong>Verapamil/Diltiazem</strong></td><td><strong>DO NOT USE</strong></td><td><span class="cor-badge cor-3">3: Harm</span></td></tr>
+<tr><td><strong>Unstable/irregular/polymorphic</strong></td><td>Adenosine <strong>NOT recommended</strong></td><td><span class="cor-badge cor-3">3: Harm</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Antiarrhythmic Infusions (Stable WCT)</div>
+<div class="drug-box"><div class="drug-name">Procainamide</div><div class="drug-dose">20-50 mg/min → maintenance 1-4 mg/min</div></div>
+<div class="drug-box"><div class="drug-name">Amiodarone</div><div class="drug-dose">150 mg over 10 min → repeat if VT recurs</div></div>
+<div class="drug-box"><div class="drug-name">Sotalol</div><div class="drug-dose">Consult guidelines for dosing</div></div>
+<ul class="bullets" style="font-size:0.82rem;margin-top:8px;">
+<li><strong>Avoid coadministration</strong> — combined effects may be arrhythmogenic</li>
+<li><strong>Defibrillator พร้อม</strong> — ยาอาจแปลงเป็น unstable rhythm</li>
+<li>Adenosine: diagnostic ใน regular monomorphic WCT — block AV node เพื่อดู underlying rhythm</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 27: POLYMORPHIC VT / TORSADES ========== -->
+<div class="slide" data-slide="26">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">27 / 44</div>
+<div class="section-badge reveal">Polymorphic VT</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Polymorphic VT / Torsades de Pointes<span>VT หลายรูปแบบ & รักษา</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Treatment</div>
+<table class="data-table">
+<thead><tr><th>Scenario</th><th>Treatment</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td><strong>All polymorphic VT</strong></td><td>Immediate <strong>unsynchronized</strong> shock (defibrillation)</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Torsades (long QT)</strong></td><td>Magnesium sulfate</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+<tr><td><strong>Normal QT — pVT</strong></td><td>Lidocaine/Amiodarone + treat ischemia</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+<tr><td><strong>Normal QT — pVT</strong></td><td>Magnesium <strong>NOT recommended</strong></td><td><span class="cor-badge cor-3">3</span></td></tr>
+</tbody>
+</table>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">Magnesium Sulfate (for Torsades)</div>
+<div class="drug-dose">1-2 g IV over 5-60 min</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Concepts</div>
+<ul class="bullets">
+<li><strong>Polymorphic VT = always unstable</strong> — ต้อง shock ทันที</li>
+<li><strong>Cannot synchronize</strong> — QRS morphology เปลี่ยนทุก beat</li>
+<li>ใช้ <strong>high-energy unsynchronized shock</strong> (max manufacturer setting)</li>
+<li><strong>Torsades</strong> = long QT ± bradycardia → magnesium + correct electrolytes</li>
+<li><strong>Non-torsades pVT</strong> = มักจาก myocardial ischemia → treat ischemia</li>
+<li>Causes of long QT: drugs (antiarrhythmics, antibiotics, psych), electrolytes, congenital</li>
+<li>Torsades + bradycardia → consider <strong>overdrive pacing / isoproterenol</strong></li>
+<li>Take-Home #8: Polymorphic VT → <strong>immediate defibrillation</strong>, delays worsen outcomes</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 28: AF/FLUTTER WITH RVR ========== -->
+<div class="slide" data-slide="27">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">28 / 44</div>
+<div class="section-badge reveal">AF/Flutter with RVR</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Atrial Fibrillation/Flutter with RVR<span>การจัดการ AF/AFlutter อัตราเร็ว</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Unstable → Cardioversion</div>
+<table class="data-table">
+<thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td>Unstable AF/flutter → immediate electrical cardioversion</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td>AF + ACS + compromise → urgent cardioversion</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td>Initial energy <strong>≥200 J biphasic</strong> for AF</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td>Initial 200 J for atrial flutter</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+<tr><td>Double synchronized cardioversion — uncertain benefit</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Stable → Rate/Rhythm Control</div>
+<table class="data-table">
+<thead><tr><th>Drug</th><th>Dose</th></tr></thead>
+<tbody>
+<tr><td><strong>Diltiazem</strong></td><td class="mono">0.25 mg/kg IV bolus → 5-10 mg/h</td></tr>
+<tr><td><strong>Metoprolol</strong></td><td class="mono">2.5-5 mg IV over 2 min, up to 3 doses</td></tr>
+<tr><td><strong>Amiodarone</strong> (critically ill)</td><td class="mono">300 mg IV over 1 h → 10-50 mg/h</td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;color:var(--red);">⚠ CONTRAINDICATED</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Preexcitation (WPW)</strong>: ห้าม digoxin, CCB, beta-blockers, IV amiodarone <span class="cor-badge cor-3">3: Harm</span></li>
+<li><strong>Decompensated HFrEF</strong>: ห้าม CCB & beta-blockers <span class="cor-badge cor-3">3: Harm</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 29: BRADYCARDIA ========== -->
+<div class="slide" data-slide="28">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">29 / 44</div>
+<div class="section-badge reveal">Bradycardia</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">Bradycardia Algorithm<span>การจัดการ Bradycardia มี Pulse</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">HR typically <50/min (if bradyarrhythmia)</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Cardiopulmonary compromise?<br>(Hypotension, altered mental status, shock, chest pain, HF)</div><div class="flow-arrow">↓</div>
+<div style="display:flex;gap:8px;">
+<div class="flow-box" style="flex:1;font-size:0.72rem;">NO → Observe & monitor</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">YES → Atropine 1 mg IV</div>
+</div>
+<div class="flow-arrow" style="margin-left:50%;">↓</div>
+<div class="flow-box">If atropine ineffective:<br>Transcutaneous pacing + Dopamine/Epinephrine infusion</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Consider transvenous pacing + Expert consult</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Drug Doses</div>
+<div class="drug-box"><div class="drug-name">Atropine</div><div class="drug-dose">1 mg IV bolus · q3-5 min · Max: 3 mg</div></div>
+<div class="drug-box"><div class="drug-name">Dopamine infusion</div><div class="drug-dose">5-20 mcg/kg/min · titrate to response</div></div>
+<div class="drug-box"><div class="drug-name">Epinephrine infusion</div><div class="drug-dose">2-10 mcg/min · titrate to response</div></div>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;">Recommendation Strength</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>Evaluate & treat reversible causes <span class="cor-badge cor-1">Class 1</span></li>
+<li>Atropine for hemodynamic compromise <span class="cor-badge cor-2a">Class 2a</span></li>
+<li>Transvenous pacing if refractory <span class="cor-badge cor-2a">Class 2a</span></li>
+<li>Epinephrine/Dopamine or transcutaneous pacing <span class="cor-badge cor-2b">Class 2b</span></li>
+<li>Immediate pacing if no IV/IO access <span class="cor-badge cor-2b">Class 2b</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 30: BRADYCAUSES ========== -->
+<div class="slide" data-slide="29">
+<div class="slide-content">
+<div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
+<div class="slide-num">30 / 44</div>
+<div class="section-badge reveal">Bradycardia Causes</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">สาเหตุของ Bradycardia<span>Reversible Causes to Investigate</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Cardiac</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Myocardial ischemia/MI</strong> — โดยเฉพาะ inferior MI</li>
+<li>Sinus node dysfunction</li>
+<li>AV block (2nd/3rd degree)</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Drugs & Toxins</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>β-blockers</strong></li>
+<li><strong>Calcium channel blockers</strong></li>
+<li><strong>Digoxin</strong></li>
+<li>Antiarrhythmics</li>
+<li>Opioids</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">Metabolic & Other</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Hypoxia</strong> — สาเหตุสำคัญมาก</li>
+<li><strong>Hyperkalemia</strong></li>
+<li><strong>Hypothyroidism</strong></li>
+<li>Electrolyte abnormalities</li>
+<li>Increased vagal tone</li>
+<li>Hypothermia</li>
+<li>Infections (sepsis)</li>
+</ul>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
+<div class="takeaway-label">Key Point</div>
+<p style="font-size:0.95rem;line-height:1.6;">Bradycardia อาจเป็น <strong>manifestation ของ underlying disease</strong> ไม่ใช่ primary problem — ต้อง evaluate และ treat underlying cause ควบคู่กับ stabilization</p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 31: SPECIAL CIRCUMSTANCES OVERVIEW ========== -->
+<div class="slide" data-slide="30">
+<div class="slide-content">
+<div class="section-ind">Section 7 · Special Circumstances</div>
+<div class="slide-num">31 / 44</div>
+<div class="section-badge reveal">Special Circumstances</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาพรวมสภาวะพิเศษ<span>Overview of Special Resuscitation Circumstances</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Conditions Covered in Part 10</div>
+<ul class="bullets" style="font-size:0.88rem;">
+<li><strong>Anaphylaxis</strong></li>
+<li><strong>Asthma</strong> (severe, near-fatal)</li>
+<li><strong>Cardiac arrest in cardiac intervention lab</strong></li>
+<li><strong>Cardiac arrest after cardiac surgery</strong></li>
+<li><strong>Drowning</strong></li>
+<li><strong>Electrocution</strong></li>
+<li><strong>Gas embolism</strong></li>
+<li><strong>High-consequence respiratory pathogens</strong></li>
+<li><strong>Hyperkalemia</strong> & electrolyte abnormalities</li>
+<li><strong>Hyperthermia / Hypothermia</strong></li>
+<li><strong>LVAD failure</strong></li>
+<li><strong>Pregnancy</strong></li>
+<li><strong>Pulmonary embolism</strong></li>
+<li><strong>Toxic ingestions</strong> (β-blocker, CCB, cocaine, cyanide, digoxin, opioids, organophosphates, TCA)</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Focus Areas in This Course</div>
+<table class="data-table">
+<thead><tr><th>Condition</th><th>Key Modification</th></tr></thead>
+<tbody>
+<tr><td><strong>Drowning</strong></td><td>Breaths-first CPR, ventilation priority</td></tr>
+<tr><td><strong>Post-cardiac surgery</strong></td><td>3 stacked shocks, pacing wires, resternotomy</td></tr>
+<tr><td><strong>Cardiac intervention lab</strong></td><td>Mechanical CPR, ECLS, intracoronary epi</td></tr>
+<tr><td><strong>Hyperkalemia</strong></td><td>Calcium, bicarb, insulin+glucose</td></tr>
+<tr><td><strong>Selected toxins</strong></td><td>Specific antidotes & modifications</td></tr>
+</tbody>
+</table>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Core Principle</div>
+<p style="font-size:0.9rem;">Special circumstances ต้อง <strong>modify standard ACLS</strong> — รู้จักและปรับ protocol ให้เหมาะสม</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 32: DROWNING ========== -->
+<div class="slide" data-slide="31">
+<div class="slide-content">
+<div class="section-ind">Section 7 · Special Circumstances</div>
+<div class="slide-num">32 / 44</div>
+<div class="section-badge reveal">Drowning</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจมน้ำ<span>Drowning Resuscitation</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Key Modifications</div>
+<ul class="bullets">
+<li><strong>Breaths-first</strong> — drowning = primarily hypoxic arrest</li>
+<li>CPR ที่มี <strong>breaths + compressions</strong> ดีกว่า compression-only <span class="cor-badge cor-1">Class 1</span></li>
+<li>ให้ <strong>5 initial breaths</strong> ก่อน แล้วค่อย compressions</li>
+<li><strong>Trained rescuer</strong> → in-water breaths ได้ ถ้าปลอดภัย <span class="cor-badge cor-2b">Class 2b</span></li>
+<li>ให้ <strong>supplemental oxygen</strong> ASAP <span class="cor-badge cor-1">Class 1</span></li>
+<li><strong>AED</strong> ใช้หลังนำออกจากน้ำ → เช็ดหน้าอกให้แห้งก่อน</li>
+<li>Compression-only CPR ได้ ถ้า rescuer unwilling/untrained <span class="cor-badge cor-2a">Class 2a</span></li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Drowning Chain of Survival</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div class="flow-box">1. Prevent — ป้องกัน drowning</div><div class="flow-arrow">↓</div>
+<div class="flow-box">2. Recognize — จำแนก distress</div><div class="flow-arrow">↓</div>
+<div class="flow-box">3. Provide flotation — ช่วยให้ลอยน้ำ</div><div class="flow-arrow">↓</div>
+<div class="flow-box green">4. Remove from water — นำออกจากน้ำ</div><div class="flow-arrow">↓</div>
+<div class="flow-box">5. Provide care — CPR + O₂ + AED</div>
+</div>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Key Difference</div>
+<p style="font-size:0.88rem;">Drowning = <strong>respiratory arrest → cardiac arrest</strong> (ไม่ใช่ primary cardiac)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 33: POST-CARDIAC SURGERY ========== -->
+<div class="slide" data-slide="32">
+<div class="slide-content">
+<div class="section-ind">Section 7 · Special Circumstances</div>
+<div class="slide-num">33 / 44</div>
+<div class="section-badge reveal">Post-Cardiac Surgery</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">หัวใจหยุดหลังการผ่าตัด<span>Cardiac Arrest After Cardiac Surgery</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Unique Protocol</div>
+<table class="data-table">
+<thead><tr><th>Scenario</th><th>Action</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td><strong>Witnessed VF</strong></td><td><strong>3 stacked shocks</strong> before CPR (within 1 min)</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Asystole/Bradycardia + pacing wires</strong></td><td><strong>Immediate pacing</strong> via epicardial wires</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>If defib/pacing fails (1 min)</strong></td><td>Start standard CPR</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Refractory to standard ACLS</strong></td><td>Resternotomy in ICU</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td>Chest/abdomen open</td><td>Internal cardiac massage</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td>Refractory to standard ACLS</td><td>ECLS / ECMO</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Differences from Standard ACLS</div>
+<ul class="bullets">
+<li><strong>3 stacked shocks</strong> — แตกต่างจาก single shock strategy ปกติ</li>
+<li>เหตุผล: <strong>monitored setting</strong> + risks of compressions on surgical suture lines</li>
+<li><strong>Resternotomy</strong> ใน ICU — standard protocol ≥10 days หลัง surgery</li>
+<li><strong>Internal massage</strong> → improved cardiac index & coronary perfusion</li>
+<li>Common causes: VF (ischemia, pacemaker malfunction), <strong>tamponade</strong>, hypovolemia/bleeding</li>
+<li><strong>ECLS</strong> (ECMO/CPB) → survival 36-78% ใน case series</li>
+<li>Resternotomy นอก ICU → <strong>poor outcomes</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 34: OTHER SPECIAL CIRCUMSTANCES ========== -->
+<div class="slide" data-slide="33">
+<div class="slide-content">
+<div class="section-ind">Section 7 · Special Circumstances</div>
+<div class="slide-num">34 / 44</div>
+<div class="section-badge reveal">Other Special Circumstances</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาวะพิเศษอื่นๆ<span>Cardiac Intervention Lab, Hyperkalemia, Toxins</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Cardiac Intervention Lab</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Mechanical CPR</strong> — reasonable <span class="cor-badge cor-2a">2a</span></li>
+<li><strong>ECLS</strong> — reasonable if initial therapy failing <span class="cor-badge cor-2a">2a</span></li>
+<li>Intracoronary epinephrine — may consider <span class="cor-badge cor-2b">2b</span></li>
+<li>Survival ดีกว่า setting อื่น — vigilant monitoring</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Hyperkalemia</div>
+<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">Calcium gluconate</div><div class="drug-dose">10 mL 10% IV</div></div>
+<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">NaHCO₃</div><div class="drug-dose">50 mEq IV (1 ampule)</div></div>
+<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">Insulin + Glucose</div><div class="drug-dose">10U regular insulin + 25g dextrose IV</div></div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>เฉพาะกิจ — ไม่ routine calcium/bicarb ใน cardiac arrest ทั่วไป</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">Selected Toxins</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>β-blocker OD</strong> → high-dose insulin, calcium, glucagon</li>
+<li><strong>CCB OD</strong> → high-dose insulin, calcium</li>
+<li><strong>TCA OD</strong> → NaHCO₃ for QRS widening</li>
+<li><strong>Opioid OD</strong> → naloxone</li>
+<li><strong>Cyanide</strong> → hydroxocobalamin</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 35: POST-ROSC STABILIZATION ========== -->
+<div class="slide" data-slide="34">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">35 / 44</div>
+<div class="section-badge reveal">Post-ROSC</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การดูแลหลัง ROSC<span>Initial Stabilization After ROSC</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Initial Stabilization Algorithm</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div class="flow-box">Manage airway — confirm/adjust advanced airway</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Oxygenation: FiO₂ 100% until SpO₂ measurable</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Ventilation: PaCO₂ 35-45 mmHg</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Hemodynamics: MAP ≥65 mmHg</div><div class="flow-arrow">↓</div>
+<div class="flow-box">12-lead ECG — assess for ischemia</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Consider CT head/chest/abdomen, echo</div><div class="flow-arrow">↓</div>
+<div class="flow-box green">Coronary angiography when appropriate → Temperature control → Ongoing critical care</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Targets Summary</div>
+<table class="data-table">
+<thead><tr><th>Parameter</th><th>Target</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td><strong>FiO₂ initial</strong></td><td class="mono">100% until measurable</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>SpO₂ target</strong></td><td class="mono">90-98%</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td><strong>PaO₂ target</strong></td><td class="mono">60-105 mmHg</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
+<tr><td><strong>PaCO₂ target</strong></td><td class="mono">35-45 mmHg</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>MAP</strong></td><td class="mono">≥65 mmHg</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Glucose</strong></td><td class="mono">70-180 mg/dL</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 36: OXYGENATION ========== -->
+<div class="slide" data-slide="35">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">36 / 44</div>
+<div class="section-badge reveal">Oxygenation Targets</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">เป้าหมายออกซิเจน<span>Oxygenation After ROSC</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Recommendations</div>
+<table class="data-table">
+<thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td><span class="cor-badge cor-1">1</span></td><td>B-R</td><td>100% O₂ until SpO₂/PaO₂ measurable</td></tr>
+<tr><td><span class="cor-badge cor-1">1</span></td><td>B-NR</td><td>Avoid hypoxemia</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>Titrate FiO₂ → SpO₂ 90-98% (PaO₂ 60-105)</td></tr>
+<tr><td><span class="cor-badge cor-2b">2b</span></td><td>C-LD</td><td>Caution: pulse ox inaccuracy in darker skin</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Key Evidence</div>
+<ul class="bullets">
+<li><strong>EXACT trial</strong>: lower O₂ targets → more hypoxemic episodes → lower survival</li>
+<li><strong>Severe hyperoxemia (PaO₂ >250)</strong> → worse outcomes</li>
+<li>Target: <strong>SpO₂ 90-98%</strong> (PaO₂ 60-105 mmHg)</li>
+<li><strong>Conservative oxygen</strong> อาจดีกว่าใน hypoxic-ischemic encephalopathy</li>
+<li><strong>Pulse ox limitation</strong>: darker skin → "occult hypoxemia" (SpO₂ ปกติ แต่ PaO₂ ต่ำ)</li>
+</ul>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Practical Rule</div>
+<p style="font-size:0.9rem;">100% จนกว่าจะวัดได้ → titrate down ให้ SpO₂ <strong>90-98%</strong></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 37: BP & CIRCULATION ========== -->
+<div class="slide" data-slide="36">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">37 / 44</div>
+<div class="section-badge reveal">Blood Pressure</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ความดันโลหิตและการไหลเวียน<span>Hemodynamics & Mechanical Circulatory Support</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Blood Pressure Targets</div>
+<ul class="bullets">
+<li><strong>Avoid hypotension</strong> — MAP ≥65 mmHg <span class="cor-badge cor-1">Class 1</span></li>
+<li><strong>No specific vasopressor</strong> recommended — insufficient evidence</li>
+<li>Vasopressors: norepinephrine, dopamine, epinephrine — ตาม clinical scenario</li>
+<li>Monitor: arterial line เพื่อ accurate BP</li>
+</ul>
+<div class="drug-box" style="margin-top:12px;">
+<div class="drug-name">MAP Target</div>
+<div class="drug-dose">≥ 65 mmHg — avoid hypotension at all times</div>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Mechanical Circulatory Support (MCS)</div>
+<table class="data-table">
+<thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td>MCS <strong>not routinely used</strong> for cardiogenic shock after arrest</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td>MCS <strong>may be considered</strong> in highly selected refractory CS</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;">Coronary Angiography</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li>Recommended <strong>before discharge</strong> if suspected cardiac etiology <span class="cor-badge cor-1">Class 1</span></li>
+<li>Especially: shockable rhythm, LV dysfunction, ischemia evidence</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 38: TEMPERATURE CONTROL ========== -->
+<div class="slide" data-slide="37">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">38 / 44</div>
+<div class="section-badge reveal">Temperature Control</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การควบคุมอุณหภูมิ<span>Targeted Temperature Management</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Recommendations</div>
+<table class="data-table">
+<thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
+<tbody>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>Maintain temp control <strong>≥36 hours</strong> for unresponsive patients</td></tr>
+<tr><td><span class="cor-badge cor-1">1</span></td><td>C-LD</td><td>Avoid fever (≥37.7°C) in comatose patients</td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;">TTM2 Trial</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li><strong>TTM2</strong>: hypothermia 32-34°C vs normothermia → <strong>no difference</strong> in neurologic outcome</li>
+<li><strong>Normothermia</strong> (36-37.5°C) เป็น target ที่นิยม</li>
+<li>Avoid fever ทั้งในและหลัง 36 ชม.</li>
+</ul>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Practical Approach</div>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div class="flow-box">If not following commands off sedation:</div><div class="flow-arrow">↓</div>
+<div class="flow-box amber">Initiate deliberate temperature control strategy</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Target: normothermia (36-37.5°C) or TTM 32-36°C</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Maintain for ≥36 hours</div><div class="flow-arrow">↓</div>
+<div class="flow-box">Avoid fever ≥37.7°C for at least 72h after ROSC</div><div class="flow-arrow">↓</div>
+<div class="flow-box green">Slow rewarm at 0.25-0.5°C/h if hypothermia used</div>
+</div>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Take-Home #2 (PCAC)</div>
+<p style="font-size:0.88rem;">Temperature control <strong>≥36 hours</strong> — ไม่มี evidence สนับสนุน hypothermia over normothermia</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 39: SEIZURE ========== -->
+<div class="slide" data-slide="38">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">39 / 44</div>
+<div class="section-badge reveal">Seizure</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การตรวจหาและรักษาโรคชัก<span>Seizure & Myoclonus Management</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Seizure Evaluation</div>
+<ul class="bullets">
+<li>ประเมิน <strong>clinical seizure</strong> ในผู้ป่วยที่ไม่ follow commands</li>
+<li><strong>EEG</strong> สำหรับผู้ป่วย comatose — ตรวจหา non-convulsive seizures</li>
+<li><strong>Antiseizure trial</strong> อาจพิจารณาใน ictal-interictal continuum <span class="cor-badge cor-2b">Class 2b</span></li>
+<li>ใช้ <strong>nonsedating antiseizure</strong> medication</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Myoclonus (New Section)</div>
+<table class="data-table">
+<thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
+<tbody>
+<tr><td><strong>DO NOT suppress</strong> myoclonus without EEG correlate</td><td><span class="cor-badge cor-3">3</span></td></tr>
+<tr><td>Treat myoclonus <strong>with</strong> EEG correlate as seizure</td><td>—</td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px;">
+<div class="card-title" style="font-size:0.95rem;">Key Concepts</div>
+<ul class="bullets" style="font-size:0.85rem;">
+<li><strong>Myoclonus</strong> ≠ จบเสมอ — อาจไม่มี prognostic significance ถ้าไม่มี EEG correlate</li>
+<li><strong>Myoclonic status epilepticus</strong> → poor prognosis (แต่ต้อง confirm ด้วย EEG)</li>
+<li>Myoclonus ที่มี EEG seizure → treat ด้วย antiseizure meds</li>
+<li>Myoclonus ที่ <strong>ไม่มี</strong> EEG correlate → <strong>ห้าม suppress</strong> <span class="cor-badge cor-3">Class 3</span></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 40: NEUROPROGNOSTICATION ========== -->
+<div class="slide" data-slide="39">
+<div class="slide-content">
+<div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
+<div class="slide-num">40 / 44</div>
+<div class="section-badge reveal">Neuroprognostication</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">การพยากรณ์โรคทางระบบประสาท<span>Multimodal Neuroprognostication</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Principles</div>
+<ul class="bullets">
+<li><strong>Multimodal approach</strong> — ไม่ใช้ single test เพียงอย่างเดียว</li>
+<li><strong>Delayed</strong> — ≥72 hours หลัง ROSC หรือหลัง normothermia</li>
+<li>ประเมิน <strong>off sedation</strong> และ off neuromuscular blockade</li>
+<li>Now differentiates <strong>favorable vs unfavorable</strong> outcome</li>
+<li><strong>NfL (neurofilament light chain)</strong> — biomarker ใหม่ เพิ่มจาก NSE</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Tools</div>
+<table class="data-table">
+<thead><tr><th>Tool</th><th>Note</th></tr></thead>
+<tbody>
+<tr><td><strong>Neuro exam</strong></td><td>Off sedation — brainstem reflexes, motor response</td></tr>
+<tr><td><strong>Biomarkers</strong></td><td>NSE, NfL (high values → unfavorable)</td></tr>
+<tr><td><strong>EEG</strong></td><td>Background, reactivity, seizures</td></tr>
+<tr><td><strong>SSEP (N20)</strong></td><td>Bilateral absence → poor prognosis</td></tr>
+<tr><td><strong>CT/MRI</strong></td><td>Edema, infarct pattern</td></tr>
+<tr><td><strong>Advanced neuromonitoring</strong></td><td>New section — NIRS, microdialysis (research)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 41: TOR ========== -->
+<div class="slide" data-slide="40">
+<div class="slide-content">
+<div class="section-ind">Section 9 · Termination & Ethics</div>
+<div class="slide-num">41 / 44</div>
+<div class="section-badge reveal">Termination of Resuscitation</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">กฎการหยุดการกู้ชีพ<span>Termination of Resuscitation (TOR) Rules</span></h2>
+<div class="grid-3">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">BLS TOR Rule <span class="cor-badge cor-1">Class 1</span></div>
+<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">สำหรับ BLS providers (no ALS available):</p>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>Arrest <strong>not witnessed</strong> by EMS</li>
+<li><strong>No ROSC</strong> before transport</li>
+<li><strong>No AED shock</strong> delivered</li>
+</ul>
+<p style="font-size:0.82rem;color:var(--green);margin-top:8px;"><strong>ทั้ง 3 เงื่อนไข → terminate</strong></p>
+<p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.87% (survival 0.13%)</p>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">ALS TOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
+<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">สำหรับ ALS providers:</p>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>Arrest <strong>not witnessed</strong></li>
+<li><strong>No bystander CPR</strong></li>
+<li><strong>No ROSC</strong> before transport</li>
+<li><strong>No shock</strong> delivered</li>
+</ul>
+<p style="font-size:0.82rem;color:var(--green);margin-top:8px;"><strong>ทั้ง 4 เงื่อนไข → terminate</strong></p>
+<p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.99% (survival 0.01%)</p>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card-title">UTOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
+<p style="font-size:0.85rem;color:#4b5563;margin-bottom:8px;">Tiered (BLS+ALS) system:</p>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>ใช้ BLS criteria + ALS support</li>
+<li>Specificity >99% after ~15 min</li>
+<li>ลด transport ลง 50%</li>
+</ul>
+<div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;">
+<p style="font-size:0.82rem;color:#92400e;"><strong>ETCO₂ Rule:</strong></p>
+<p style="font-size:0.8rem;color:#92400e;">Intubated: ETCO₂ <10 mmHg after 20 min → component of TOR (not alone) <span class="cor-badge cor-2b">2b</span></p>
+<p style="font-size:0.8rem;color:#92400e;margin-top:4px;">Non-intubated: <strong>อย่าใช้ ETCO₂ cutoff</strong> เพียงอย่างเดียว <span class="cor-badge cor-3">3: Harm</span></p>
+</div>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:16px;">
+<div class="takeaway-label">Take-Home #3 (ALS)</div>
+<p style="font-size:0.95rem;">TOR rules ขึ้นกับ <strong>EMS scope of practice</strong> · ETCO₂ <strong>ไม่ใช้ alone</strong> · TOR ไม่ apply สำหรับ overdose, trauma, IHCA</p>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 42: ETHICS ========== -->
+<div class="slide" data-slide="41">
+<div class="slide-content">
+<div class="section-ind">Section 9 · Termination & Ethics</div>
+<div class="slide-num">42 / 44</div>
+<div class="section-badge reveal">Ethics</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">ประเด็นทางจริยธรรม<span>Ethical Considerations in Resuscitation</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">Withholding & Withdrawing</div>
+<ul class="bullets">
+<li><strong>DNAR orders</strong> — ต้องเคารพ ตรวจสอบก่อนเริ่ม CPR</li>
+<li>เริ่ม CPR โดย default ในผู้ใหญ่ที่ไม่มี DNAR และไม่แน่ใจ</li>
+<li><strong>Withholding</strong> — ไม่เริ่ม CPR เมื่อมี signs of irreversible death</li>
+<li><strong>Withdrawing</strong> — หยุด CPR เมื่อ futile (TOR rules, prolonged effort)</li>
+<li>Consider <strong>family presence</strong> ระหว่าง resuscitation — ส่วนใหญ่พบว่าช่วยใน grieving process</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Support & Debriefing</div>
+<ul class="bullets">
+<li><strong>Structured assessment</strong> สำหรับ emotional distress → survivors & caregivers <span class="cor-badge cor-1">Class 1</span></li>
+<li>ทำก่อน <strong>hospital discharge</strong></li>
+<li><strong>Healthcare professional burnout</strong> — interventions อาจ beneficial <span class="cor-badge cor-2b">Class 2b</span></li>
+<li><strong>Debriefing</strong> หลัง resuscitation — ช่วย team performance & emotional wellbeing</li>
+<li><strong>Organ donation</strong> — พิจารณาในผู้ป่วยที่ไม่รอด</li>
+</ul>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Take-Home #9 (PCAC)</div>
+<p style="font-size:0.9rem;">Structured assessment & referral for <strong>emotional distress</strong> — survivors & caregivers — before discharge</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 43: SUMMARY ========== -->
+<div class="slide" data-slide="42">
+<div class="slide-content">
+<div class="section-ind">Section 10 · Summary</div>
+<div class="slide-num">43 / 44</div>
+<div class="section-badge reveal">Key Takeaways</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">สรุปประเด็นสำคัญ<span>Key Takeaways from ACLS 2025</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">BLS & ALS Foundations</div>
+<ul class="bullets">
+<li><strong>High-quality CPR</strong> = foundation — rate 100-120, depth ≥5cm, full recoil, minimize interruptions</li>
+<li><strong>Single shock strategy</strong> — resume CPR ทันทีหลัง shock</li>
+<li><strong>Epinephrine 1mg q3-5min</strong> — non-shockable ASAP, shockable after initial defib fails</li>
+<li><strong>Amiodarone/Lidocaine</strong> for refractory VF — not routine calcium/bicarb/magnesium</li>
+<li><strong>IV first</strong> → IO → central venous · ET route removed</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Arrhythmias & Special Circumstances</div>
+<ul class="bullets">
+<li><strong>Unstable tachy</strong> → synchronized cardioversion (AF ≥200J, narrow 100J, mono VT 100J)</li>
+<li><strong>Polymorphic VT</strong> → unsynchronized shock (max energy)</li>
+<li><strong>Torsades</strong> → magnesium + correct electrolytes</li>
+<li><strong>Bradycardia</strong> → atropine → pacing/infusion</li>
+<li><strong>Drowning</strong> → breaths first · <strong>Post-surgery</strong> → 3 stacked shocks + pacing</li>
+</ul>
+</div>
+</div>
+<div class="card reveal" style="transition-delay:0.4s;margin-top:20px;">
+<div class="card-title">Post-Arrest Care Bundle</div>
+<div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">90-98%</div><div style="font-size:0.75rem;color:#4b5563;">SpO₂ Target</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">35-45</div><div style="font-size:0.75rem;color:#4b5563;">PaCO₂ mmHg</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥65</div><div style="font-size:0.75rem;color:#4b5563;">MAP mmHg</div></div>
+<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥36h</div><div style="font-size:0.75rem;color:#4b5563;">Temp Control</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 44: REFERENCES ========== -->
+<div class="slide" data-slide="43">
+<div class="slide-content">
+<div class="section-ind">Section 10 · Summary</div>
+<div class="slide-num">44 / 44</div>
+<div class="section-badge reveal">References</div>
+<h2 class="slide-title reveal" style="transition-delay:0.1s;">อ้างอิง<span>References & Source Guidelines</span></h2>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card-title">AHA 2025 Guidelines</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Kleinman ME, et al.</strong> Part 7: Adult Basic Life Support. Circulation. 2025;152(suppl 2):Sxxx–Sxxx.</li>
+<li><strong>Wigginton JG, et al.</strong> Part 9: Adult Advanced Life Support. Circulation. 2025;152(suppl 2):S538–S577.</li>
+<li><strong>Cao D, et al.</strong> Part 10: Adult and Pediatric Special Circumstances of Resuscitation. Circulation. 2025;152(suppl 2):S578–S672.</li>
+<li><strong>Hirsch KG, et al.</strong> Part 11: Post–Cardiac Arrest Care. Circulation. 2025;152(suppl 2):S673–S718.</li>
+</ul>
+</div>
+<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card-title">Supporting Guidelines</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li><strong>Perman SM, et al.</strong> 2023 AHA Focused Update on Adult ACLS. Circulation. 2024;149:e254–e273.</li>
+<li><strong>Dezfulian C, et al.</strong> Part 4: Systems of Care. Circulation. 2025;152(suppl 2):S353–S384.</li>
+<li><strong>Elmer J, et al.</strong> Part 3: Ethics. Circulation. 2025;152(suppl 2):S323–S352.</li>
+<li><strong>Donoghue A, et al.</strong> Part 12: Resuscitation Education Science. Circulation. 2025;152(suppl 2):S719–S750.</li>
+<li><strong>Joglar JA, et al.</strong> 2023 ACC/AHA/ACCP/HRS Guideline for AF. Circulation. 2024;149:e1–e156.</li>
+<li><strong>Kusumoto FM, et al.</strong> 2018 ACC/AHA/HRS Guideline on Bradycardia. Circulation. 2019;140:e382–e482.</li>
+</ul>
+</div>
+</div>
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:20px;text-align:center;">
+<div class="takeaway-label" style="text-align:center;">End of Teaching Slides</div>
+<p style="font-size:1rem;line-height:1.6;">ฝึกฝนกับ <strong>10 Case Scenarios</strong> → คลิก "Case Scenarios" ในหน้าหลัก<br>หรือกด <span class="mono">→</span เพื่อไปยังสไลด์ถัดไป</p>
+</div>
+</div>
+</div>
+
+</div><!-- /deck-stage -->
+</div><!-- /deck-viewport -->
+
+<!-- === NAV CONTROLS === -->
+<div class="deck-controls">
+<button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+<span class="nav-counter" id="slideCounter">01 / 44</span>
+<button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+/* === SLIDE PRESENTATION CONTROLLER === */
+class SlidePresentation {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.currentSlide = 0;
+    this.totalSlides = this.slides.length;
+    this.scale = 1;
+    this.stage = document.getElementById('deckStage');
+    this.viewport = document.getElementById('deckViewport');
+    this.counter = document.getElementById('slideCounter');
+    this.progressBar = document.getElementById('progressBar');
+    this.init();
+  }
+
+  init() {
+    this.scaleStage();
+    window.addEventListener('resize', () => this.scaleStage());
+    this.bindKeyboard();
+    this.bindTouch();
+    this.bindWheel();
+    this.updateCounter();
+    this.updateProgress();
+  }
+
+  scaleStage() {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scaleX = vw / 1920;
+    const scaleY = vh / 1080;
+    this.scale = Math.min(scaleX, scaleY);
+    this.stage.style.transform = `translate(-50%, -50%) scale(${this.scale})`;
+    this.stage.style.left = '50%';
+    this.stage.style.top = '50%';
+    // Center with letterbox
+    const offsetX = (vw - 1920 * this.scale) / 2;
+    const offsetY = (vh - 1080 * this.scale) / 2;
+    this.stage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
+    this.stage.style.left = '0';
+    this.stage.style.top = '0';
+  }
+
+  goToSlide(index) {
+    if (index < 0 || index >= this.totalSlides) return;
+    this.slides[this.currentSlide].classList.remove('active');
+    this.currentSlide = index;
+    this.slides[this.currentSlide].classList.add('active');
+    this.updateCounter();
+    this.updateProgress();
+  }
+
+  changeSlide(dir) {
+    this.goToSlide(this.currentSlide + dir);
+  }
+
+  updateCounter() {
+    const num = String(this.currentSlide + 1).padStart(2, '0');
+    const total = String(this.totalSlides).padStart(2, '0');
+    this.counter.textContent = `${num} / ${total}`;
+  }
+
+  updateProgress() {
+    const pct = ((this.currentSlide + 1) / this.totalSlides) * 100;
+    this.progressBar.style.width = pct + '%';
+  }
+
+  bindKeyboard() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.getAttribute('contenteditable')) return;
+      switch(e.key) {
+        case 'ArrowRight': case ' ': case 'PageDown':
+          e.preventDefault(); this.changeSlide(1); break;
+        case 'ArrowLeft': case 'PageUp':
+          e.preventDefault(); this.changeSlide(-1); break;
+        case 'Home': this.goToSlide(0); break;
+        case 'End': this.goToSlide(this.totalSlides - 1); break;
+        case 'e': case 'E':
+          if (!e.target.getAttribute('contenteditable')) this.editor.toggle();
+          break;
+      }
+    });
+  }
+
+  bindTouch() {
+    let startX = 0, startY = 0;
+    this.viewport.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+    this.viewport.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+        this.changeSlide(dx < 0 ? 1 : -1);
+      }
+    });
+  }
+
+  bindWheel() {
+    let throttle = false;
+    this.viewport.addEventListener('wheel', (e) => {
+      if (throttle) return;
+      throttle = true;
+      setTimeout(() => throttle = false, 800);
+      if (e.deltaY > 0) this.changeSlide(1);
+      else if (e.deltaY < 0) this.changeSlide(-1);
+    });
+  }
+}
+
+/* === INLINE EDITOR === */
+class InlineEditor {
+  constructor() {
+    this.isActive = false;
+    this.toggleBtn = document.getElementById('editToggle');
+    this.hotzone = document.getElementById('editHotzone');
+    this.hideTimeout = null;
+    this.bindEvents();
+  }
+
+  toggle() {
+    this.isActive = !this.isActive;
+    this.toggleBtn.classList.toggle('active', this.isActive);
+    this.toggleBtn.textContent = this.isActive ? '✓ Edit ON' : '✎ Edit Mode';
+    document.querySelectorAll('.slide.active [contenteditable]').forEach(el => {
+      el.setAttribute('contenteditable', this.isActive ? 'true' : 'false');
+    });
+    if (this.isActive) {
+      document.querySelectorAll('.slide.active .slide-title, .slide.active .card-title, .slide-active .bullets li').forEach(el => {
+        el.setAttribute('contenteditable', 'true');
+      });
+    }
+  }
+
+  bindEvents() {
+    this.toggleBtn.addEventListener('click', () => this.toggle());
+    this.hotzone.addEventListener('mouseenter', () => {
+      clearTimeout(this.hideTimeout);
+      this.toggleBtn.classList.add('show');
+    });
+    this.hotzone.addEventListener('mouseleave', () => {
+      this.hideTimeout = setTimeout(() => {
+        if (!this.isActive) this.toggleBtn.classList.remove('show');
+      }, 400);
+    });
+    this.toggleBtn.addEventListener('mouseenter', () => clearTimeout(this.hideTimeout));
+    this.toggleBtn.addEventListener('mouseleave', () => {
+      this.hideTimeout = setTimeout(() => {
+        if (!this.isActive) this.toggleBtn.classList.remove('show');
+      }, 400);
+    });
+    this.hotzone.addEventListener('click', () => this.toggle());
+  }
+}
+
+/* === INITIALIZE === */
+const presentation = new SlidePresentation();
+const editor = new InlineEditor();
+
+/* === NAV BUTTONS === */
+document.getElementById('prevBtn').addEventListener('click', () => presentation.changeSlide(-1));
+document.getElementById('nextBtn').addEventListener('click', () => presentation.changeSlide(1));
+
+/* === GLOBAL FUNCTION === */
+function changeSlide(dir) { presentation.changeSlide(dir); }
+</script>
+</body>
+</html>

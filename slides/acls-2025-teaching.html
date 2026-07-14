@@ -87,11 +87,11 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 .nav-counter{font-family:'JetBrains Mono',monospace;color:var(--navy);font-size:0.85rem;padding:0 12px;}
 /* Reveal animations */
 .reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s var(--ease-out-expo),transform 0.6s var(--ease-out-expo);}
-.visible .reveal{opacity:1;transform:translateY(0);}
-.visible .reveal:nth-child(2){transition-delay:0.1s;}
-.visible .reveal:nth-child(3){transition-delay:0.2s;}
-.visible .reveal:nth-child(4){transition-delay:0.3s;}
-.visible .reveal:nth-child(5){transition-delay:0.4s;}
+.slide.active .reveal{opacity:1;transform:translateY(0);}
+.slide.active .reveal:nth-child(2){transition-delay:0.1s;}
+.slide.active .reveal:nth-child(3){transition-delay:0.2s;}
+.slide.active .reveal:nth-child(4){transition-delay:0.3s;}
+.slide.active .reveal:nth-child(5){transition-delay:0.4s;}
 /* Drug dose box */
 .drug-box{background:rgba(37,99,235,0.12);border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
 .drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#ffffff;}

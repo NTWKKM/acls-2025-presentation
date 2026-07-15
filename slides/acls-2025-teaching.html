@@ -6,121 +6,195 @@
 <title>ACLS 2025 Teaching Slides</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* === ROOT VARIABLES === */
 :root {
-  --navy:#0f1e3d;  /* now used as content/card color */ --navy-light:#1a2d52; --smokewhite:#f4f4f6;  /* now used as background */
-  --blue:#2563eb; --blue-light:#3b82f6; --red:#dc2626; --green:#16a34a; --amber:#d97706;
+  --navy:#0f1e3d; --navy-light:#1a2d52; --navy-deep:#0a1628;
+  --smokewhite:#f4f4f6; --bg-soft:#eef0f4;
+  --blue:#2563eb; --blue-light:#3b82f6; --blue-glow:#60a5fa;
+  --red:#dc2626; --red-light:#ef4444; --green:#16a34a; --green-light:#22c55e;
+  --amber:#d97706; --amber-light:#f59e0b;
   --text-on-navy:#e8eaf0; --text-on-white:#1a1a2e; --text-muted:#6b7280;
-  --card-radius:14px;
+  --card-radius:14px; --card-radius-lg:20px;
   --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
 }
-/* === VIEWPORT BASE (mandatory) === */
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#f4f4f6;}
-.deck-viewport{position:fixed;inset:0;overflow:hidden;background:#f4f4f6;}
-.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:#f4f4f6;}
-.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:#f4f4f6;}
-.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1;}
+/* === VIEWPORT BASE === */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--smokewhite);font-family:'Noto Sans Thai','DM Sans',sans-serif;}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--smokewhite);}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--smokewhite);}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--smokewhite);transform:translateX(60px);transition:opacity 0.5s var(--ease-out-expo),transform 0.5s var(--ease-out-expo),visibility 0.5s;}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:1;transform:translateX(0);}
+.slide.prev{transform:translateX(-60px);}
 img,video,canvas,svg{max-width:100%;max-height:100%;}
 .deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000;}
 @media print{
   html,body{width:1920px;height:auto;overflow:visible;background:#fff;}
   .deck-viewport{position:static;overflow:visible;background:#fff;}
   .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none;}
-  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always;}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;transform:none!important;break-after:page;page-break-after:always;}
   .slide:last-child{break-after:auto;page-break-after:auto;}
   .deck-controls{display:none!important;}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.2s!important;}}
 
 /* === DESIGN SYSTEM === */
-body{font-family:'DM Sans',sans-serif;color:var(--navy);}
-/* Slide layout */
-.slide-content{position:relative;width:100%;height:100%;padding:60px 80px;display:flex;flex-direction:column;}
+.slide-content{position:relative;width:100%;height:100%;padding:56px 72px;display:flex;flex-direction:column;}
 /* Section badge */
-.section-badge{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--navy);margin-bottom:12px;}
+.section-badge{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;font-weight:500;}
 /* Slide title */
-.slide-title{font-family:'Sora',sans-serif;font-weight:700;font-size:2.4rem;line-height:1.2;margin-bottom:24px;color:var(--navy);}
-.slide-title span{display:block;font-size:1.1rem;font-weight:400;color:#6b7280;margin-top:4px;}
+.slide-title{font-family:'Sora',sans-serif;font-weight:700;font-size:2.1rem;line-height:1.25;margin-bottom:6px;color:var(--navy);}
+.slide-title span{display:block;font-size:1rem;font-weight:400;color:var(--text-muted);margin-top:2px;font-family:'Noto Sans Thai',sans-serif;}
+/* Title underline accent */
+.title-accent{width:48px;height:3px;background:linear-gradient(90deg,var(--blue),transparent);border-radius:2px;margin-bottom:20px;}
 /* Cards */
-.card{background:var(--navy);border-radius:var(--card-radius);padding:32px;color:#e8eaf0;}
-.card-title{font-family:'Sora',sans-serif;font-weight:700;font-size:1.15rem;margin-bottom:16px;color:#ffffff;}
+.card{background:var(--navy);border-radius:var(--card-radius);padding:28px;color:#e8eaf0;box-shadow:0 4px 24px rgba(15,30,61,0.15);transition:transform 0.3s var(--ease-out-expo),box-shadow 0.3s var(--ease-out-expo);}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(15,30,61,0.25);}
+.card-title{font-family:'Sora',sans-serif;font-weight:600;font-size:1.05rem;margin-bottom:14px;color:#ffffff;display:flex;align-items:center;gap:8px;}
+.card-title .icon{width:20px;height:20px;flex-shrink:0;opacity:0.8;}
 /* Grid layouts */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex-grow:1;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;flex-grow:1;}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;flex-grow:1;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex-grow:1;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex-grow:1;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex-grow:1;}
 /* Bullet lists */
 .bullets{list-style:none;padding:0;margin:0;}
-.bullets li{padding:10px 0 10px 28px;position:relative;font-size:0.95rem;line-height:1.5;color:#cbd5e1;border-bottom:1px solid rgba(255,255,255,0.08);}
+.bullets li{padding:7px 0 7px 24px;position:relative;font-size:0.88rem;line-height:1.5;color:#cbd5e1;border-bottom:1px solid rgba(255,255,255,0.06);}
 .bullets li:last-child{border-bottom:none;}
-.bullets li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-weight:700;}
-.bullets li strong{color:#93c5fd;}
+.bullets li::before{content:'';position:absolute;left:0;top:14px;width:6px;height:6px;border-radius:50%;background:var(--blue-light);flex-shrink:0;}
+.bullets li strong{color:#93c5fd;font-weight:600;}
 /* Mono text */
 .mono{font-family:'JetBrains Mono',monospace;}
-/* Flow boxes (for algorithms) */
-.flow-box{background:var(--navy);color:#fff;border-radius:10px;padding:16px 20px;text-align:center;font-size:0.9rem;font-weight:600;border:2px solid var(--blue);}
-.flow-box.red{border-color:var(--red);}
-.flow-box.green{border-color:var(--green);}
-.flow-box.amber{border-color:var(--amber);}
-.flow-arrow{font-size:1.2rem;color:var(--navy);text-align:center;margin:6px 0;}
+/* Flow boxes */
+.flow-box{background:var(--navy);color:#fff;border-radius:10px;padding:12px 18px;text-align:center;font-size:0.85rem;font-weight:500;border:1.5px solid rgba(37,99,235,0.4);transition:border-color 0.3s,box-shadow 0.3s;}
+.slide.active .flow-box{animation:flowGlow 0.6s var(--ease-out-expo) both;}
+.slide.active .flow-box:nth-child(4){animation-delay:0.3s;}
+.slide.active .flow-box:nth-child(6){animation-delay:0.5s;}
+.slide.active .flow-box:nth-child(8){animation-delay:0.7s;}
+.slide.active .flow-box:nth-child(10){animation-delay:0.9s;}
+@keyframes flowGlow{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.flow-box.red{border-color:var(--red);background:linear-gradient(135deg,rgba(220,38,38,0.15),var(--navy));}
+.flow-box.green{border-color:var(--green);background:linear-gradient(135deg,rgba(22,163,74,0.15),var(--navy));}
+.flow-box.amber{border-color:var(--amber);background:linear-gradient(135deg,rgba(217,119,6,0.15),var(--navy));}
+.flow-arrow{font-size:1.1rem;color:var(--blue-light);text-align:center;margin:2px 0;line-height:1;animation:arrowPulse 2s ease-in-out infinite;}
+@keyframes arrowPulse{0%,100%{opacity:0.5;transform:translateY(0);}50%{opacity:1;transform:translateY(2px);}}
 /* Tables */
-.data-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-.data-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.05em;}
-.data-table td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.08);color:#cbd5e1;}
-.data-table tr:nth-child(even) td{background:rgba(255,255,255,0.04);}
+.data-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.data-table th{background:rgba(37,99,235,0.15);color:#93c5fd;padding:9px 12px;text-align:left;font-weight:600;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(37,99,235,0.3);}
+.data-table td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,0.06);color:#cbd5e1;}
+.data-table tr:nth-child(even) td{background:rgba(255,255,255,0.03);}
+.data-table tr:hover td{background:rgba(37,99,235,0.08);}
 /* COR badges */
-.cor-badge{display:inline-block;padding:2px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;font-weight:700;}
+.cor-badge{display:inline-flex;align-items:center;justify-content:center;min-width:28px;padding:2px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;letter-spacing:0.02em;}
 .cor-1{background:#dcfce7;color:#15803d;}
 .cor-2a{background:#dbeafe;color:#1d4ed8;}
 .cor-2b{background:#fef3c7;color:#b45309;}
 .cor-3{background:#fee2e2;color:#b91c1c;}
 /* Slide number */
-.slide-num{position:absolute;top:24px;right:32px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:#6b7280;}
+.slide-num{position:absolute;top:20px;right:28px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text-muted);font-weight:500;}
 /* Section indicator */
-.section-ind{position:absolute;top:24px;left:32px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--navy);letter-spacing:0.1em;text-transform:uppercase;}
+.section-ind{position:absolute;top:20px;left:28px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--blue);letter-spacing:0.12em;text-transform:uppercase;font-weight:500;}
 /* Progress bar */
-.progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--blue);z-index:9999;transition:width 0.3s ease;}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-light));z-index:9999;transition:width 0.4s var(--ease-out-expo);box-shadow:0 0 8px rgba(37,99,235,0.5);}
 /* Nav controls */
-.nav-btn{background:var(--navy);border:1px solid var(--blue);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.85rem;margin:0 4px;transition:background 0.2s;}
-.nav-btn:hover{background:rgba(37,99,235,0.4);}
-.nav-counter{font-family:'JetBrains Mono',monospace;color:var(--navy);font-size:0.85rem;padding:0 12px;}
-/* Reveal animations */
-.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s var(--ease-out-expo),transform 0.6s var(--ease-out-expo);}
+.nav-btn{background:var(--navy);border:1px solid rgba(37,99,235,0.4);color:#fff;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'Noto Sans Thai',sans-serif;font-size:0.82rem;margin:0 4px;transition:all 0.2s;backdrop-filter:blur(8px);}
+.nav-btn:hover{background:rgba(37,99,235,0.3);transform:scale(1.05);}
+.nav-counter{font-family:'JetBrains Mono',monospace;color:var(--navy);font-size:0.82rem;padding:0 12px;font-weight:500;}
+/* Reveal animations — staggered */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s var(--ease-out-expo),transform 0.6s var(--ease-out-expo);}
 .slide.active .reveal{opacity:1;transform:translateY(0);}
-.slide.active .reveal:nth-child(2){transition-delay:0.1s;}
-.slide.active .reveal:nth-child(3){transition-delay:0.2s;}
-.slide.active .reveal:nth-child(4){transition-delay:0.3s;}
-.slide.active .reveal:nth-child(5){transition-delay:0.4s;}
+.slide.active .reveal:nth-child(1){transition-delay:0.05s;}
+.slide.active .reveal:nth-child(2){transition-delay:0.12s;}
+.slide.active .reveal:nth-child(3){transition-delay:0.20s;}
+.slide.active .reveal:nth-child(4){transition-delay:0.28s;}
+.slide.active .reveal:nth-child(5){transition-delay:0.36s;}
+.slide.active .reveal:nth-child(6){transition-delay:0.44s;}
+.slide.active .reveal:nth-child(7){transition-delay:0.52s;}
+/* For nested reveals inside grid children */
+.slide.active .grid-2 > .reveal:nth-child(1){transition-delay:0.15s;}
+.slide.active .grid-2 > .reveal:nth-child(2){transition-delay:0.25s;}
+.slide.active .grid-3 > .reveal:nth-child(1){transition-delay:0.15s;}
+.slide.active .grid-3 > .reveal:nth-child(2){transition-delay:0.22s;}
+.slide.active .grid-3 > .reveal:nth-child(3){transition-delay:0.30s;}
 /* Drug dose box */
-.drug-box{background:rgba(37,99,235,0.12);border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:8px 0;}
-.drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:700;font-size:0.9rem;color:#ffffff;}
-.drug-box .drug-dose{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#60a5fa;margin-top:4px;}
+.drug-box{background:rgba(37,99,235,0.10);border-left:3px solid var(--blue);padding:10px 14px;border-radius:0 8px 8px 0;margin:6px 0;transition:background 0.3s;}
+.drug-box:hover{background:rgba(37,99,235,0.18);}
+.drug-box .drug-name{font-family:'Sora',sans-serif;font-weight:600;font-size:0.85rem;color:#ffffff;}
+.drug-box .drug-dose{font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#60a5fa;margin-top:3px;}
 /* Key takeaway */
-.takeaway{background:linear-gradient(135deg,var(--navy-light) 0%,var(--navy) 100%);border-radius:var(--card-radius);padding:24px 32px;color:#fff;border:1px solid rgba(37,99,235,0.4);}
-.takeaway-label{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#60a5fa;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
-/* Title slide specific */
+.takeaway{background:linear-gradient(135deg,var(--navy-light) 0%,var(--navy-deep) 100%);border-radius:var(--card-radius);padding:18px 24px;color:#fff;border:1px solid rgba(37,99,235,0.3);box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);}
+.takeaway-label{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--blue-glow);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;}
+/* Title slide */
 .title-slide-content{align-items:center;justify-content:center;text-align:center;}
-.title-main{font-family:'Sora',sans-serif;font-weight:800;font-size:4.5rem;background:linear-gradient(135deg,#0f1e3d 0%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;}
-.title-sub{font-size:1.6rem;color:#6b7280;margin-bottom:32px;}
-.title-meta{font-family:'JetBrains Mono',monospace;font-size:0.9rem;color:var(--navy);letter-spacing:0.1em;}
+.title-main{font-family:'Sora',sans-serif;font-weight:800;font-size:4.2rem;background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;line-height:1.1;}
+.title-sub{font-size:1.5rem;color:var(--text-muted);margin-bottom:28px;font-family:'Noto Sans Thai',sans-serif;}
+.title-meta{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--navy);letter-spacing:0.08em;line-height:1.8;}
+/* Section divider slide */
+.divider-slide{background:var(--navy-deep);color:#fff;}
+.divider-slide .slide-content{align-items:center;justify-content:center;text-align:center;}
+.divider-num{font-family:'Sora',sans-serif;font-weight:800;font-size:7rem;color:rgba(37,99,235,0.15);line-height:1;margin-bottom:0;}
+.divider-title{font-family:'Sora',sans-serif;font-weight:700;font-size:3rem;color:#fff;margin-bottom:12px;}
+.divider-sub{font-family:'Noto Sans Thai',sans-serif;font-size:1.2rem;color:#93c5fd;max-width:600px;line-height:1.5;}
+.divider-line{width:80px;height:2px;background:var(--blue);margin:20px auto;border-radius:1px;}
+/* ECG strip */
+.ecg-strip{width:100%;height:60px;background:var(--navy-deep);border-radius:8px;overflow:hidden;position:relative;margin:6px 0;}
+.ecg-strip svg{width:100%;height:100%;}
+.ecg-label{position:absolute;top:4px;left:8px;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--blue-glow);z-index:2;}
+/* Heartbeat animation */
+@keyframes heartbeat{0%,100%{transform:scale(1);}10%{transform:scale(1.15);}20%{transform:scale(1);}30%{transform:scale(1.12);}40%{transform:scale(1);}}
+.heart-icon{animation:heartbeat 1.2s ease-in-out infinite;display:inline-block;}
+/* ECG draw animation */
+@keyframes ecgDraw{from{stroke-dashoffset:1000;}to{stroke-dashoffset:0;}}
+.ecg-line{stroke-dasharray:1000;stroke-dashoffset:1000;animation:ecgDraw 2s var(--ease-out-expo) forwards;}
+/* Slide transition direction indicator */
+.transition-indicator{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);font-size:0.7rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;z-index:999;opacity:0.5;}
+/* Chain of Survival */
+.chain-container{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;}
+.chain-link{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;border-radius:12px;transition:all 0.4s var(--ease-out-expo);cursor:default;}
+.chain-link .chain-num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:1.1rem;color:#fff;transition:all 0.3s;}
+.chain-link .chain-text{font-size:0.78rem;text-align:center;color:#cbd5e1;max-width:120px;line-height:1.3;}
+.chain-arrow{color:var(--blue-light);font-size:1.5rem;margin:0 4px;}
+.slide.active .chain-link{animation:chainPop 0.5s var(--ease-spring) both;}
+.slide.active .chain-link:nth-child(1){animation-delay:0.2s;}
+.slide.active .chain-link:nth-child(3){animation-delay:0.35s;}
+.slide.active .chain-link:nth-child(5){animation-delay:0.5s;}
+.slide.active .chain-link:nth-child(7){animation-delay:0.65s;}
+.slide.active .chain-link:nth-child(9){animation-delay:0.8s;}
+@keyframes chainPop{from{opacity:0;transform:scale(0.7);}to{opacity:1;transform:scale(1);}}
+/* CPR meter animation */
+.cpr-meter{position:relative;width:120px;height:120px;margin:0 auto;}
+.cpr-meter-circle{width:100%;height:100%;border-radius:50%;border:4px solid var(--navy);position:relative;overflow:hidden;}
+.cpr-meter-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,var(--blue-light),var(--blue));border-radius:0 0 50% 50%;animation:cprPump 0.6s ease-in-out infinite alternate;}
+@keyframes cprPump{0%{height:30%;opacity:0.6;}100%{height:70%;opacity:1;}}
+.cpr-meter-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#fff;z-index:2;text-align:center;}
+/* Stat card */
+.stat-card{text-align:center;padding:14px;background:rgba(37,99,235,0.08);border-radius:10px;border:1px solid rgba(37,99,235,0.2);}
+.stat-card .stat-num{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--blue-glow);}
+.stat-card .stat-label{font-size:0.72rem;color:#94a3b8;margin-top:2px;}
 /* Inline editing */
 .edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer;}
-.edit-toggle{position:fixed;top:16px;left:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:10001;background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;}
+.edit-toggle{position:fixed;top:16px;left:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease;z-index:10001;background:var(--blue);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-family:'Noto Sans Thai',sans-serif;font-size:0.85rem;cursor:pointer;}
 .edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto;}
 .edit-toggle.active{background:var(--green);}
 [contenteditable]{outline:2px dashed var(--blue);outline-offset:4px;border-radius:4px;}
 [contenteditable]:focus{outline-color:var(--green);background:rgba(37,99,235,0.05);}
+/* H's & T's grid */
+.ht-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+.ht-card{background:var(--navy-light);border-radius:10px;padding:12px;text-align:center;border:1px solid rgba(37,99,235,0.3);transition:all 0.3s;}
+.ht-card:hover{border-color:var(--blue-light);transform:translateY(-2px);}
+.ht-card .ht-icon{font-size:1.5rem;margin-bottom:4px;}
+.ht-card .ht-name{font-family:'Sora',sans-serif;font-weight:600;font-size:0.8rem;color:#fff;}
+.ht-card .ht-desc{font-size:0.68rem;color:#94a3b8;margin-top:2px;line-height:1.3;}
+/* Floating background ECG for title slide */
+.bg-ecg{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.06;pointer-events:none;}
 </style>
 </head>
 <body>
 <!-- Progress bar -->
 <div class="progress-bar" id="progressBar" style="width:0%"></div>
-
-<!-- Inline editing hotzone + toggle -->
+<!-- Inline editing -->
 <div class="edit-hotzone" id="editHotzone"></div>
 <button class="edit-toggle" id="editToggle">✎ Edit Mode</button>
-
 <!-- Deck viewport -->
 <div class="deck-viewport" id="deckViewport">
 <div class="deck-stage" id="deckStage">
@@ -129,11 +203,17 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="slide active" data-slide="0">
 <div class="slide-content title-slide-content">
 <div class="section-ind">ACLS 2025</div>
-<div class="slide-num">01 / 44</div>
-<div class="badge" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;color:var(--navy);padding:8px 20px;border:1px solid rgba(37,99,235,0.3);border-radius:100px;background:rgba(37,99,235,0.06);margin-bottom:32px;">AHA 2025 GUIDELINES · BILINGUAL TH/EN</div>
-<h1 class="title-main reveal">ACLS 2025</h1>
-<p class="title-sub reveal" style="transition-delay:0.15s;">การกู้ชีพผู้ใหญ่ขั้นสูง<br><span style="font-size:1.1rem;color:var(--text-muted);">Adult Advanced Life Support</span></p>
-<p class="title-meta reveal" style="transition-delay:0.3s;">BLS → ALS → ROSC + SPECIAL CONDITIONS<br>Based on AHA 2025 Guidelines — Parts 7, 9, 10, 11</p>
+<div class="slide-num">01 / 54</div>
+<svg class="bg-ecg" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+<path d="M0,540 L200,540 L220,540 L240,520 L260,560 L280,540 L400,540 L420,540 L440,300 L460,780 L480,540 L600,540 L620,540 L640,520 L660,560 L680,540 L800,540 L820,540 L840,300 L860,780 L880,540 L1000,540 L1020,540 L1040,520 L1060,560 L1080,540 L1200,540 L1220,540 L1240,300 L1260,780 L1280,540 L1400,540 L1420,540 L1440,520 L1460,560 L1480,540 L1600,540 L1620,540 L1640,300 L1660,780 L1680,540 L1920,540" stroke="#2563eb" stroke-width="3" fill="none" class="ecg-line"/>
+</svg>
+<div class="badge" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;letter-spacing:0.1em;color:var(--blue);padding:8px 20px;border:1px solid rgba(37,99,235,0.3);border-radius:100px;background:rgba(37,99,235,0.06);margin-bottom:28px;">AHA 2025 GUIDELINES · BILINGUAL TH/EN</div>
+<h1 class="title-main reveal" style="position:relative;z-index:2;">ACLS 2025</h1>
+<p class="title-sub reveal" style="transition-delay:0.15s;position:relative;z-index:2;">การกู้ชีพผู้ใหญ่ขั้นสูง<br><span style="font-size:1.1rem;color:var(--text-muted);">Adult Advanced Life Support</span></p>
+<div class="title-meta reveal" style="transition-delay:0.3s;position:relative;z-index:2;">
+<span class="heart-icon" style="color:var(--red);">❤</span> BLS → ALS → ROSC + SPECIAL CONDITIONS<br>
+Based on AHA 2025 Guidelines — Parts 7, 9, 10, 11
+</div>
 </div>
 </div>
 
@@ -141,11 +221,12 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="slide" data-slide="1">
 <div class="slide-content">
 <div class="section-ind">Section 1 · Introduction</div>
-<div class="slide-num">02 / 44</div>
+<div class="slide-num">02 / 54</div>
 <div class="section-badge reveal">ภาพรวม</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาพรวม ACLS 2025<span>What's New in 2025 Guidelines</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ภาพรวม ACLS 2025<span>What's New in 2025 Guidelines</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">สิ่งใหม่ใน ACLS 2025</div>
 <ul class="bullets">
 <li><strong>Higher first-shock energy ≥200J</strong> for AF/flutter cardioversion (Class 2a, B-R)</li>
@@ -158,16 +239,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>Endotracheal drug route <strong>removed</strong> from guidelines — low/unpredictable absorption</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">วัตถุประสงค์การเรียน</div>
 <ul class="bullets">
 <li>เข้าใจ <strong>Chain of Survival 2025</strong> และ 2030 Impact Goals</li>
 <li>ปฏิบัติ <strong>Adult BLS</strong> ได้ถูกต้องตาม algorithm</li>
 <li>ใช้ <strong>Cardiac Arrest Algorithm</strong> สำหรับ VF/pVT และ Asystole/PEA</li>
 <li>ใช้ยาและ <strong>defibrillation</strong> ตามขีดจำกัดและระยะห่างที่แนะนำ</li>
-<li>จัดการ <strong>arrhythmia</strong> ทั้ง bradycardia และ tachyarrhythmia ได้</li>
+<li>จัดการ <strong>arrhythmia</strong> ทั้ง brady และ tachyarrhythmia ได้</li>
 <li>รู้จัก <strong>reversible causes</strong> (H's & T's) และรักษาได้ทันที</li>
-<li>ดูแลผู้ป่วย <strong>post-ROSC</strong> ครบทั้ง oxygen, BP, temperature, seizure</li>
+<li>ดูแลผู้ป่วย <strong>post-ROSC</strong> ครบทั้ง O₂, BP, temp, seizure</li>
 <li>ตัดสินใจ <strong>termination of resuscitation</strong> ตามกฎที่ถูกต้อง</li>
 </ul>
 </div>
@@ -179,53 +260,84 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="slide" data-slide="2">
 <div class="slide-content">
 <div class="section-ind">Section 1 · Introduction</div>
-<div class="slide-num">03 / 44</div>
+<div class="slide-num">03 / 54</div>
 <div class="section-badge reveal">Chain of Survival</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Chain of Survival 2025<span>5 Links & 2030 Impact Goals</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Chain of Survival 2025<span>5 Links & 2030 Impact Goals</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">5 Links of Chain of Survival</div>
-<div style="display:flex;flex-direction:column;gap:10px;">
-<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">1. Recognition & Activation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Recognize cardiac arrest, activate emergency response</span></div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">2. High-Quality CPR</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Push hard, push fast, minimize interruptions</span></div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">3. Rapid Defibrillation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">AED as soon as available</span></div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box" style="text-align:left;padding:14px 20px;"><strong style="color:var(--blue-light);">4. Advanced Resuscitation</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">ALS interventions, drugs, advanced airway</span></div>
-<div class="flow-arrow">↓</div>
-<div class="flow-box green" style="text-align:left;padding:14px 20px;"><strong style="color:#86efac;">5. Post-Arrest Care</strong><br><span style="font-weight:400;font-size:0.8rem;color:#cbd5e1;">Targeted temp, oxygenation, hemodynamics, neuroprognostication</span></div>
+<div class="chain-container" style="flex-direction:column;gap:6px;margin-top:8px;">
+<div class="chain-link" style="flex-direction:row;gap:12px;padding:8px 12px;width:100%;justify-content:flex-start;">
+<div class="chain-num" style="background:var(--blue);">1</div>
+<div style="text-align:left;"><strong style="color:#fff;font-size:0.85rem;">Recognition & Activation</strong><br><span style="font-size:0.75rem;color:#94a3b8;">Recognize cardiac arrest, activate emergency response</span></div>
+</div>
+<div class="chain-arrow" style="transform:rotate(90deg);">→</div>
+<div class="chain-link" style="flex-direction:row;gap:12px;padding:8px 12px;width:100%;justify-content:flex-start;">
+<div class="chain-num" style="background:var(--blue);">2</div>
+<div style="text-align:left;"><strong style="color:#fff;font-size:0.85rem;">High-Quality CPR</strong><br><span style="font-size:0.75rem;color:#94a3b8;">Push hard, push fast, minimize interruptions</span></div>
+</div>
+<div class="chain-arrow" style="transform:rotate(90deg);">→</div>
+<div class="chain-link" style="flex-direction:row;gap:12px;padding:8px 12px;width:100%;justify-content:flex-start;">
+<div class="chain-num" style="background:var(--blue);">3</div>
+<div style="text-align:left;"><strong style="color:#fff;font-size:0.85rem;">Rapid Defibrillation</strong><br><span style="font-size:0.75rem;color:#94a3b8;">AED as soon as available</span></div>
+</div>
+<div class="chain-arrow" style="transform:rotate(90deg);">→</div>
+<div class="chain-link" style="flex-direction:row;gap:12px;padding:8px 12px;width:100%;justify-content:flex-start;">
+<div class="chain-num" style="background:var(--blue);">4</div>
+<div style="text-align:left;"><strong style="color:#fff;font-size:0.85rem;">Advanced Resuscitation</strong><br><span style="font-size:0.75rem;color:#94a3b8;">ALS interventions, drugs, advanced airway</span></div>
+</div>
+<div class="chain-arrow" style="transform:rotate(90deg);">→</div>
+<div class="chain-link" style="flex-direction:row;gap:12px;padding:8px 12px;width:100%;justify-content:flex-start;">
+<div class="chain-num" style="background:var(--green);">5</div>
+<div style="text-align:left;"><strong style="color:#86efac;font-size:0.85rem;">Post-Arrest Care</strong><br><span style="font-size:0.75rem;color:#94a3b8;">Targeted temp, oxygenation, hemodynamics, neuroprognostication</span></div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+</div>
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">2030 Impact Goals</div>
-<ul class="bullets">
-<li>เพิ่ม <strong>bystander CPR rate >50%</strong> สำหรับ adult OHCA</li>
-<li>เพิ่ม <strong>public AED use >20%</strong> ก่อน EMS มาถึง</li>
-<li>OHCA incidence: <strong>83 per 100,000</strong> ต่อปี (US data)</li>
-<li>Survival to discharge OHCA: <strong>10.5%</strong> (CARES 2024)</li>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+<div class="stat-card"><div class="stat-num">&gt;50%</div><div class="stat-label">Bystander CPR Rate</div></div>
+<div class="stat-card"><div class="stat-num">&gt;20%</div><div class="stat-label">Public AED Use</div></div>
+<div class="stat-card"><div class="stat-num">10.5%</div><div class="stat-label">OHCA Survival</div></div>
+<div class="stat-card"><div class="stat-num">23.6%</div><div class="stat-label">IHCA Survival</div></div>
+</div>
+<ul class="bullets" style="font-size:0.82rem;">
+<li>OHCA incidence: <strong>83 per 100,000</strong> ต่อปี (US)</li>
 <li>Favorable neurological outcome: <strong>8.2%</strong></li>
-<li>IHCA survival: <strong>23.6%</strong> (2023, ปี GWTG-R)</li>
 <li>เน้นเรื่อง <strong>equity</strong> — ลดช่องว่างด้าน race/sex/socioeconomic</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
+<div class="takeaway" style="margin-top:12px;">
 <div class="takeaway-label">Key Point</div>
-<p style="font-size:0.9rem;line-height:1.5;color:#e8eaf0;">BLS คือรากฐาน — ถ้า BLS ไม่ดี ALS จะไม่ได้ผลเต็มที่</p>
+<p style="font-size:0.85rem;line-height:1.5;">BLS คือรากฐาน — ถ้า BLS ไม่ดี ALS จะไม่ได้ผลเต็มที่</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 4: RECOGNITION ========== -->
-<div class="slide" data-slide="3">
+<!-- ========== SLIDE 4: SECTION 2 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="3">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 2</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">04 / 54</div>
+<div class="divider-num reveal">02</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Adult BLS</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">การกู้ชีพผู้ใหญ่ขั้นพื้นฐาน — Recognition, CPR, AED, FBAO</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 5: RECOGNITION ========== -->
+<div class="slide" data-slide="4">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">04 / 44</div>
+<div class="slide-num">05 / 54</div>
 <div class="section-badge reveal">Adult BLS · Recognition</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจำแนกและประเมินหยุดหัวใจ<span>Recognition of Cardiac Arrest</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การจำแนกและประเมินหยุดหัวใจ<span>Recognition of Cardiac Arrest</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">การประเมินผู้ใหญ่ที่ไม่ตอบสนอง</div>
 <ul class="bullets">
 <li><strong>Verify scene safety</strong> — ตรวจสอบความปลอดภัยก่อนเข้าไป</li>
@@ -238,8 +350,14 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>หากมี <strong>pulse + หายใจผิดปกติ</strong> → ให้ 1 breath/6s (10/min)</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Agonal Breathing & Pitfalls</div>
+<div class="ecg-strip" style="margin-bottom:10px;">
+<div class="ecg-label">AGONAL BREATHING / GASPING</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none">
+<path d="M0,30 L50,30 L55,28 L60,32 L65,30 L120,30 L125,25 L130,35 L135,30 L200,30 L205,28 L210,32 L215,30 L280,30 L285,25 L290,35 L295,30 L360,30 L365,28 L370,32 L375,30 L400,30" stroke="#f59e0b" stroke-width="1.5" fill="none"/>
+</svg>
+</div>
 <ul class="bullets">
 <li><strong>Agonal breathing/gasping</strong> พบใน 40-60% ของ OHCA</li>
 <li>คนทั่วไปมักเข้าใจผิดว่า "ยังหายใจ" → ไม่เริ่ม CPR</li>
@@ -248,53 +366,54 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>ผู้ใหญ่ที่มี <strong>signs of puberty</strong> → ใช้ Adult BLS algorithm</li>
 <li>ถ้าสงสัย <strong>opioid overdose</strong> → ให้ naloxone ถ้ามี</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home Message #2</div>
-<p style="font-size:0.9rem;">Lone rescuer: <strong>activate emergency response ก่อน</strong> แล้วค่อยเริ่ม CPR</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Take-Home Message</div>
+<p style="font-size:0.85rem;">Lone rescuer: <strong>activate emergency response ก่อน</strong> แล้วค่อยเริ่ม CPR</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 5: BLS ALGORITHM ========== -->
-<div class="slide" data-slide="4">
+<!-- ========== SLIDE 6: BLS ALGORITHM ========== -->
+<div class="slide" data-slide="5">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">05 / 44</div>
+<div class="slide-num">06 / 54</div>
 <div class="section-badge reveal">BLS Algorithm</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Adult BLS Algorithm for HCPs<span>สำหรับ Healthcare Professionals</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Adult BLS Algorithm for HCPs<span>สำหรับ Healthcare Professionals</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Algorithm Flow</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">Verify scene safety</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Check responsiveness → Shout for help</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Activate emergency response → Send for AED</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Check breathing + pulse (≤10s simultaneously)</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box green" style="flex:1;font-size:0.75rem;">Normal breathing + pulse felt → Monitor, check pulse q2min</div>
-<div class="flow-box red" style="flex:1;font-size:0.75rem;">No breathing/gasping + no pulse → Start CPR</div>
+<div class="flow-box green" style="flex:1;font-size:0.72rem;">Normal breathing + pulse → Monitor, check pulse q2min</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">No breathing/gasping + no pulse → Start CPR</div>
 </div>
 <div class="flow-arrow">↓</div>
 <div class="flow-box">CPR 30:2 → Use AED ASAP</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box red" style="flex:1;font-size:0.75rem;">Shockable → Shock → Resume CPR 2min</div>
-<div class="flow-box" style="flex:1;font-size:0.75rem;">Non-shockable → Resume CPR 2min</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">Shockable → Shock → Resume CPR 2min</div>
+<div class="flow-box" style="flex:1;font-size:0.72rem;">Non-shockable → Resume CPR 2min</div>
 </div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Points for HCPs</div>
-<ul class="bullets" style="font-size:0.85rem;">
+<ul class="bullets" style="font-size:0.84rem;">
 <li>HCPs ให้ <strong>compressions + ventilations</strong> สำหรับทุกสาเหตุ (Class 2a)</li>
-<li>ให้ <strong>1 breath every 6 seconds</strong> สำหรับผู้ที่มี pulse แต่หายใจผิดปกติ (Class 2a)</li>
-<li>ตำแหน่งผู้ป่วย: <strong>ลำตัวระดับเข่าของผู้กด</strong> (Take-Home #3)</li>
-<li>ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย (Take-Home #1)</li>
-<li>ใช้ <strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a) — Take-Home #10</li>
-<li>หากสงสัย opioid → <strong>naloxone</strong> (ดู Part 10)</li>
+<li>ให้ <strong>1 breath every 6 seconds</strong> สำหรับผู้ที่มี pulse แต่หายใจผิดปกติ</li>
+<li>ตำแหน่งผู้ป่วย: <strong>ลำตัวระดับเข่าของผู้กด</strong></li>
+<li>ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย</li>
+<li>ใช้ <strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a)</li>
+<li>หากสงสัย opioid → <strong>naloxone</strong></li>
 </ul>
-<div class="drug-box" style="margin-top:12px;">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">Ventilation Rate (with pulse)</div>
 <div class="drug-dose">1 breath / 6 seconds (10 breaths/min)</div>
 </div>
@@ -303,16 +422,24 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 6: HIGH-QUALITY CPR ========== -->
-<div class="slide" data-slide="5">
+<!-- ========== SLIDE 7: HIGH-QUALITY CPR ========== -->
+<div class="slide" data-slide="6">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">06 / 44</div>
+<div class="slide-num">07 / 54</div>
 <div class="section-badge reveal">High-Quality CPR</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การกดหน้าอกคุณภาพสูง<span>High-Quality Chest Compressions</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การกดหน้าอกคุณภาพสูง<span>High-Quality Chest Compressions</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">5 Key Metrics</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+<div class="stat-card"><div class="stat-num">100-120</div><div class="stat-label">Rate/min</div></div>
+<div class="stat-card"><div class="stat-num">≥2"</div><div class="stat-label">Depth (5cm)</div></div>
+<div class="stat-card"><div class="stat-num">Full</div><div class="stat-label">Recoil</div></div>
+<div class="stat-card"><div class="stat-num">Min</div><div class="stat-label">Interruptions</div></div>
+<div class="stat-card"><div class="stat-num">30:2</div><div class="stat-label">C:V Ratio</div></div>
+</div>
 <table class="data-table">
 <thead><tr><th>Metric</th><th>Target</th></tr></thead>
 <tbody>
@@ -323,64 +450,59 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Ventilation</strong></td><td>Avoid excessive ventilation</td></tr>
 </tbody>
 </table>
-<div style="margin-top:16px;">
-<div class="drug-box">
-<div class="drug-name">Compression:Ventilation Ratio</div>
-<div class="drug-dose">30 : 2 (no advanced airway)</div>
-</div>
-<div class="drug-box">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">With Advanced Airway</div>
 <div class="drug-dose">1 breath / 6s + continuous compressions</div>
 </div>
 </div>
-</div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Additional Considerations</div>
 <ul class="bullets">
 <li>เปลี่ยน <strong>compressor ทุก 2 นาที</strong> หรือเร็วกว่าถ้าเหนื่อย</li>
-<li>ผู้ป่วย <strong>obesity</strong> — ใช้เทคนิคเดียวกับน้ำหนักปกติ (Take-Home #8)</li>
-<li><strong>Mechanical CPR</strong> — ไม่แนะนำให้ใช้เป็นประจำ (Class 3: No Benefit)</li>
-<li><strong>ETCO₂ monitoring</strong> — ใช้ประเมินคุณภาพ CPR (≥10 mmHg, ideal ≥20 mmHg)</li>
+<li>ผู้ป่วย <strong>obesity</strong> — ใช้เทคนิคเดียวับน้ำหนักปกติ</li>
+<li><strong>Mechanical CPR</strong> — ไม่แนะนำให้ใช้เป็นประจำ (Class 3)</li>
+<li><strong>ETCO₂ monitoring</strong> — ใช้ประเมินคุณภาพ CPR (≥10 mmHg, ideal ≥20)</li>
 <li>กดกลางหน้าอก ที่ <strong>lower half of sternum</strong></li>
 <li>หลีกเลี่ยงการกด <strong>xiphoid process</strong> หรือ ribs</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home #3</div>
-<p style="font-size:0.9rem;">ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong> เพื่อให้กดได้มีประสิทธิภาพ</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Key Position Tip</div>
+<p style="font-size:0.85rem;">ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong> เพื่อให้กดได้มีประสิทธิภาพ</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 7: VENTILATION ========== -->
-<div class="slide" data-slide="6">
+<!-- ========== SLIDE 8: VENTILATION ========== -->
+<div class="slide" data-slide="7">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">07 / 44</div>
+<div class="slide-num">08 / 54</div>
 <div class="section-badge reveal">Ventilation</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การช่วยหายใจ<span>Ventilation During CPR</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การช่วยหายใจ<span>Ventilation During CPR</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Ventilation Strategy</div>
 <table class="data-table">
 <thead><tr><th>Situation</th><th>Recommendation</th></tr></thead>
 <tbody>
-<tr><td>No advanced airway</td><td class="mono">30:2 ratio (compression:ventilation)</td></tr>
-<tr><td>Advanced airway in place</td><td class="mono">1 breath / 6s (10/min) + continuous compressions</td></tr>
+<tr><td>No advanced airway</td><td class="mono">30:2 ratio (C:V)</td></tr>
+<tr><td>Advanced airway in place</td><td class="mono">1 breath / 6s + continuous compressions</td></tr>
 <tr><td>Pulse present, not breathing normally</td><td class="mono">1 breath / 6s (10/min)</td></tr>
 <tr><td>Tidal volume</td><td>Enough for <strong>visible chest rise</strong></td></tr>
 </tbody>
 </table>
-<ul class="bullets" style="margin-top:12px;font-size:0.85rem;">
-<li>หลีกเลี่ยงทั้ง <strong>hypoventilation</strong> และ <strong>hyperventilation</strong> (Take-Home #5)</li>
+<ul class="bullets" style="margin-top:10px;font-size:0.84rem;">
+<li>หลีกเลี่ยงทั้ง <strong>hypoventilation</strong> และ <strong>hyperventilation</strong></li>
 <li><strong>Hyperventilation</strong> เพิ่ม intrathoracic pressure → ลด cardiac output</li>
 <li>ใช้ <strong>100% oxygen</strong> ขณะ CPR ถ้ามี (Class 2b)</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Bag-Mask Ventilation Technique</div>
-<ul class="bullets" style="font-size:0.85rem;">
+<ul class="bullets" style="font-size:0.84rem;">
 <li><strong>EC-CLAMP technique</strong> — มือที่ไม่ถนัดจับ mask (C-E clamp), มือถนัดบีบ bag</li>
 <li>ให้แต่ละ breath ใน <strong>1 วินาที</strong> — ไม่เร็วเกินไป</li>
 <li>ดู <strong>chest rise</strong> เป็น indicator ของ adequate ventilation</li>
@@ -388,47 +510,48 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>Oral airway</strong> ช่วยถ้าผู้ป่วย unconscious</li>
 <li><strong>Nasal airway</strong> ถ้ามี facial trauma / trismus</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home #5</div>
-<p style="font-size:0.9rem;">ให้ tidal volume พอ <strong>เห็น chest rise</strong> — หลีกเลี่ยง hypo/hyperventilation</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Practical Rule</div>
+<p style="font-size:0.85rem;">ให้ tidal volume พอ <strong>เห็น chest rise</strong> — หลีกเลี่ยง hypo/hyperventilation</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 8: AED ========== -->
-<div class="slide" data-slide="7">
+<!-- ========== SLIDE 9: AED ========== -->
+<div class="slide" data-slide="8">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">08 / 44</div>
+<div class="slide-num">09 / 54</div>
 <div class="section-badge reveal">AED Use</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การใช้ AED<span>Automated External Defibrillator</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การใช้ AED<span>Automated External Defibrillator</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">AED Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">Attach AED pads to bare chest</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Stop CPR — AED analyzes rhythm</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box red" style="flex:1;font-size:0.75rem;">Shockable (VF/pVT) → Clear → Press Shock</div>
-<div class="flow-box" style="flex:1;font-size:0.75rem;">Non-shockable → Resume CPR immediately</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">Shockable (VF/pVT) → Clear → Press Shock</div>
+<div class="flow-box" style="flex:1;font-size:0.72rem;">Non-shockable → Resume CPR immediately</div>
 </div>
 <div class="flow-arrow">↓</div>
 <div class="flow-box green">Resume CPR immediately for 2 minutes</div><div class="flow-arrow">↓</div>
 <div class="flow-box">AED prompts rhythm check → Repeat cycle</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key AED Principles</div>
 <ul class="bullets">
-<li><strong>Single shock strategy</strong> — ไม่ stack shocks (Class 2a, B-R)</li>
+<li><strong>Single shock strategy</strong> — ไม่ stack shocks <span class="cor-badge cor-2a">2a</span></li>
 <li>หลัง shock → <strong>resume CPR ทันที</strong> ไม่ตรวจ pulse ก่อน</li>
-<li>ลด <strong>interruptions</strong> — เป้าหมาย chest compression fraction >80%</li>
+<li>ลด <strong>interruptions</strong> — เป้าหมาย CCF >80%</li>
 <li><strong>Bystander AED</strong> ใช้ใน 7.9% ของ OHCA (CARES 2024)</li>
-<li>ปีก่อน EMS มาถึง → 2030 goal: <strong>>20%</strong></li>
+<li>ปีก่อน EMS มาถึง → 2030 goal: <strong>&gt;20%</strong></li>
 </ul>
-<div class="drug-box" style="margin-top:12px;">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">Defibrillation Energy (Biphasic)</div>
 <div class="drug-dose">Manufacturer recommended (120-200J initial)</div>
 </div>
@@ -437,21 +560,22 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 9: FBAO ========== -->
-<div class="slide" data-slide="8">
+<!-- ========== SLIDE 10: FBAO ========== -->
+<div class="slide" data-slide="9">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">09 / 44</div>
+<div class="slide-num">10 / 54</div>
 <div class="section-badge reveal">FBAO</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Foreign-Body Airway Obstruction<span>การสำลักวัตถุแปลกปลอมในทางเดินหายใจ</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Foreign-Body Airway Obstruction<span>การสำลักวัตถุแปลกปลอมในทางเดินหายใจ</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">FBAO Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">Check for signs of severe FBAO</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box green" style="flex:1;font-size:0.75rem;">Mild: Can cough → Encourage cough</div>
-<div class="flow-box red" style="flex:1;font-size:0.75rem;">Severe: Cannot breathe/speak → Act!</div>
+<div class="flow-box green" style="flex:1;font-size:0.72rem;">Mild: Can cough → Encourage cough</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">Severe: Cannot breathe/speak → Act!</div>
 </div>
 <div class="flow-arrow">↓</div>
 <div class="flow-box amber">5 Back Blows + 5 Abdominal Thrusts</div><div class="flow-arrow">↓</div>
@@ -460,45 +584,46 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="flow-box">Check mouth before breaths → Repeat cycle</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Points</div>
 <ul class="bullets">
-<li><strong>5 back blows</strong> (slaps between shoulder blades) + <strong>5 abdominal thrusts</strong> (Heimlich) — Take-Home #9</li>
+<li><strong>5 back blows</strong> (slaps between shoulder blades) + <strong>5 abdominal thrusts</strong> (Heimlich)</li>
 <li>เมื่อผู้ป่วย <strong>unresponsive</strong> → เริ่ม CPR ด้วย compressions (ไม่ใช่ breaths)</li>
 <li>ตรวจ <strong>visible object</strong> ในปากก่อนให้ breaths — อย่า blind finger sweep</li>
 <li>ผู้ป่วย <strong>late pregnancy</strong> หรือ rescuer ไม่สามารถ encircle abdomen → ใช้ <strong>chest thrusts</strong> แทน</li>
-<li>หลัง FBAO resolved → ส่งประเมิน <strong>internal injuries</strong> (abdominal thrusts อาจทำร้ายอวัยวะ)</li>
+<li>หลัง FBAO resolved → ส่งประเมิน <strong>internal injuries</strong></li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 10: BLS SPECIAL ========== -->
-<div class="slide" data-slide="9">
+<!-- ========== SLIDE 11: BLS SPECIAL ========== -->
+<div class="slide" data-slide="10">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">10 / 44</div>
+<div class="slide-num">11 / 54</div>
 <div class="section-badge reveal">BLS Special Considerations</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ประเด็นพิเศษใน BLS<span>Special Considerations</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ประเด็นพิเศษใน BLS<span>Special Considerations</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Obesity</div>
 <ul class="bullets" style="font-size:0.8rem;">
-<li>ใช้ <strong>เทคนิคเดียวกับ</strong> น้ำหนักปกติ (Take-Home #8)</li>
+<li>ใช้ <strong>เทคนิคเดียวกับ</strong> น้ำหนักปกติ</li>
 <li>อาจต้อง <strong>reposition</strong> มือให้สูงขึ้นบน sternum</li>
 <li>ลำบากกดลึก — ใช้น้ำหนักตัวมากขึ้น</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">PPE & Safety</div>
 <ul class="bullets" style="font-size:0.8rem;">
-<li><strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a) — Take-Home #10</li>
-<li>Face mask/shield ลดการแพร่เชื้o</li>
+<li><strong>PPE</strong> ขณะทำ CPR ได้ (Class 2a)</li>
+<li>Face mask/shield ลดการแพร่เชื้อ</li>
 <li>Bag-mask ปลอดภัยกว่า mouth-to-mouth</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">Opioid Overdose</div>
 <ul class="bullets" style="font-size:0.8rem;">
 <li>สงสัย opioid → <strong>naloxone</strong> (ถ้ามี)</li>
@@ -507,35 +632,36 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:24px;">
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
 <div class="takeaway-label">Summary</div>
-<p style="font-size:0.95rem;line-height:1.6;">ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย (Take-Home #1) · ใช้ PPE (Take-Home #10) · Naloxone สำหรับ suspected opioid · เทคนิคเดียวกันสำหรับ obesity</p>
+<p style="font-size:0.9rem;line-height:1.6;">ทำ CPR ณ จุดที่พบ ถ้าทำได้อย่างปลอดภัย · ใช้ PPE · Naloxone สำหรับ suspected opioid · เทคนิคเดียวกันสำหรับ obesity</p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 11: POSITIONING ========== -->
-<div class="slide" data-slide="10">
+<!-- ========== SLIDE 12: POSITIONING ========== -->
+<div class="slide" data-slide="11">
 <div class="slide-content">
 <div class="section-ind">Section 2 · Adult BLS</div>
-<div class="slide-num">11 / 44</div>
+<div class="slide-num">12 / 54</div>
 <div class="section-badge reveal">Positioning</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การวางตำแหน่งและสภาพแวดล้อม<span>Patient Positioning & Environment</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การวางตำแหน่งและสภาพแวดล้อม<span>Patient Positioning & Environment</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Positioning Principles</div>
 <ul class="bullets">
-<li>ทำ CPR ที่ <strong>จุดที่พบผู้ป่วย</strong> (Take-Home #1) — ถ้าทำได้ปลอดภัย</li>
-<li>ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong> (Take-Home #3)</li>
-<li>ผู้ป่วยบน <strong>พื้นแข็ง</strong> — ไม่ใช่เตียงนุ่ม (ลดประสิทธิภาพการกด)</li>
+<li>ทำ CPR ที่ <strong>จุดที่พบผู้ป่วย</strong> — ถ้าทำได้ปลอดภัย</li>
+<li>ลำตัวผู้ป่วยระดับ <strong>เข่าของผู้กด</strong></li>
+<li>ผู้ป่วยบน <strong>พื้นแข็ง</strong> — ไม่ใช่เตียงนุ่ม</li>
 <li>ถ้าบนเตียง → ใช้ <strong>backboard</strong> หรือ log-roll ลงพื้น</li>
 <li>หากผู้ป่วย <strong>pregnant</strong> — เอนเป็นด้านซ้าย หรือ manual left uterine displacement</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Scene & Safety</div>
 <ul class="bullets">
-<li><strong>Verify scene safety</strong> ก่อนเข้าใกล้ — เป็นขั้นตอนแรกของ algorithm</li>
+<li><strong>Verify scene safety</strong> ก่อนเข้าใกล้ — เป็นขั้นตอนแรก</li>
 <li>ประเมิน <strong>danger</strong>: ไฟฟ้า น้ำ ก๊าซ ควัน จราจร</li>
 <li><strong>Telecommunicator CPR (T-CPR)</strong> — คำแนะนำทางโทรศัพท์สำคัญมาก</li>
 <li>T-CPR: ให้ <strong>compression-only</strong> instructions แก่ lay rescuer</li>
@@ -546,30 +672,42 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 12: CARDIAC ARREST ALGORITHM ========== -->
-<div class="slide" data-slide="11">
+<!-- ========== SLIDE 13: SECTION 3 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="12">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 3</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">13 / 54</div>
+<div class="divider-num reveal">03</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Adult ALS</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">การกู้ชีพผู้ใหญ่ขั้นสูง — Cardiac Arrest Algorithm, Defibrillation, Drugs, Airway, Monitoring</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 14: CARDIAC ARREST ALGORITHM ========== -->
+<div class="slide" data-slide="13">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">12 / 44</div>
+<div class="slide-num">14 / 54</div>
 <div class="section-badge reveal">ALS Algorithm</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Adult Cardiac Arrest Algorithm<span>ภาพรวม Algorithm แบบ Circular</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Adult Cardiac Arrest Algorithm<span>ภาพรวม Algorithm แบบ Circular</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Algorithm Overview</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.78rem;">
 <div class="flow-box">Start CPR · Give O₂ · Attach monitor/defibrillator</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Rhythm check — Shockable?</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box red" style="flex:1;font-size:0.72rem;"><strong>VF / pVT</strong><br>Shock → CPR 2min → IV/IO → Epi q3-5min → Shock → Antiarrhythmic → CPR 2min → Shock → Treat causes</div>
-<div class="flow-box" style="flex:1;font-size:0.72rem;"><strong>Asystole / PEA</strong><br>CPR 2min → IV/IO → Epi ASAP → CPR 2min → Rhythm check → Treat reversible causes</div>
+<div class="flow-box red" style="flex:1;font-size:0.7rem;"><strong>VF / pVT</strong><br>Shock → CPR 2min → IV/IO → Epi q3-5min → Shock → Antiarrhythmic → CPR 2min → Shock → Treat causes</div>
+<div class="flow-box" style="flex:1;font-size:0.7rem;"><strong>Asystole / PEA</strong><br>CPR 2min → IV/IO → Epi ASAP → CPR 2min → Rhythm check → Treat reversible causes</div>
 </div>
 <div class="flow-arrow">↓</div>
-<div class="flow-box green">ROSC → Go to Post-Cardiac Arrest Care</div>
-<div class="flow-arrow">↓</div>
+<div class="flow-box green">ROSC → Go to Post-Cardiac Arrest Care</div><div class="flow-arrow">↓</div>
 <div class="flow-box">If no ROSC → Consider appropriateness of continued resuscitation</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Differences</div>
 <table class="data-table">
 <thead><tr><th>Feature</th><th>Shockable</th><th>Non-shockable</th></tr></thead>
@@ -581,63 +719,108 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td>Reversible causes</td><td>Check H's & T's</td><td>Check H's & T's — critical</td></tr>
 </tbody>
 </table>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home #1 (ALS)</div>
-<p style="font-size:0.9rem;">ประเมิน <strong>clinical stability</strong> ก่อนเลือก treatment pathway</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Key Principle</div>
+<p style="font-size:0.85rem;">ประเมิน <strong>clinical stability</strong> ก่อนเลือก treatment pathway</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 13: SHOCKABLE RHYTHM ========== -->
-<div class="slide" data-slide="12">
+<!-- ========== SLIDE 15: ECG RHYTHM RECOGNITION ========== -->
+<div class="slide" data-slide="14">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">13 / 44</div>
-<div class="section-badge reveal">Shockable Rhythm</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Shockable Rhythm (VF / pVT)<span>วิธีจัดการ Ventricular Fibrillation</span></h2>
+<div class="slide-num">15 / 54</div>
+<div class="section-badge reveal">ECG Recognition</div>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การจดจำ Rhythm ใน Cardiac Arrest<span>ECG Rhythm Recognition — Shockable vs Non-shockable</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
+<div class="card-title" style="color:#ef4444;">Shockable Rhythms</div>
+<div class="ecg-strip">
+<div class="ecg-label">VF — VENTRICULAR FIBRILLATION</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 L20,28 L25,35 L30,20 L35,40 L40,25 L45,38 L50,22 L55,42 L60,28 L65,35 L70,18 L75,45 L80,30 L85,25 L90,40 L95,20 L100,38 L105,28 L110,42 L115,22 L120,35 L125,30 L130,18 L135,45 L140,25 L145,38 L150,20 L155,42 L160,28 L165,35 L170,22 L175,40 L180,30 L185,18 L190,45 L195,25 L200,38 L205,20 L210,42 L215,28 L220,35 L225,22 L230,40 L235,30 L240,18 L245,45 L250,25 L255,38 L260,20 L265,42 L270,28 L275,35 L280,22 L285,40 L290,30 L295,18 L300,45 L305,25 L310,38 L315,20 L320,42 L325,28 L330,35 L335,22 L340,40 L345,30 L350,18 L355,45 L360,25 L365,38 L370,20 L375,42 L380,28 L385,35 L390,22 L395,40 L400,30" stroke="#ef4444" stroke-width="1.5" fill="none"/></svg>
+</div>
+<p style="font-size:0.8rem;color:#94a3b8;margin:4px 0 8px;">Chaotic, irregular waveform — no discernible QRS, P waves, or T waves</p>
+<div class="ecg-strip">
+<div class="ecg-label">pVT — PULSELESS VT</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 L40,30 L45,10 L50,50 L55,30 L80,30 L85,10 L90,50 L95,30 L120,30 L125,10 L130,50 L135,30 L160,30 L165,10 L170,50 L175,30 L200,30 L205,10 L210,50 L215,30 L240,30 L245,10 L250,50 L255,30 L280,30 L285,10 L290,50 L295,30 L320,30 L325,10 L330,50 L335,30 L360,30 L365,10 L370,50 L375,30 L400,30" stroke="#ef4444" stroke-width="1.5" fill="none"/></svg>
+</div>
+<p style="font-size:0.8rem;color:#94a3b8;margin:4px 0 8px;">Wide QRS, regular, fast — no pulse</p>
+</div>
+<div class="card reveal" style="transition-delay:0.25s;">
+<div class="card-title" style="color:#f59e0b;">Non-Shockable Rhythms</div>
+<div class="ecg-strip">
+<div class="ecg-label">ASYSTOLE — FLATLINE</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 L400,30" stroke="#f59e0b" stroke-width="1.5" fill="none"/></svg>
+</div>
+<p style="font-size:0.8rem;color:#94a3b8;margin:4px 0 8px;">Flatline — confirm in 2 leads, check leads/p增益</p>
+<div class="ecg-strip">
+<div class="ecg-label">PEA — PULSELESS ELECTRICAL ACTIVITY</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 L50,30 L55,25 L60,35 L65,30 L120,30 L125,15 L135,45 L140,30 L200,30 L205,25 L210,35 L215,30 L280,30 L285,15 L295,45 L300,30 L360,30 L365,25 L370,35 L375,30 L400,30" stroke="#f59e0b" stroke-width="1.5" fill="none"/></svg>
+</div>
+<p style="font-size:0.8rem;color:#94a3b8;margin:4px 0 8px;">Organized electrical activity แต่ไม่มี pulse — หา reversible cause</p>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Critical Decision</div>
+<p style="font-size:0.82rem;">Shockable → <strong>Defibrillate</strong> · Non-shockable → <strong>Epinephrine + Treat Causes</strong></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 16: SHOCKABLE RHYTHM ========== -->
+<div class="slide" data-slide="15">
+<div class="slide-content">
+<div class="section-ind">Section 3 · Adult ALS</div>
+<div class="slide-num">16 / 54</div>
+<div class="section-badge reveal">Shockable Rhythm</div>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Shockable Rhythm (VF / pVT)<span>วิธีจัดการ Ventricular Fibrillation</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">VF/pVT Algorithm Steps</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.78rem;">
-<div class="flow-box">Shock (1st) → Resume CPR 2 min</div><div class="flow-arrow">↓</div>
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.76rem;">
+<div class="flow-box red">Shock (1st) → Resume CPR 2 min</div><div class="flow-arrow">↓</div>
 <div class="flow-box">IV/IO access → Epinephrine 1mg</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Rhythm check → Shock (2nd) → CPR 2 min</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Epinephrine q3-5 min → Consider advanced airway</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Rhythm check → Shock (3rd) → CPR 2 min</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Amiodarone 300mg OR Lidocaine 1-1.5 mg/kg</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Rhythm check → Shock (4th) → Treat reversible causes</div><div class="flow-arrow">↓</div>
-<div class="flow-box green">If no ROSC → Consider appropriateness / ECPR / TOR</div>
+<div class="flow-box green">If no ROSC → Consider ECPR / TOR</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Drug Doses</div>
 <div class="drug-box"><div class="drug-name">Epinephrine</div><div class="drug-dose">1 mg IV/IO · q3-5 min · Class 1 (B-R)</div></div>
 <div class="drug-box"><div class="drug-name">Amiodarone — 1st dose</div><div class="drug-dose">300 mg IV/IO bolus</div></div>
 <div class="drug-box"><div class="drug-name">Amiodarone — 2nd dose</div><div class="drug-dose">150 mg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 1st dose</div><div class="drug-dose">1-1.5 mg/kg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 2nd dose</div><div class="drug-dose">0.5-0.75 mg/kg IV/IO</div></div>
-<div class="takeaway" style="margin-top:12px;">
-<div class="takeaway-label">Take-Home #4 (ALS)</div>
-<p style="font-size:0.85rem;">Epi <strong>หลัง initial defib ไม่สำเร็จ</strong> — not before first shock</p>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Key Timing</div>
+<p style="font-size:0.82rem;">Epi <strong>หลัง initial defib ไม่สำเร็จ</strong> — not before first shock</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 14: NON-SHOCKABLE ========== -->
-<div class="slide" data-slide="13">
+<!-- ========== SLIDE 17: NON-SHOCKABLE ========== -->
+<div class="slide" data-slide="16">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">14 / 44</div>
+<div class="slide-num">17 / 54</div>
 <div class="section-badge reveal">Non-Shockable Rhythm</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Non-Shockable Rhythm (Asystole / PEA)<span>การจัดการ Asystole และ Pulseless Electrical Activity</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Non-Shockable Rhythm (Asystole / PEA)<span>การจัดการ Asystole และ Pulseless Electrical Activity</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Asystole/PEA Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.78rem;">
 <div class="flow-box">Start CPR · Give O₂ · Attach monitor</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Rhythm check — Non-shockable (Asystole/PEA)</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Resume CPR 2 min → IV/IO access → <strong>Epinephrine ASAP</strong></div><div class="flow-arrow">↓</div>
@@ -647,16 +830,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="flow-box green">ROSC → Post-arrest care | If no ROSC → Consider TOR</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Differences from VF/pVT</div>
 <ul class="bullets">
-<li><strong>Epinephrine ASAP</strong> — ให้เร็วที่สุดเท่าที่ทำได้ (Class 2a, B-NR)</li>
+<li><strong>Epinephrine ASAP</strong> — ให้เร็วที่สุดเท่าที่ทำได้ <span class="cor-badge cor-2a">2a</span></li>
 <li><strong>ไม่ใช่ shock</strong> — ไม่มี defibrillation ใน pathway นี้</li>
 <li><strong>ไม่ใช้ antiarrhythmic</strong> — ไม่มีบทบาทใน asystole/PEA</li>
 <li><strong>Reversible causes</strong> สำคัญที่สุด — PEA มักมี secondary cause</li>
 <li>ถ้า rhythm เปลี่ยนเป็น <strong>VF/pVT</strong> → เปลี่ยนเป็น shockable pathway</li>
 </ul>
-<div class="drug-box" style="margin-top:12px;">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">Epinephrine timing (non-shockable)</div>
 <div class="drug-dose">As soon as feasible — Class 2a (B-NR)</div>
 </div>
@@ -665,15 +848,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 15: DEFIBRILLATION ========== -->
-<div class="slide" data-slide="14">
+<!-- ========== SLIDE 18: DEFIBRILLATION ========== -->
+<div class="slide" data-slide="17">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">15 / 44</div>
+<div class="slide-num">18 / 54</div>
 <div class="section-badge reveal">Defibrillation</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การกระตุ้นหัวใจด้วยไฟฟ้า<span>Defibrillation Energy & Strategy</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การกระตุ้นหัวใจด้วยไฟฟ้า<span>Defibrillation Energy & Strategy</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Energy Settings</div>
 <table class="data-table">
 <thead><tr><th>Waveform</th><th>Initial Energy</th><th>Subsequent</th></tr></thead>
@@ -683,17 +867,17 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Unknown biphasic</strong></td><td class="mono">Max available</td><td>—</td></tr>
 </tbody>
 </table>
-<div style="margin-top:16px;">
+<div style="margin-top:12px;">
 <div class="card-title" style="font-size:0.95rem;">Key Recommendations</div>
-<ul class="bullets" style="font-size:0.85rem;">
-<li><strong>Biphasic preferred</strong> over monophasic <span class="cor-badge cor-2a">Class 2a</span></li>
-<li><strong>Single shock strategy</strong> — ไม่ stack shocks <span class="cor-badge cor-2a">Class 2a</span></li>
+<ul class="bullets" style="font-size:0.84rem;">
+<li><strong>Biphasic preferred</strong> over monophasic <span class="cor-badge cor-2a">2a</span></li>
+<li><strong>Single shock strategy</strong> — ไม่ stack shocks <span class="cor-badge cor-2a">2a</span></li>
 <li>หลัง shock → <strong>resume CPR ทันที</strong> 2 นาที ก่อน rhythm check</li>
-<li>Escalating energy อาจพิจารณาถ้า shock แรกไม่สำเร็จ <span class="cor-badge cor-2b">Class 2b</span></li>
+<li>Escalating energy พิจารณาถ้า shock แรกไม่สำเร็จ <span class="cor-badge cor-2b">2b</span></li>
 </ul>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Why Single Shock?</div>
 <ul class="bullets">
 <li>Biphasic shock <strong>first-shock success >75%</strong></li>
@@ -701,59 +885,61 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>VF ที่เห็นหลัง shock มักเป็น <strong>recurrent VF</strong> ไม่ใช่ incessant VF (~80%)</li>
 <li>เปลี่ยนคำว่า "shock-refractory" → <strong>"persisting VF/pVT"</strong> หลัง ≥3 shocks</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home #2 (ALS)</div>
-<p style="font-size:0.9rem;">Higher first-shock <strong>≥200J</strong> สำหรับ AF/flutter cardioversion</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">New in 2025</div>
+<p style="font-size:0.85rem;">Higher first-shock <strong>≥200J</strong> สำหรับ AF/flutter cardioversion</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 16: VECTOR CHANGE & DSD ========== -->
-<div class="slide" data-slide="15">
+<!-- ========== SLIDE 19: VECTOR CHANGE & DSD ========== -->
+<div class="slide" data-slide="18">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">16 / 44</div>
+<div class="slide-num">19 / 54</div>
 <div class="section-badge reveal">VC & DSD</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Vector Change & Double Sequential Defibrillation<span>สำหรับ Persisting VF หลัง ≥3 Shocks</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Vector Change & Double Sequential Defibrillation<span>สำหรับ Persisting VF หลัง ≥3 Shocks</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">What is VC & DSD?</div>
 <ul class="bullets">
 <li><strong>Vector Change (VC)</strong> — ย้ายตำแหน่ง defib pads เพื่อเปลี่ยนทิศทาง current</li>
-<li><strong>Double Sequential Defibrillation (DSD)</strong> — 2 defibrillators → 2 ชุด pads → shock ติดต่อกันใกล้เคียง</li>
+<li><strong>Double Sequential Defibrillation (DSD)</strong> — 2 defibrillators → 2 ชุด pads → shock ติดต่อกัน</li>
 <li>ใช้สำหรับ <strong>persisting VF/pVT หลัง ≥3 consecutive shocks</strong></li>
 <li><span class="cor-badge cor-2b">Class 2b</span> — <strong>usefulness not established</strong> ทั้ง VC และ DSD</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">DOSE-VF Trial Evidence</div>
 <ul class="bullets">
-<li>VC และ DSD <strong>improved survival to discharge</strong> ใน intention-to-treat analysis</li>
+<li>VC และ DSD <strong>improved survival to discharge</strong> ใน intention-to-treat</li>
 <li>แต่ <strong>ไม่ significant</strong> เมื่อวิเคราะห์ตาม treatment ที่ได้จริง</li>
 <li>DSD benefit พบเฉพาะ <strong>incessant VF (17%)</strong> — ไม่ใช่ recurrent VF (83%)</li>
-<li><strong>Timing ระหว่าง double shocks</strong> ต้องแม่นมาก (milliseconds) — ยากที่ทำได้ด้วยมือ</li>
+<li><strong>Timing ระหว่าง double shocks</strong> ต้องแม่นมาก (milliseconds)</li>
 <li>ต้องการ <strong>เทคโนโลยีใหม่</strong> เพื่อ optimize shock delivery</li>
 </ul>
-<div class="takeaway" style="margin-top:16px;">
-<div class="takeaway-label">Take-Home #4</div>
-<p style="font-size:0.9rem;">VC/DSD ยัง <strong>ไม่ established</strong> — ต้องวิจัยต่อ</p>
+<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway-label">Bottom Line</div>
+<p style="font-size:0.85rem;">VC/DSD ยัง <strong>ไม่ established</strong> — ต้องวิจัยต่อ</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 17: VASCULAR ACCESS ========== -->
-<div class="slide" data-slide="16">
+<!-- ========== SLIDE 20: VASCULAR ACCESS ========== -->
+<div class="slide" data-slide="19">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">17 / 44</div>
+<div class="slide-num">20 / 54</div>
 <div class="section-badge reveal">Vascular Access</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การเข้าเส้นเลือด<span>Vascular Access During Cardiac Arrest</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การเข้าเส้นเลือด<span>Vascular Access During Cardiac Arrest</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">IV Access <span class="cor-badge cor-1">Class 1</span></div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>First-line</strong> — พยายามก่อน</li>
@@ -762,7 +948,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>LOE A — หลักฐานคุณภาพสูง</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">IO Access <span class="cor-badge cor-2a">Class 2a</span></div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Reasonable alternative</strong> ถ้า IV ไม่ได้</li>
@@ -771,7 +957,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>Tibial หรือ humeral — ยังไม่รู้ optimal site</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">Central Venous <span class="cor-badge cor-2b">Class 2b</span></div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>พิจารณาถ้า <strong>IV และ IO ไม่ได้</strong></li>
@@ -781,22 +967,23 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
-<div class="takeaway-label">Take-Home #9</div>
-<p style="font-size:0.95rem;">IV first <span class="cor-badge cor-1">Class 1</span> → IO if IV fails <span class="cor-badge cor-2a">Class 2a</span> → Central venous if IV+IO fail <span class="cor-badge cor-2b">Class 2b</span> · Endotracheal route <strong>REMOVED</strong> from guidelines</p>
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
+<div class="takeaway-label">Hierarchy</div>
+<p style="font-size:0.9rem;">IV first <span class="cor-badge cor-1">Class 1</span> → IO if IV fails <span class="cor-badge cor-2a">Class 2a</span> → Central venous if IV+IO fail <span class="cor-badge cor-2b">Class 2b</span> · Endotracheal route <strong>REMOVED</strong> from guidelines</p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 18: VASOPRESSOR ========== -->
-<div class="slide" data-slide="17">
+<!-- ========== SLIDE 21: VASOPRESSOR ========== -->
+<div class="slide" data-slide="20">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">18 / 44</div>
+<div class="slide-num">21 / 54</div>
 <div class="section-badge reveal">Vasopressor</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ยากระตุ้นหัวใจ<span>Vasopressor Medications</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ยากระตุ้นหัวใจ<span>Vasopressor Medications</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Epinephrine Recommendations</div>
 <table class="data-table">
 <thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
@@ -804,13 +991,13 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><span class="cor-badge cor-1">1</span></td><td>B-R</td><td>Epinephrine is recommended for adult cardiac arrest</td></tr>
 <tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>1 mg q3-5 min</td></tr>
 <tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-NR</td><td>Non-shockable: epinephrine as soon as feasible</td></tr>
-<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-NR</td><td>Shockable: epinephrine after initial defib attempts fail</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-NR</td><td>Shockable: epinephrine after initial defib fails</td></tr>
 <tr><td><span class="cor-badge cor-3">3</span></td><td>B-R</td><td>Vasopressin alone or + epi = no advantage over epi alone</td></tr>
 <tr><td><span class="cor-badge cor-3">3</span></td><td>B-R</td><td>High-dose epinephrine not recommended for routine use</td></tr>
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Evidence</div>
 <ul class="bullets">
 <li><strong>PARAMEDIC2</strong> — RCT: epi vs placebo → ROSC ↑, survival to admission ↑</li>
@@ -820,7 +1007,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>Shockable</strong>: ให้ epi <strong>หลัง initial defib</strong> พยายามแล้วไม่สำเร็จ</li>
 <li><strong>Non-shockable</strong>: ให้ epi <strong>ASAP</strong></li>
 </ul>
-<div class="drug-box" style="margin-top:12px;">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">Epinephrine</div>
 <div class="drug-dose">1 mg IV/IO · every 3-5 min · max: no defined max</div>
 </div>
@@ -829,23 +1016,24 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 19: ANTIARRHYTHMICS ========== -->
-<div class="slide" data-slide="18">
+<!-- ========== SLIDE 22: ANTIARRHYTHMICS ========== -->
+<div class="slide" data-slide="21">
 <div class="slide-content">
 <div class="section-ind">Section 3 · Adult ALS</div>
-<div class="slide-num">19 / 44</div>
+<div class="slide-num">22 / 54</div>
 <div class="section-badge reveal">Antiarrhythmics</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ยาต้านอาการหัวใจเต้นผิดจังหวะ<span>Antiarrhythmic Medications</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ยาต้านอาการหัวใจเต้นผิดจังหวะ<span>Antiarrhythmic Medications</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Amiodarone & Lidocaine</div>
 <div class="drug-box"><div class="drug-name">Amiodarone — 1st dose</div><div class="drug-dose">300 mg IV/IO bolus</div></div>
 <div class="drug-box"><div class="drug-name">Amiodarone — 2nd dose</div><div class="drug-dose">150 mg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 1st dose</div><div class="drug-dose">1-1.5 mg/kg IV/IO</div></div>
 <div class="drug-box"><div class="drug-name">Lidocaine — 2nd dose</div><div class="drug-dose">0.5-0.75 mg/kg IV/IO</div></div>
-<p style="font-size:0.85rem;color:#cbd5e1;margin-top:12px;"><span class="cor-badge cor-2b">Class 2b</span> — May be considered for VF/pVT unresponsive to defibrillation</p>
+<p style="font-size:0.84rem;color:#cbd5e1;margin-top:10px;"><span class="cor-badge cor-2b">Class 2b</span> — May be considered for VF/pVT unresponsive to defibrillation</p>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">NOT Recommended (Routine)</div>
 <table class="data-table">
 <thead><tr><th>Drug</th><th>COR</th><th>Note</th></tr></thead>
@@ -856,9 +1044,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td>Steroids</td><td><span class="cor-badge cor-2b">2b</span></td><td>Uncertain benefit</td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;">Evidence (ROC trial)</div>
-<ul class="bullets" style="font-size:0.85rem;">
+<ul class="bullets" style="font-size:0.82rem;">
 <li>Amiodarone & Lidocaine → <strong>survival to admission ↑</strong> vs placebo</li>
 <li>ไม่ improve <strong>survival to discharge</strong></li>
 <li>Subgroup: <strong>bystander-witnessed arrest</strong> → improved survival</li>
@@ -870,15 +1058,28 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 20: ADVANCED AIRWAY ========== -->
-<div class="slide" data-slide="19">
+<!-- ========== SLIDE 23: SECTION 4 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="22">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 4</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">23 / 54</div>
+<div class="divider-num reveal">04</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Airway & Monitoring</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">Advanced Airway, ETCO₂ Capnography, POCUS & CPR Adjuncts</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 24: ADVANCED AIRWAY ========== -->
+<div class="slide" data-slide="23">
 <div class="slide-content">
 <div class="section-ind">Section 4 · Airway & Monitoring</div>
-<div class="slide-num">20 / 44</div>
+<div class="slide-num">24 / 54</div>
 <div class="section-badge reveal">Advanced Airway</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจัดการทางเดินหายใจ<span>Advanced Airway Placement</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การจัดการทางเดินหายใจ<span>Advanced Airway Placement</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Decision Framework</div>
 <table class="data-table">
 <thead><tr><th>Setting</th><th>ETI Success</th><th>Recommendation</th></tr></thead>
@@ -890,48 +1091,58 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Principles</div>
 <ul class="bullets">
-<li><strong>Defer advanced airway</strong> ถ้าจะหยุด chest compressions — จนกว่า initial CPR + defib ไม่สำเร็จ <span class="cor-badge cor-1">Class 1</span></li>
+<li><strong>Defer advanced airway</strong> ถ้าจะหยุด chest compressions <span class="cor-badge cor-1">Class 1</span></li>
 <li><strong>Frequent retraining</strong> สำหรับผู้ทำ intubation <span class="cor-badge cor-1">Class 1</span></li>
 <li><strong>Waveform capnography</strong> — ยืนยันตำแหน่ง ET tube <span class="cor-badge cor-1">Class 1</span></li>
 <li>หากมี advanced airway → <strong>1 breath / 6s</strong> + continuous compressions</li>
 <li>EMS ที่ intubate → <strong>quality improvement program</strong> <span class="cor-badge cor-1">Class 1</span></li>
-<li>BMV vs ETI — <strong>no survival difference</strong> ใน RCT (physician-based EMS)</li>
+<li>BMV vs ETI — <strong>no survival difference</strong> ใน RCT</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 21: ETCO2 ========== -->
-<div class="slide" data-slide="20">
+<!-- ========== SLIDE 25: ETCO2 ========== -->
+<div class="slide" data-slide="24">
 <div class="slide-content">
 <div class="section-ind">Section 4 · Airway & Monitoring</div>
-<div class="slide-num">21 / 44</div>
+<div class="slide-num">25 / 54</div>
 <div class="section-badge reveal">ETCO₂ Monitoring</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การตรวจ ETCO₂<span>Capnography During Cardiac Arrest</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การตรวจ ETCO₂<span>Capnography During Cardiac Arrest</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Confirm Tube</div>
+<div class="ecg-strip" style="margin-bottom:10px;">
+<div class="ecg-label">ETCO₂ WAVEFORM</div>
+<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0,45 L20,45 L25,20 L35,25 L45,45 L80,45 L85,20 L95,25 L105,45 L140,45 L145,20 L155,25 L165,45 L200,45" stroke="#22c55e" stroke-width="1.5" fill="none"/></svg>
+</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>100% specific</strong> สำหรับ ET tube placement</li>
 <li>Sensitivity ลดลงใน prolonged arrest</li>
 <li>Confirm + monitor ตลอด</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">CPR Quality</div>
+<div class="stat-card" style="margin-bottom:10px;"><div class="stat-num">≥20</div><div class="stat-label">mmHg target</div></div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>ETCO₂ reflects <strong>cardiac output</strong></li>
-<li><strong><10 mmHg</strong> → poor outcomes</li>
+<li><strong>&lt;10 mmHg</strong> → poor outcomes</li>
 <li><strong>≥20 mmHg</strong> → ↑ ROSC rate</li>
 <li>Target compressions ให้ ETCO₂ ≥10</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">Detect ROSC</div>
+<div class="ecg-strip" style="margin-bottom:10px;">
+<div class="ecg-label">ABRUPT RISE → ROSC</div>
+<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M0,50 L60,50 L65,48 L70,45 L75,30 L80,15 L85,10 L90,8 L100,8 L110,8 L120,8 L140,8 L160,8 L180,8 L200,8" stroke="#22c55e" stroke-width="2" fill="none"/></svg>
+</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Abrupt rise >10 mmHg</strong> → น่าจะ ROSC</li>
 <li>ใช้ร่วมกับ pulse check</li>
@@ -939,22 +1150,23 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
 <div class="takeaway-label">TOR & ETCO₂</div>
-<p style="font-size:0.95rem;line-height:1.6;">ใน intubated patients: ETCO₂ <strong><10 mmHg after 20 min</strong> อาจพิจารณาเป็น <strong>ส่วนหนึ่ง</strong>ของ multimodal TOR decision <span class="cor-badge cor-2b">Class 2b</span> · <strong>ไม่ใช้ ETCO₂ อย่างเดียว</strong> เพื่อ stop resuscitation <span class="cor-badge cor-3">Class 3: Harm</span></p>
+<p style="font-size:0.9rem;line-height:1.6;">Intubated: ETCO₂ <strong>&lt;10 mmHg after 20 min</strong> → ส่วนหนึ่งของ multimodal TOR <span class="cor-badge cor-2b">2b</span> · <strong>ไม่ใช้ ETCO₂ อย่างเดียว</strong> <span class="cor-badge cor-3">3: Harm</span></p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 22: POCUS & ADJUNCTS ========== -->
-<div class="slide" data-slide="21">
+<!-- ========== SLIDE 26: POCUS & ADJUNCTS ========== -->
+<div class="slide" data-slide="25">
 <div class="slide-content">
 <div class="section-ind">Section 4 · Airway & Monitoring</div>
-<div class="slide-num">22 / 44</div>
+<div class="slide-num">26 / 54</div>
 <div class="section-badge reveal">POCUS & Adjuncts</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">POCUS & CPR Adjuncts<span>Point-of-Care Ultrasound & Other Adjuncts</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">POCUS & CPR Adjuncts<span>Point-of-Care Ultrasound & Other Adjuncts</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">POCUS During Cardiac Arrest</div>
 <ul class="bullets">
 <li><span class="cor-badge cor-2b">Class 2b</span> — พิจารณาใช้เพื่อ <strong>diagnose reversible causes</strong> (PE, tamponade, hypovolemia)</li>
@@ -964,7 +1176,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>TEE (transesophageal) — ภาพดีกว่า ไม่หยุด CPR แต่ยังเป็น knowledge gap</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Other Adjuncts</div>
 <table class="data-table">
 <thead><tr><th>Adjunct</th><th>COR</th><th>Note</th></tr></thead>
@@ -976,78 +1188,98 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Head-up CPR</strong></td><td><span class="cor-badge cor-3">3</span></td><td><strong>Not recommended</strong> outside trials</td></tr>
 </tbody>
 </table>
-<div class="takeaway" style="margin-top:12px;">
-<div class="takeaway-label">Take-Home #5</div>
-<p style="font-size:0.9rem;"><strong>Head-up CPR</strong> discouraged outside rigorous clinical trials</p>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Key</div>
+<p style="font-size:0.85rem;"><strong>Head-up CPR</strong> discouraged outside rigorous clinical trials</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 23: REVERSIBLE CAUSES ========== -->
-<div class="slide" data-slide="22">
+<!-- ========== SLIDE 27: SECTION 5 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="26">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 5</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">27 / 54</div>
+<div class="divider-num reveal">05</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Reversible Causes</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">H's & T's — สาเหตุที่สามารถรักษาได้ ซึ่งเป็นกุญแจสำคัญของ PEA/Asystole</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 28: REVERSIBLE CAUSES ========== -->
+<div class="slide" data-slide="27">
 <div class="slide-content">
 <div class="section-ind">Section 5 · Reversible Causes</div>
-<div class="slide-num">23 / 44</div>
+<div class="slide-num">28 / 54</div>
 <div class="section-badge reveal">Reversible Causes</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Reversible Causes — H's & T's<span>สาเหตุที่สามารถรักษาได้</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Reversible Causes — H's & T's<span>สาเหตุที่สามารถรักษาได้</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">The H's</div>
-<table class="data-table">
-<thead><tr><th>Cause</th><th>Key Intervention</th></tr></thead>
-<tbody>
-<tr><td><strong>Hypovolemia</strong></td><td>IV fluids, blood transfusion</td></tr>
-<tr><td><strong>Hypoxia</strong></td><td>100% O₂, adequate ventilation</td></tr>
-<tr><td><strong>Hydrogen ion (acidosis)</strong></td><td>Hyperventilate, consider bicarb (special cases)</td></tr>
-<tr><td><strong>Hypokalemia</strong></td><td>Potassium replacement</td></tr>
-<tr><td><strong>Hyperkalemia</strong></td><td>Calcium, insulin+glucose, bicarb (see Part 10)</td></tr>
-<tr><td><strong>Hypothermia</strong></td><td>Active rewarming (see Part 10)</td></tr>
-</tbody>
-</table>
+<div class="ht-grid" style="grid-template-columns:1fr 1fr;">
+<div class="ht-card"><div class="ht-name">Hypovolemia</div><div class="ht-desc">IV fluids, blood</div></div>
+<div class="ht-card"><div class="ht-name">Hypoxia</div><div class="ht-desc">100% O₂, ventilate</div></div>
+<div class="ht-card"><div class="ht-name">H⁺ (Acidosis)</div><div class="ht-desc">Hyperventilate, bicarb</div></div>
+<div class="ht-card"><div class="ht-name">Hypokalemia</div><div class="ht-desc">K⁺ replacement</div></div>
+<div class="ht-card"><div class="ht-name">Hyperkalemia</div><div class="ht-desc">Ca, insulin+glucose</div></div>
+<div class="ht-card"><div class="ht-name">Hypothermia</div><div class="ht-desc">Active rewarming</div></div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+</div>
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">The T's</div>
-<table class="data-table">
-<thead><tr><th>Cause</th><th>Key Intervention</th></tr></thead>
-<tbody>
-<tr><td><strong>Tension pneumothorax</strong></td><td>Needle decompression → chest tube</td></tr>
-<tr><td><strong>Tamponade, cardiac</strong></td><td>Pericardiocentesis</td></tr>
-<tr><td><strong>Toxins</strong></td><td>Specific antidotes (see Part 10)</td></tr>
-<tr><td><strong>Thrombosis, pulmonary</strong></td><td>Fibrinolytics, surgical embolectomy</td></tr>
-<tr><td><strong>Thrombosis, coronary</strong></td><td>PCI, fibrinolytics</td></tr>
-</tbody>
-</table>
+<div class="ht-grid" style="grid-template-columns:1fr 1fr;">
+<div class="ht-card"><div class="ht-name">Tension Pneumothorax</div><div class="ht-desc">Needle → chest tube</div></div>
+<div class="ht-card"><div class="ht-name">Tamponade</div><div class="ht-desc">Pericardiocentesis</div></div>
+<div class="ht-card"><div class="ht-name">Toxins</div><div class="ht-desc">Specific antidotes</div></div>
+<div class="ht-card"><div class="ht-name">Thrombosis (PE)</div><div class="ht-desc">Fibrinolytics</div></div>
+<div class="ht-card"><div class="ht-name">Thrombosis (ACS)</div><div class="ht-desc">PCI, fibrinolytics</div></div>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
+</div>
+<div class="takeaway reveal" style="transition-delay:0.35s;margin-top:16px;">
 <div class="takeaway-label">Critical Concept</div>
-<p style="font-size:0.95rem;line-height:1.6;">ใน <strong>PEA และ Asystole</strong> — การหาและรักษา reversible cause สำคัญที่สุด · PEA มักเป็น <strong>secondary arrest</strong> จาก underlying condition</p>
+<p style="font-size:0.9rem;line-height:1.6;">ใน <strong>PEA และ Asystole</strong> — การหาและรักษา reversible cause สำคัญที่สุด · PEA มักเป็น <strong>secondary arrest</strong> จาก underlying condition</p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 24: TACHYARRHYTHMIA OVERVIEW ========== -->
-<div class="slide" data-slide="23">
+<!-- ========== SLIDE 29: SECTION 6 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="28">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 6</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">29 / 54</div>
+<div class="divider-num reveal">06</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Arrhythmia Algorithms</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">Tachyarrhythmia, Narrow/Wide-Complex, Torsades, AF/Flutter, Bradycardia</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 30: TACHYARRHYTHMIA OVERVIEW ========== -->
+<div class="slide" data-slide="29">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">24 / 44</div>
+<div class="slide-num">30 / 54</div>
 <div class="section-badge reveal">Tachyarrhythmia</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Tachyarrhythmia Algorithm<span>ภาพรวมการจัดการ Tachyarrhythmia</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Tachyarrhythmia Algorithm<span>ภาพรวมการจัดการ Tachyarrhythmia</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Assess Stability</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">Assess appropriateness of HR for clinical condition</div><div class="flow-arrow">↓</div>
 <div class="flow-box">HR typically ≥150/min if tachyarrhythmia</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Signs of instability?</div>
 <div style="display:flex;gap:8px;">
-<div class="flow-box red" style="flex:1;font-size:0.72rem;">YES → Synchronized cardioversion (sedate if feasible)</div>
-<div class="flow-box" style="flex:1;font-size:0.72rem;">NO → Vagal/Adenosine → Antiarrhythmic → Expert consult</div>
+<div class="flow-box red" style="flex:1;font-size:0.72rem;">YES → Synchronized cardioversion</div>
+<div class="flow-box" style="flex:1;font-size:0.72rem;">NO → Vagal/Adenosine → Antiarrhythmic</div>
 </div>
 </div>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.9rem;">Signs of Instability</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>Hypotension</li>
@@ -1058,7 +1290,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Synchronized Cardioversion Energy</div>
 <table class="data-table">
 <thead><tr><th>Rhythm</th><th>Initial Energy (biphasic)</th></tr></thead>
@@ -1067,10 +1299,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Atrial Flutter</strong></td><td class="mono">200 J</td></tr>
 <tr><td><strong>Narrow-complex tach</strong></td><td class="mono">100 J</td></tr>
 <tr><td><strong>Monomorphic VT</strong></td><td class="mono">100 J</td></tr>
-<tr><td><strong>Polymorphic VT</strong></td><td class="mono">Unsynchronized — max energy (defib)</td></tr>
+<tr><td><strong>Polymorphic VT</strong></td><td class="mono">Unsynchronized — max energy</td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="drug-box">
 <div class="drug-name">Adenosine</div>
 <div class="drug-dose">6 mg rapid IV push → 12 mg if needed</div>
@@ -1081,17 +1313,18 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 25: NARROW-COMPLEX TACH ========== -->
-<div class="slide" data-slide="24">
+<!-- ========== SLIDE 31: NARROW-COMPLEX TACH ========== -->
+<div class="slide" data-slide="30">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">25 / 44</div>
+<div class="slide-num">31 / 54</div>
 <div class="section-badge reveal">Narrow-Complex Tach</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Narrow-Complex Tachycardia<span>Regular NCT — SVT</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Narrow-Complex Tachycardia<span>Regular NCT — SVT</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Treatment Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">Stable? → 12-lead ECG, IV access, O₂</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Vagal maneuvers (Valsalva, carotid massage)</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Adenosine 6 mg rapid IV push → 12 mg</div><div class="flow-arrow">↓</div>
@@ -1099,7 +1332,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="flow-box red">If unstable → Synchronized cardioversion 100 J</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Drug Details</div>
 <div class="drug-box"><div class="drug-name">Adenosine</div><div class="drug-dose">6 mg → 12 mg rapid IV push + NS flush</div></div>
 <div class="drug-box"><div class="drug-name">Diltiazem</div><div class="drug-dose">0.25 mg/kg IV bolus over 2 min → 5-10 mg/h</div></div>
@@ -1116,15 +1349,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 26: WIDE-COMPLEX TACH ========== -->
-<div class="slide" data-slide="25">
+<!-- ========== SLIDE 32: WIDE-COMPLEX TACH ========== -->
+<div class="slide" data-slide="31">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">26 / 44</div>
+<div class="slide-num">32 / 54</div>
 <div class="section-badge reveal">Wide-Complex Tach</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Wide-Complex Tachycardia<span>QRS ≥ 0.12s, HR >150/min</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Wide-Complex Tachycardia<span>QRS ≥ 0.12s, HR >150/min</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Treatment</div>
 <table class="data-table">
 <thead><tr><th>Situation</th><th>Treatment</th><th>COR</th></tr></thead>
@@ -1138,7 +1372,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Antiarrhythmic Infusions (Stable WCT)</div>
 <div class="drug-box"><div class="drug-name">Procainamide</div><div class="drug-dose">20-50 mg/min → maintenance 1-4 mg/min</div></div>
 <div class="drug-box"><div class="drug-name">Amiodarone</div><div class="drug-dose">150 mg over 10 min → repeat if VT recurs</div></div>
@@ -1146,38 +1380,43 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <ul class="bullets" style="font-size:0.82rem;margin-top:8px;">
 <li><strong>Avoid coadministration</strong> — combined effects may be arrhythmogenic</li>
 <li><strong>Defibrillator พร้อม</strong> — ยาอาจแปลงเป็น unstable rhythm</li>
-<li>Adenosine: diagnostic ใน regular monomorphic WCT — block AV node เพื่อดู underlying rhythm</li>
+<li>Adenosine: diagnostic ใน regular monomorphic WCT</li>
 </ul>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 27: POLYMORPHIC VT / TORSADES ========== -->
-<div class="slide" data-slide="26">
+<!-- ========== SLIDE 33: POLYMORPHIC VT / TORSADES ========== -->
+<div class="slide" data-slide="32">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">27 / 44</div>
+<div class="slide-num">33 / 54</div>
 <div class="section-badge reveal">Polymorphic VT</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Polymorphic VT / Torsades de Pointes<span>VT หลายรูปแบบ & รักษา</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Polymorphic VT / Torsades de Pointes<span>VT หลายรูปแบบ & รักษา</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Treatment</div>
+<div class="ecg-strip" style="margin-bottom:8px;">
+<div class="ecg-label">TORSADES DE POINTES</div>
+<svg viewBox="0 0 400 60" preserveAspectRatio="none"><path d="M0,30 L30,30 L35,15 L40,45 L45,30 L55,30 L60,10 L65,50 L70,30 L85,30 L90,15 L95,45 L100,30 L110,30 L115,10 L120,50 L125,30 L140,30 L145,15 L150,45 L155,30 L165,30 L170,10 L175,50 L180,30 L195,30 L200,15 L205,45 L210,30 L220,30 L225,10 L230,50 L235,30 L250,30 L255,15 L260,45 L265,30 L275,30 L280,10 L285,50 L290,30 L305,30 L310,15 L315,45 L320,30 L330,30 L335,10 L340,50 L345,30 L360,30 L365,15 L370,45 L375,30 L385,30 L390,10 L395,50 L400,30" stroke="#ef4444" stroke-width="1.5" fill="none"/></svg>
+</div>
 <table class="data-table">
 <thead><tr><th>Scenario</th><th>Treatment</th><th>COR</th></tr></thead>
 <tbody>
-<tr><td><strong>All polymorphic VT</strong></td><td>Immediate <strong>unsynchronized</strong> shock (defibrillation)</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>All polymorphic VT</strong></td><td>Immediate <strong>unsynchronized</strong> shock</td><td><span class="cor-badge cor-1">1</span></td></tr>
 <tr><td><strong>Torsades (long QT)</strong></td><td>Magnesium sulfate</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
 <tr><td><strong>Normal QT — pVT</strong></td><td>Lidocaine/Amiodarone + treat ischemia</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
 <tr><td><strong>Normal QT — pVT</strong></td><td>Magnesium <strong>NOT recommended</strong></td><td><span class="cor-badge cor-3">3</span></td></tr>
 </tbody>
 </table>
-<div class="drug-box" style="margin-top:12px;">
+<div class="drug-box" style="margin-top:10px;">
 <div class="drug-name">Magnesium Sulfate (for Torsades)</div>
 <div class="drug-dose">1-2 g IV over 5-60 min</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Concepts</div>
 <ul class="bullets">
 <li><strong>Polymorphic VT = always unstable</strong> — ต้อง shock ทันที</li>
@@ -1187,22 +1426,26 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>Non-torsades pVT</strong> = มักจาก myocardial ischemia → treat ischemia</li>
 <li>Causes of long QT: drugs (antiarrhythmics, antibiotics, psych), electrolytes, congenital</li>
 <li>Torsades + bradycardia → consider <strong>overdrive pacing / isoproterenol</strong></li>
-<li>Take-Home #8: Polymorphic VT → <strong>immediate defibrillation</strong>, delays worsen outcomes</li>
 </ul>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Critical</div>
+<p style="font-size:0.85rem;">Polymorphic VT → <strong>immediate defibrillation</strong>, delays worsen outcomes</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 28: AF/FLUTTER WITH RVR ========== -->
-<div class="slide" data-slide="27">
+<!-- ========== SLIDE 34: AF/FLUTTER WITH RVR ========== -->
+<div class="slide" data-slide="33">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">28 / 44</div>
+<div class="slide-num">34 / 54</div>
 <div class="section-badge reveal">AF/Flutter with RVR</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Atrial Fibrillation/Flutter with RVR<span>การจัดการ AF/AFlutter อัตราเร็ว</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Atrial Fibrillation/Flutter with RVR<span>การจัดการ AF/AFlutter อัตราเร็ว</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Unstable → Cardioversion</div>
 <table class="data-table">
 <thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
@@ -1215,7 +1458,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Stable → Rate/Rhythm Control</div>
 <table class="data-table">
 <thead><tr><th>Drug</th><th>Dose</th></tr></thead>
@@ -1225,7 +1468,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Amiodarone</strong> (critically ill)</td><td class="mono">300 mg IV over 1 h → 10-50 mg/h</td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;color:var(--red);">⚠ CONTRAINDICATED</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Preexcitation (WPW)</strong>: ห้าม digoxin, CCB, beta-blockers, IV amiodarone <span class="cor-badge cor-3">3: Harm</span></li>
@@ -1237,17 +1480,18 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 29: BRADYCARDIA ========== -->
-<div class="slide" data-slide="28">
+<!-- ========== SLIDE 35: BRADYCARDIA ========== -->
+<div class="slide" data-slide="34">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">29 / 44</div>
+<div class="slide-num">35 / 54</div>
 <div class="section-badge reveal">Bradycardia</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">Bradycardia Algorithm<span>การจัดการ Bradycardia มี Pulse</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">Bradycardia Algorithm<span>การจัดการ Bradycardia มี Pulse</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">HR typically <50/min (if bradyarrhythmia)</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Cardiopulmonary compromise?<br>(Hypotension, altered mental status, shock, chest pain, HF)</div><div class="flow-arrow">↓</div>
 <div style="display:flex;gap:8px;">
@@ -1259,19 +1503,18 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="flow-box">Consider transvenous pacing + Expert consult</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Drug Doses</div>
 <div class="drug-box"><div class="drug-name">Atropine</div><div class="drug-dose">1 mg IV bolus · q3-5 min · Max: 3 mg</div></div>
 <div class="drug-box"><div class="drug-name">Dopamine infusion</div><div class="drug-dose">5-20 mcg/kg/min · titrate to response</div></div>
 <div class="drug-box"><div class="drug-name">Epinephrine infusion</div><div class="drug-dose">2-10 mcg/min · titrate to response</div></div>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;">Recommendation Strength</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>Evaluate & treat reversible causes <span class="cor-badge cor-1">Class 1</span></li>
 <li>Atropine for hemodynamic compromise <span class="cor-badge cor-2a">Class 2a</span></li>
 <li>Transvenous pacing if refractory <span class="cor-badge cor-2a">Class 2a</span></li>
 <li>Epinephrine/Dopamine or transcutaneous pacing <span class="cor-badge cor-2b">Class 2b</span></li>
-<li>Immediate pacing if no IV/IO access <span class="cor-badge cor-2b">Class 2b</span></li>
 </ul>
 </div>
 </div>
@@ -1279,15 +1522,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 30: BRADYCAUSES ========== -->
-<div class="slide" data-slide="29">
+<!-- ========== SLIDE 36: BRADYCAUSES ========== -->
+<div class="slide" data-slide="35">
 <div class="slide-content">
 <div class="section-ind">Section 6 · Arrhythmia Algorithms</div>
-<div class="slide-num">30 / 44</div>
+<div class="slide-num">36 / 54</div>
 <div class="section-badge reveal">Bradycardia Causes</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">สาเหตุของ Bradycardia<span>Reversible Causes to Investigate</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">สาเหตุของ Bradycardia<span>Reversible Causes to Investigate</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Cardiac</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Myocardial ischemia/MI</strong> — โดยเฉพาะ inferior MI</li>
@@ -1295,7 +1539,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>AV block (2nd/3rd degree)</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">Drugs & Toxins</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>β-blockers</strong></li>
@@ -1305,7 +1549,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>Opioids</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">Metabolic & Other</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Hypoxia</strong> — สาเหตุสำคัญมาก</li>
@@ -1318,24 +1562,37 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:20px;">
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:16px;">
 <div class="takeaway-label">Key Point</div>
-<p style="font-size:0.95rem;line-height:1.6;">Bradycardia อาจเป็น <strong>manifestation ของ underlying disease</strong> ไม่ใช่ primary problem — ต้อง evaluate และ treat underlying cause ควบคู่กับ stabilization</p>
+<p style="font-size:0.9rem;line-height:1.6;">Bradycardia อาจเป็น <strong>manifestation ของ underlying disease</strong> ไม่ใช่ primary problem — ต้อง evaluate และ treat underlying cause ควบคู่กับ stabilization</p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 31: SPECIAL CIRCUMSTANCES OVERVIEW ========== -->
-<div class="slide" data-slide="30">
+<!-- ========== SLIDE 37: SECTION 7 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="36">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 7</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">37 / 54</div>
+<div class="divider-num reveal">07</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Special Circumstances</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">Drowning, Post-Cardiac Surgery, Hyperkalemia, Toxins — ต้อง modify standard ACLS</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 38: SPECIAL CIRCUMSTANCES OVERVIEW ========== -->
+<div class="slide" data-slide="37">
 <div class="slide-content">
 <div class="section-ind">Section 7 · Special Circumstances</div>
-<div class="slide-num">31 / 44</div>
+<div class="slide-num">38 / 54</div>
 <div class="section-badge reveal">Special Circumstances</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาพรวมสภาวะพิเศษ<span>Overview of Special Resuscitation Circumstances</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ภาพรวมสภาวะพิเศษ<span>Overview of Special Resuscitation Circumstances</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Conditions Covered in Part 10</div>
-<ul class="bullets" style="font-size:0.88rem;">
+<ul class="bullets" style="font-size:0.86rem;">
 <li><strong>Anaphylaxis</strong></li>
 <li><strong>Asthma</strong> (severe, near-fatal)</li>
 <li><strong>Cardiac arrest in cardiac intervention lab</strong></li>
@@ -1349,10 +1606,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>LVAD failure</strong></li>
 <li><strong>Pregnancy</strong></li>
 <li><strong>Pulmonary embolism</strong></li>
-<li><strong>Toxic ingestions</strong> (β-blocker, CCB, cocaine, cyanide, digoxin, opioids, organophosphates, TCA)</li>
+<li><strong>Toxic ingestions</strong></li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Focus Areas in This Course</div>
 <table class="data-table">
 <thead><tr><th>Condition</th><th>Key Modification</th></tr></thead>
@@ -1364,68 +1621,70 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>Selected toxins</strong></td><td>Specific antidotes & modifications</td></tr>
 </tbody>
 </table>
-<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway" style="margin-top:10px;">
 <div class="takeaway-label">Core Principle</div>
-<p style="font-size:0.9rem;">Special circumstances ต้อง <strong>modify standard ACLS</strong> — รู้จักและปรับ protocol ให้เหมาะสม</p>
+<p style="font-size:0.85rem;">Special circumstances ต้อง <strong>modify standard ACLS</strong> — รู้จักและปรับ protocol</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 32: DROWNING ========== -->
-<div class="slide" data-slide="31">
+<!-- ========== SLIDE 39: DROWNING ========== -->
+<div class="slide" data-slide="38">
 <div class="slide-content">
 <div class="section-ind">Section 7 · Special Circumstances</div>
-<div class="slide-num">32 / 44</div>
+<div class="slide-num">39 / 54</div>
 <div class="section-badge reveal">Drowning</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การจมน้ำ<span>Drowning Resuscitation</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การจมน้ำ<span>Drowning Resuscitation</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Key Modifications</div>
 <ul class="bullets">
 <li><strong>Breaths-first</strong> — drowning = primarily hypoxic arrest</li>
 <li>CPR ที่มี <strong>breaths + compressions</strong> ดีกว่า compression-only <span class="cor-badge cor-1">Class 1</span></li>
 <li>ให้ <strong>5 initial breaths</strong> ก่อน แล้วค่อย compressions</li>
-<li><strong>Trained rescuer</strong> → in-water breaths ได้ ถ้าปลอดภัย <span class="cor-badge cor-2b">Class 2b</span></li>
+<li><strong>Trained rescuer</strong> → in-water breaths ได้ ถ้าปลอดภัย <span class="cor-badge cor-2b">2b</span></li>
 <li>ให้ <strong>supplemental oxygen</strong> ASAP <span class="cor-badge cor-1">Class 1</span></li>
 <li><strong>AED</strong> ใช้หลังนำออกจากน้ำ → เช็ดหน้าอกให้แห้งก่อน</li>
-<li>Compression-only CPR ได้ ถ้า rescuer unwilling/untrained <span class="cor-badge cor-2a">Class 2a</span></li>
+<li>Compression-only CPR ได้ ถ้า rescuer unwilling/untrained <span class="cor-badge cor-2a">2a</span></li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Drowning Chain of Survival</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.78rem;">
 <div class="flow-box">1. Prevent — ป้องกัน drowning</div><div class="flow-arrow">↓</div>
 <div class="flow-box">2. Recognize — จำแนก distress</div><div class="flow-arrow">↓</div>
 <div class="flow-box">3. Provide flotation — ช่วยให้ลอยน้ำ</div><div class="flow-arrow">↓</div>
 <div class="flow-box green">4. Remove from water — นำออกจากน้ำ</div><div class="flow-arrow">↓</div>
 <div class="flow-box">5. Provide care — CPR + O₂ + AED</div>
 </div>
-<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway" style="margin-top:10px;">
 <div class="takeaway-label">Key Difference</div>
-<p style="font-size:0.88rem;">Drowning = <strong>respiratory arrest → cardiac arrest</strong> (ไม่ใช่ primary cardiac)</p>
+<p style="font-size:0.85rem;">Drowning = <strong>respiratory arrest → cardiac arrest</strong> (ไม่ใช่ primary cardiac)</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 33: POST-CARDIAC SURGERY ========== -->
-<div class="slide" data-slide="32">
+<!-- ========== SLIDE 40: POST-CARDIAC SURGERY ========== -->
+<div class="slide" data-slide="39">
 <div class="slide-content">
 <div class="section-ind">Section 7 · Special Circumstances</div>
-<div class="slide-num">33 / 44</div>
+<div class="slide-num">40 / 54</div>
 <div class="section-badge reveal">Post-Cardiac Surgery</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">หัวใจหยุดหลังการผ่าตัด<span>Cardiac Arrest After Cardiac Surgery</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">หัวใจหยุดหลังการผ่าตัด<span>Cardiac Arrest After Cardiac Surgery</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Unique Protocol</div>
 <table class="data-table">
 <thead><tr><th>Scenario</th><th>Action</th><th>COR</th></tr></thead>
 <tbody>
 <tr><td><strong>Witnessed VF</strong></td><td><strong>3 stacked shocks</strong> before CPR (within 1 min)</td><td><span class="cor-badge cor-1">1</span></td></tr>
-<tr><td><strong>Asystole/Bradycardia + pacing wires</strong></td><td><strong>Immediate pacing</strong> via epicardial wires</td><td><span class="cor-badge cor-1">1</span></td></tr>
+<tr><td><strong>Asystole/Brady + pacing wires</strong></td><td><strong>Immediate pacing</strong> via epicardial wires</td><td><span class="cor-badge cor-1">1</span></td></tr>
 <tr><td><strong>If defib/pacing fails (1 min)</strong></td><td>Start standard CPR</td><td><span class="cor-badge cor-1">1</span></td></tr>
 <tr><td><strong>Refractory to standard ACLS</strong></td><td>Resternotomy in ICU</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
 <tr><td>Chest/abdomen open</td><td>Internal cardiac massage</td><td><span class="cor-badge cor-2a">2a</span></td></tr>
@@ -1433,7 +1692,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Differences from Standard ACLS</div>
 <ul class="bullets">
 <li><strong>3 stacked shocks</strong> — แตกต่างจาก single shock strategy ปกติ</li>
@@ -1449,15 +1708,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 34: OTHER SPECIAL CIRCUMSTANCES ========== -->
-<div class="slide" data-slide="33">
+<!-- ========== SLIDE 41: OTHER SPECIAL CIRCUMSTANCES ========== -->
+<div class="slide" data-slide="40">
 <div class="slide-content">
 <div class="section-ind">Section 7 · Special Circumstances</div>
-<div class="slide-num">34 / 44</div>
+<div class="slide-num">41 / 54</div>
 <div class="section-badge reveal">Other Special Circumstances</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ภาวะพิเศษอื่นๆ<span>Cardiac Intervention Lab, Hyperkalemia, Toxins</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ภาวะพิเศษอื่นๆ<span>Cardiac Intervention Lab, Hyperkalemia, Toxins</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Cardiac Intervention Lab</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Mechanical CPR</strong> — reasonable <span class="cor-badge cor-2a">2a</span></li>
@@ -1466,16 +1726,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>Survival ดีกว่า setting อื่น — vigilant monitoring</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">Hyperkalemia</div>
-<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">Calcium gluconate</div><div class="drug-dose">10 mL 10% IV</div></div>
-<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">NaHCO₃</div><div class="drug-dose">50 mEq IV (1 ampule)</div></div>
-<div class="drug-box" style="margin-bottom:8px;"><div class="drug-name">Insulin + Glucose</div><div class="drug-dose">10U regular insulin + 25g dextrose IV</div></div>
+<div class="drug-box" style="margin-bottom:6px;"><div class="drug-name">Calcium gluconate</div><div class="drug-dose">10 mL 10% IV</div></div>
+<div class="drug-box" style="margin-bottom:6px;"><div class="drug-name">NaHCO₃</div><div class="drug-dose">50 mEq IV (1 ampule)</div></div>
+<div class="drug-box" style="margin-bottom:6px;"><div class="drug-name">Insulin + Glucose</div><div class="drug-dose">10U regular insulin + 25g dextrose IV</div></div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>เฉพาะกิจ — ไม่ routine calcium/bicarb ใน cardiac arrest ทั่วไป</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">Selected Toxins</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>β-blocker OD</strong> → high-dose insulin, calcium, glucagon</li>
@@ -1489,28 +1749,46 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 35: POST-ROSC STABILIZATION ========== -->
-<div class="slide" data-slide="34">
+<!-- ========== SLIDE 42: SECTION 8 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="41">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 8</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">42 / 54</div>
+<div class="divider-num reveal">08</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Post-Cardiac Arrest Care</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">Initial Stabilization, Oxygenation, Hemodynamics, Temperature Control, Seizure, Neuroprognostication</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 43: POST-ROSC STABILIZATION ========== -->
+<div class="slide" data-slide="42">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">35 / 44</div>
+<div class="slide-num">43 / 54</div>
 <div class="section-badge reveal">Post-ROSC</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การดูแลหลัง ROSC<span>Initial Stabilization After ROSC</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การดูแลหลัง ROSC<span>Initial Stabilization After ROSC</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Initial Stabilization Algorithm</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.78rem;">
 <div class="flow-box">Manage airway — confirm/adjust advanced airway</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Oxygenation: FiO₂ 100% until SpO₂ measurable</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Ventilation: PaCO₂ 35-45 mmHg</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Hemodynamics: MAP ≥65 mmHg</div><div class="flow-arrow">↓</div>
 <div class="flow-box">12-lead ECG — assess for ischemia</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Consider CT head/chest/abdomen, echo</div><div class="flow-arrow">↓</div>
-<div class="flow-box green">Coronary angiography when appropriate → Temperature control → Ongoing critical care</div>
+<div class="flow-box green">Coronary angiography → Temperature control → Ongoing critical care</div>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Targets Summary</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+<div class="stat-card"><div class="stat-num">90-98%</div><div class="stat-label">SpO₂</div></div>
+<div class="stat-card"><div class="stat-num">35-45</div><div class="stat-label">PaCO₂ mmHg</div></div>
+<div class="stat-card"><div class="stat-num">≥65</div><div class="stat-label">MAP mmHg</div></div>
+</div>
 <table class="data-table">
 <thead><tr><th>Parameter</th><th>Target</th><th>COR</th></tr></thead>
 <tbody>
@@ -1527,15 +1805,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 36: OXYGENATION ========== -->
-<div class="slide" data-slide="35">
+<!-- ========== SLIDE 44: OXYGENATION ========== -->
+<div class="slide" data-slide="43">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">36 / 44</div>
+<div class="slide-num">44 / 54</div>
 <div class="section-badge reveal">Oxygenation Targets</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">เป้าหมายออกซิเจน<span>Oxygenation After ROSC</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">เป้าหมายออกซิเจน<span>Oxygenation After ROSC</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Recommendations</div>
 <table class="data-table">
 <thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
@@ -1547,46 +1826,44 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </tbody>
 </table>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Key Evidence</div>
 <ul class="bullets">
 <li><strong>EXACT trial</strong>: lower O₂ targets → more hypoxemic episodes → lower survival</li>
 <li><strong>Severe hyperoxemia (PaO₂ >250)</strong> → worse outcomes</li>
 <li>Target: <strong>SpO₂ 90-98%</strong> (PaO₂ 60-105 mmHg)</li>
 <li><strong>Conservative oxygen</strong> อาจดีกว่าใน hypoxic-ischemic encephalopathy</li>
-<li><strong>Pulse ox limitation</strong>: darker skin → "occult hypoxemia" (SpO₂ ปกติ แต่ PaO₂ ต่ำ)</li>
+<li><strong>Pulse ox limitation</strong>: darker skin → "occult hypoxemia"</li>
 </ul>
-<div class="takeaway" style="margin-top:12px;">
+<div class="takeaway" style="margin-top:10px;">
 <div class="takeaway-label">Practical Rule</div>
-<p style="font-size:0.9rem;">100% จนกว่าจะวัดได้ → titrate down ให้ SpO₂ <strong>90-98%</strong></p>
+<p style="font-size:0.85rem;">100% จนกว่าจะวัดได้ → titrate down ให้ SpO₂ <strong>90-98%</strong></p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 37: BP & CIRCULATION ========== -->
-<div class="slide" data-slide="36">
+<!-- ========== SLIDE 45: BP & CIRCULATION ========== -->
+<div class="slide" data-slide="44">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">37 / 44</div>
+<div class="slide-num">45 / 54</div>
 <div class="section-badge reveal">Blood Pressure</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ความดันโลหิตและการไหลเวียน<span>Hemodynamics & Mechanical Circulatory Support</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ความดันโลหิตและการไหลเวียน<span>Hemodynamics & Mechanical Circulatory Support</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Blood Pressure Targets</div>
+<div class="stat-card" style="margin-bottom:12px;"><div class="stat-num">≥ 65 mmHg</div><div class="stat-label">MAP Target — avoid hypotension</div></div>
 <ul class="bullets">
 <li><strong>Avoid hypotension</strong> — MAP ≥65 mmHg <span class="cor-badge cor-1">Class 1</span></li>
 <li><strong>No specific vasopressor</strong> recommended — insufficient evidence</li>
-<li>Vasopressors: norepinephrine, dopamine, epinephrine — ตาม clinical scenario</li>
+<li>Vasopressors: norepinephrine, dopamine, epinephrine</li>
 <li>Monitor: arterial line เพื่อ accurate BP</li>
 </ul>
-<div class="drug-box" style="margin-top:12px;">
-<div class="drug-name">MAP Target</div>
-<div class="drug-dose">≥ 65 mmHg — avoid hypotension at all times</div>
 </div>
-</div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Mechanical Circulatory Support (MCS)</div>
 <table class="data-table">
 <thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
@@ -1595,7 +1872,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td>MCS <strong>may be considered</strong> in highly selected refractory CS</td><td><span class="cor-badge cor-2b">2b</span></td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;">Coronary Angiography</div>
 <ul class="bullets" style="font-size:0.85rem;">
 <li>Recommended <strong>before discharge</strong> if suspected cardiac etiology <span class="cor-badge cor-1">Class 1</span></li>
@@ -1607,35 +1884,36 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 38: TEMPERATURE CONTROL ========== -->
-<div class="slide" data-slide="37">
+<!-- ========== SLIDE 46: TEMPERATURE CONTROL ========== -->
+<div class="slide" data-slide="45">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">38 / 44</div>
+<div class="slide-num">46 / 54</div>
 <div class="section-badge reveal">Temperature Control</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การควบคุมอุณหภูมิ<span>Targeted Temperature Management</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การควบคุมอุณหภูมิ<span>Targeted Temperature Management</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Recommendations</div>
 <table class="data-table">
 <thead><tr><th>COR</th><th>LOE</th><th>Recommendation</th></tr></thead>
 <tbody>
-<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>Maintain temp control <strong>≥36 hours</strong> for unresponsive patients</td></tr>
+<tr><td><span class="cor-badge cor-2a">2a</span></td><td>B-R</td><td>Maintain temp control <strong>≥36 hours</strong></td></tr>
 <tr><td><span class="cor-badge cor-1">1</span></td><td>C-LD</td><td>Avoid fever (≥37.7°C) in comatose patients</td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;">TTM2 Trial</div>
 <ul class="bullets" style="font-size:0.85rem;">
-<li><strong>TTM2</strong>: hypothermia 32-34°C vs normothermia → <strong>no difference</strong> in neurologic outcome</li>
+<li><strong>TTM2</strong>: hypothermia 32-34°C vs normothermia → <strong>no difference</strong></li>
 <li><strong>Normothermia</strong> (36-37.5°C) เป็น target ที่นิยม</li>
 <li>Avoid fever ทั้งในและหลัง 36 ชม.</li>
 </ul>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Practical Approach</div>
-<div style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+<div style="display:flex;flex-direction:column;gap:5px;font-size:0.8rem;">
 <div class="flow-box">If not following commands off sedation:</div><div class="flow-arrow">↓</div>
 <div class="flow-box amber">Initiate deliberate temperature control strategy</div><div class="flow-arrow">↓</div>
 <div class="flow-box">Target: normothermia (36-37.5°C) or TTM 32-36°C</div><div class="flow-arrow">↓</div>
@@ -1643,33 +1921,34 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <div class="flow-box">Avoid fever ≥37.7°C for at least 72h after ROSC</div><div class="flow-arrow">↓</div>
 <div class="flow-box green">Slow rewarm at 0.25-0.5°C/h if hypothermia used</div>
 </div>
-<div class="takeaway" style="margin-top:12px;">
-<div class="takeaway-label">Take-Home #2 (PCAC)</div>
-<p style="font-size:0.88rem;">Temperature control <strong>≥36 hours</strong> — ไม่มี evidence สนับสนุน hypothermia over normothermia</p>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Bottom Line</div>
+<p style="font-size:0.85rem;">Temperature control <strong>≥36 hours</strong> — ไม่มี evidence สนับสนุน hypothermia over normothermia</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 39: SEIZURE ========== -->
-<div class="slide" data-slide="38">
+<!-- ========== SLIDE 47: SEIZURE ========== -->
+<div class="slide" data-slide="46">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">39 / 44</div>
+<div class="slide-num">47 / 54</div>
 <div class="section-badge reveal">Seizure</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การตรวจหาและรักษาโรคชัก<span>Seizure & Myoclonus Management</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การตรวจหาและรักษาโรคชัก<span>Seizure & Myoclonus Management</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Seizure Evaluation</div>
 <ul class="bullets">
 <li>ประเมิน <strong>clinical seizure</strong> ในผู้ป่วยที่ไม่ follow commands</li>
 <li><strong>EEG</strong> สำหรับผู้ป่วย comatose — ตรวจหา non-convulsive seizures</li>
-<li><strong>Antiseizure trial</strong> อาจพิจารณาใน ictal-interictal continuum <span class="cor-badge cor-2b">Class 2b</span></li>
+<li><strong>Antiseizure trial</strong> อาจพิจารณาใน ictal-interictal continuum <span class="cor-badge cor-2b">2b</span></li>
 <li>ใช้ <strong>nonsedating antiseizure</strong> medication</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Myoclonus (New Section)</div>
 <table class="data-table">
 <thead><tr><th>Recommendation</th><th>COR</th></tr></thead>
@@ -1678,13 +1957,13 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td>Treat myoclonus <strong>with</strong> EEG correlate as seizure</td><td>—</td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px;">
+<div style="margin-top:10px;">
 <div class="card-title" style="font-size:0.95rem;">Key Concepts</div>
 <ul class="bullets" style="font-size:0.85rem;">
 <li><strong>Myoclonus</strong> ≠ จบเสมอ — อาจไม่มี prognostic significance ถ้าไม่มี EEG correlate</li>
-<li><strong>Myoclonic status epilepticus</strong> → poor prognosis (แต่ต้อง confirm ด้วย EEG)</li>
+<li><strong>Myoclonic status epilepticus</strong> → poor prognosis (ต้อง confirm ด้วย EEG)</li>
 <li>Myoclonus ที่มี EEG seizure → treat ด้วย antiseizure meds</li>
-<li>Myoclonus ที่ <strong>ไม่มี</strong> EEG correlate → <strong>ห้าม suppress</strong> <span class="cor-badge cor-3">Class 3</span></li>
+<li>Myoclonus ที่ <strong>ไม่มี</strong> EEG correlate → <strong>ห้าม suppress</strong> <span class="cor-badge cor-3">3</span></li>
 </ul>
 </div>
 </div>
@@ -1692,15 +1971,16 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 40: NEUROPROGNOSTICATION ========== -->
-<div class="slide" data-slide="39">
+<!-- ========== SLIDE 48: NEUROPROGNOSTICATION ========== -->
+<div class="slide" data-slide="47">
 <div class="slide-content">
 <div class="section-ind">Section 8 · Post-Cardiac Arrest Care</div>
-<div class="slide-num">40 / 44</div>
+<div class="slide-num">48 / 54</div>
 <div class="section-badge reveal">Neuroprognostication</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">การพยากรณ์โรคทางระบบประสาท<span>Multimodal Neuroprognostication</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">การพยากรณ์โรคทางระบบประสาท<span>Multimodal Neuroprognostication</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Principles</div>
 <ul class="bullets">
 <li><strong>Multimodal approach</strong> — ไม่ใช้ single test เพียงอย่างเดียว</li>
@@ -1710,7 +1990,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>NfL (neurofilament light chain)</strong> — biomarker ใหม่ เพิ่มจาก NSE</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Tools</div>
 <table class="data-table">
 <thead><tr><th>Tool</th><th>Note</th></tr></thead>
@@ -1720,7 +2000,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <tr><td><strong>EEG</strong></td><td>Background, reactivity, seizures</td></tr>
 <tr><td><strong>SSEP (N20)</strong></td><td>Bilateral absence → poor prognosis</td></tr>
 <tr><td><strong>CT/MRI</strong></td><td>Edema, infarct pattern</td></tr>
-<tr><td><strong>Advanced neuromonitoring</strong></td><td>New section — NIRS, microdialysis (research)</td></tr>
+<tr><td><strong>Advanced neuromonitoring</strong></td><td>NIRS, microdialysis (research)</td></tr>
 </tbody>
 </table>
 </div>
@@ -1728,26 +2008,39 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </div>
 </div>
 
-<!-- ========== SLIDE 41: TOR ========== -->
-<div class="slide" data-slide="40">
+<!-- ========== SLIDE 49: SECTION 9 DIVIDER ========== -->
+<div class="slide divider-slide" data-slide="48">
+<div class="slide-content">
+<div class="section-ind" style="color:var(--blue-glow);">Section 9</div>
+<div class="slide-num" style="color:rgba(255,255,255,0.3);">49 / 54</div>
+<div class="divider-num reveal">09</div>
+<div class="divider-line reveal" style="transition-delay:0.1s;"></div>
+<div class="divider-title reveal" style="transition-delay:0.15s;">Termination & Ethics</div>
+<div class="divider-sub reveal" style="transition-delay:0.2s;">TOR Rules (BLS/ALS/UTOR), ETCO₂ in TOR, Ethical Considerations</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 50: TOR ========== -->
+<div class="slide" data-slide="49">
 <div class="slide-content">
 <div class="section-ind">Section 9 · Termination & Ethics</div>
-<div class="slide-num">41 / 44</div>
+<div class="slide-num">50 / 54</div>
 <div class="section-badge reveal">Termination of Resuscitation</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">กฎการหยุดการกู้ชีพ<span>Termination of Resuscitation (TOR) Rules</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">กฎการหยุดการกู้ชีพ<span>Termination of Resuscitation (TOR) Rules</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-3">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">BLS TOR Rule <span class="cor-badge cor-1">Class 1</span></div>
-<p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">สำหรับ BLS providers (no ALS available):</p>
+<p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">สำหรับ BLS providers (no ALS):</p>
 <ul class="bullets" style="font-size:0.82rem;">
 <li>Arrest <strong>not witnessed</strong> by EMS</li>
 <li><strong>No ROSC</strong> before transport</li>
 <li><strong>No AED shock</strong> delivered</li>
 </ul>
-<p style="font-size:0.82rem;color:var(--green);margin-top:8px;"><strong>ทั้ง 3 เงื่อนไข → terminate</strong></p>
-<p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.87% (survival 0.13%)</p>
+<p style="font-size:0.82rem;color:var(--green-light);margin-top:8px;"><strong>ทั้ง 3 เงื่อนไข → terminate</strong></p>
+<p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.87% (survival 0.13%)</p>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.22s;">
 <div class="card-title">ALS TOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
 <p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">สำหรับ ALS providers:</p>
 <ul class="bullets" style="font-size:0.82rem;">
@@ -1756,10 +2049,10 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>No ROSC</strong> before transport</li>
 <li><strong>No shock</strong> delivered</li>
 </ul>
-<p style="font-size:0.82rem;color:var(--green);margin-top:8px;"><strong>ทั้ง 4 เงื่อนไข → terminate</strong></p>
-<p style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.99% (survival 0.01%)</p>
+<p style="font-size:0.82rem;color:var(--green-light);margin-top:8px;"><strong>ทั้ง 4 เงื่อนไข → terminate</strong></p>
+<p style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;">Specificity: 99.99% (survival 0.01%)</p>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;">
+<div class="card reveal" style="transition-delay:0.30s;">
 <div class="card-title">UTOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
 <p style="font-size:0.85rem;color:#cbd5e1;margin-bottom:8px;">Tiered (BLS+ALS) system:</p>
 <ul class="bullets" style="font-size:0.82rem;">
@@ -1767,65 +2060,108 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li>Specificity >99% after ~15 min</li>
 <li>ลด transport ลง 50%</li>
 </ul>
-<div style="margin-top:12px;padding:12px;background:#fef3c7;border-radius:8px;">
-<p style="font-size:0.82rem;color:#92400e;"><strong>ETCO₂ Rule:</strong></p>
-<p style="font-size:0.8rem;color:#92400e;">Intubated: ETCO₂ <10 mmHg after 20 min → component of TOR (not alone) <span class="cor-badge cor-2b">2b</span></p>
-<p style="font-size:0.8rem;color:#92400e;margin-top:4px;">Non-intubated: <strong>อย่าใช้ ETCO₂ cutoff</strong> เพียงอย่างเดียว <span class="cor-badge cor-3">3: Harm</span></p>
+<div style="margin-top:10px;padding:10px;background:rgba(217,119,6,0.15);border-radius:8px;">
+<p style="font-size:0.8rem;color:#fbbf24;"><strong>ETCO₂ Rule:</strong></p>
+<p style="font-size:0.76rem;color:#fbbf24;">Intubated: ETCO₂ &lt;10 mmHg after 20 min → component of TOR <span class="cor-badge cor-2b">2b</span></p>
+<p style="font-size:0.76rem;color:#fbbf24;margin-top:3px;">Non-intubated: <strong>อย่าใช้ ETCO₂ alone</strong> <span class="cor-badge cor-3">3: Harm</span></p>
 </div>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.5s;margin-top:16px;">
-<div class="takeaway-label">Take-Home #3 (ALS)</div>
-<p style="font-size:0.95rem;">TOR rules ขึ้นกับ <strong>EMS scope of practice</strong> · ETCO₂ <strong>ไม่ใช้ alone</strong> · TOR ไม่ apply สำหรับ overdose, trauma, IHCA</p>
+<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:14px;">
+<div class="takeaway-label">Key Takeaway</div>
+<p style="font-size:0.9rem;">TOR rules ขึ้นกับ <strong>EMS scope of practice</strong> · ETCO₂ <strong>ไม่ใช้ alone</strong> · TOR ไม่ apply สำหรับ overdose, trauma, IHCA</p>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 42: ETHICS ========== -->
-<div class="slide" data-slide="41">
+<!-- ========== SLIDE 51: ETHICS ========== -->
+<div class="slide" data-slide="50">
 <div class="slide-content">
 <div class="section-ind">Section 9 · Termination & Ethics</div>
-<div class="slide-num">42 / 44</div>
+<div class="slide-num">51 / 54</div>
 <div class="section-badge reveal">Ethics</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">ประเด็นทางจริยธรรม<span>Ethical Considerations in Resuscitation</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ประเด็นทางจริยธรรม<span>Ethical Considerations in Resuscitation</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">Withholding & Withdrawing</div>
 <ul class="bullets">
 <li><strong>DNAR orders</strong> — ต้องเคารพ ตรวจสอบก่อนเริ่ม CPR</li>
 <li>เริ่ม CPR โดย default ในผู้ใหญ่ที่ไม่มี DNAR และไม่แน่ใจ</li>
 <li><strong>Withholding</strong> — ไม่เริ่ม CPR เมื่อมี signs of irreversible death</li>
 <li><strong>Withdrawing</strong> — หยุด CPR เมื่อ futile (TOR rules, prolonged effort)</li>
-<li>Consider <strong>family presence</strong> ระหว่าง resuscitation — ส่วนใหญ่พบว่าช่วยใน grieving process</li>
+<li>Consider <strong>family presence</strong> ระหว่าง resuscitation — ช่วยใน grieving process</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Support & Debriefing</div>
 <ul class="bullets">
 <li><strong>Structured assessment</strong> สำหรับ emotional distress → survivors & caregivers <span class="cor-badge cor-1">Class 1</span></li>
 <li>ทำก่อน <strong>hospital discharge</strong></li>
-<li><strong>Healthcare professional burnout</strong> — interventions อาจ beneficial <span class="cor-badge cor-2b">Class 2b</span></li>
+<li><strong>Healthcare professional burnout</strong> — interventions อาจ beneficial <span class="cor-badge cor-2b">2b</span></li>
 <li><strong>Debriefing</strong> หลัง resuscitation — ช่วย team performance & emotional wellbeing</li>
 <li><strong>Organ donation</strong> — พิจารณาในผู้ป่วยที่ไม่รอด</li>
 </ul>
-<div class="takeaway" style="margin-top:12px;">
-<div class="takeaway-label">Take-Home #9 (PCAC)</div>
-<p style="font-size:0.9rem;">Structured assessment & referral for <strong>emotional distress</strong> — survivors & caregivers — before discharge</p>
+<div class="takeaway" style="margin-top:10px;">
+<div class="takeaway-label">Key</div>
+<p style="font-size:0.85rem;">Structured assessment & referral for <strong>emotional distress</strong> — survivors & caregivers — before discharge</p>
 </div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 43: SUMMARY ========== -->
-<div class="slide" data-slide="42">
+<!-- ========== SLIDE 52: DRUG QUICK REFERENCE ========== -->
+<div class="slide" data-slide="51">
 <div class="slide-content">
 <div class="section-ind">Section 10 · Summary</div>
-<div class="slide-num">43 / 44</div>
-<div class="section-badge reveal">Key Takeaways</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">สรุปประเด็นสำคัญ<span>Key Takeaways from ACLS 2025</span></h2>
+<div class="slide-num">52 / 54</div>
+<div class="section-badge reveal">Drug Quick Reference</div>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">ตารางยาฉุกเฉิน<span>ACLS Drug Quick Reference Card</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
+<div class="card-title">Cardiac Arrest Drugs</div>
+<table class="data-table">
+<thead><tr><th>Drug</th><th>Dose</th><th>Indication</th></tr></thead>
+<tbody>
+<tr><td><strong>Epinephrine</strong></td><td class="mono">1 mg IV/IO q3-5min</td><td>VF/pVT, Asystole, PEA</td></tr>
+<tr><td><strong>Amiodarone</strong></td><td class="mono">300mg → 150mg IV/IO</td><td>Refractory VF/pVT</td></tr>
+<tr><td><strong>Lidocaine</strong></td><td class="mono">1-1.5 → 0.5-0.75 mg/kg</td><td>Refractory VF/pVT</td></tr>
+<tr><td><strong>Magnesium</strong></td><td class="mono">1-2 g IV</td><td>Torsades (long QT)</td></tr>
+<tr><td><strong>Calcium gluconate</strong></td><td class="mono">10 mL 10% IV</td><td>Hyperkalemia</td></tr>
+<tr><td><strong>NaHCO₃</strong></td><td class="mono">50 mEq IV</td><td>Hyperkalemia, TCA OD</td></tr>
+</tbody>
+</table>
+</div>
+<div class="card reveal" style="transition-delay:0.25s;">
+<div class="card-title">Arrhythmia & Brady Drugs</div>
+<table class="data-table">
+<thead><tr><th>Drug</th><th>Dose</th><th>Indication</th></tr></thead>
+<tbody>
+<tr><td><strong>Adenosine</strong></td><td class="mono">6mg → 12mg rapid IV</td><td>SVT (narrow-complex)</td></tr>
+<tr><td><strong>Diltiazem</strong></td><td class="mono">0.25 mg/kg IV → 5-10 mg/h</td><td>AF/Flutter rate control</td></tr>
+<tr><td><strong>Metoprolol</strong></td><td class="mono">2.5-5 mg IV q5min (max 3)</td><td>AF/Flutter rate control</td></tr>
+<tr><td><strong>Atropine</strong></td><td class="mono">1 mg IV q3-5min (max 3 mg)</td><td>Bradycardia</td></tr>
+<tr><td><strong>Dopamine</strong></td><td class="mono">5-20 mcg/kg/min</td><td>Brady infusion</td></tr>
+<tr><td><strong>Epinephrine infusion</strong></td><td class="mono">2-10 mcg/min</td><td>Brady infusion</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ========== SLIDE 53: SUMMARY ========== -->
+<div class="slide" data-slide="52">
+<div class="slide-content">
+<div class="section-ind">Section 10 · Summary</div>
+<div class="slide-num">53 / 54</div>
+<div class="section-badge reveal">Key Takeaways</div>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">สรุปประเด็นสำคัญ<span>Key Takeaways from ACLS 2025</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
+<div class="grid-2">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">BLS & ALS Foundations</div>
 <ul class="bullets">
 <li><strong>High-quality CPR</strong> = foundation — rate 100-120, depth ≥5cm, full recoil, minimize interruptions</li>
@@ -1835,7 +2171,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <li><strong>IV first</strong> → IO → central venous · ET route removed</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Arrhythmias & Special Circumstances</div>
 <ul class="bullets">
 <li><strong>Unstable tachy</strong> → synchronized cardioversion (AF ≥200J, narrow 100J, mono VT 100J)</li>
@@ -1846,36 +2182,37 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="card reveal" style="transition-delay:0.4s;margin-top:20px;">
+<div class="card reveal" style="transition-delay:0.35s;margin-top:16px;">
 <div class="card-title">Post-Arrest Care Bundle</div>
 <div class="grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">90-98%</div><div style="font-size:0.75rem;color:#cbd5e1;">SpO₂ Target</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">35-45</div><div style="font-size:0.75rem;color:#cbd5e1;">PaCO₂ mmHg</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥65</div><div style="font-size:0.75rem;color:#cbd5e1;">MAP mmHg</div></div>
-<div style="text-align:center;padding:12px;background:#eff6ff;border-radius:8px;"><div class="mono" style="font-size:1.1rem;font-weight:700;color:var(--blue);">≥36h</div><div style="font-size:0.75rem;color:#cbd5e1;">Temp Control</div></div>
+<div class="stat-card"><div class="stat-num">90-98%</div><div class="stat-label">SpO₂ Target</div></div>
+<div class="stat-card"><div class="stat-num">35-45</div><div class="stat-label">PaCO₂ mmHg</div></div>
+<div class="stat-card"><div class="stat-num">≥65</div><div class="stat-label">MAP mmHg</div></div>
+<div class="stat-card"><div class="stat-num">≥36h</div><div class="stat-label">Temp Control</div></div>
 </div>
 </div>
 </div>
 </div>
 
-<!-- ========== SLIDE 44: REFERENCES ========== -->
-<div class="slide" data-slide="43">
+<!-- ========== SLIDE 54: REFERENCES ========== -->
+<div class="slide" data-slide="53">
 <div class="slide-content">
 <div class="section-ind">Section 10 · Summary</div>
-<div class="slide-num">44 / 44</div>
+<div class="slide-num">54 / 54</div>
 <div class="section-badge reveal">References</div>
-<h2 class="slide-title reveal" style="transition-delay:0.1s;">อ้างอิง<span>References & Source Guidelines</span></h2>
+<h2 class="slide-title reveal" style="transition-delay:0.05s;">อ้างอิง<span>References & Source Guidelines</span></h2>
+<div class="title-accent reveal" style="transition-delay:0.1s;"></div>
 <div class="grid-2">
-<div class="card reveal" style="transition-delay:0.2s;">
+<div class="card reveal" style="transition-delay:0.15s;">
 <div class="card-title">AHA 2025 Guidelines</div>
 <ul class="bullets" style="font-size:0.82rem;">
-<li><strong>Kleinman ME, et al.</strong> Part 7: Adult Basic Life Support. Circulation. 2025;152(suppl 2):Sxxx–Sxxx.</li>
+<li><strong>Kleinman ME, et al.</strong> Part 7: Adult Basic Life Support. Circulation. 2025;152(suppl 2).</li>
 <li><strong>Wigginton JG, et al.</strong> Part 9: Adult Advanced Life Support. Circulation. 2025;152(suppl 2):S538–S577.</li>
-<li><strong>Cao D, et al.</strong> Part 10: Adult and Pediatric Special Circumstances of Resuscitation. Circulation. 2025;152(suppl 2):S578–S672.</li>
+<li><strong>Cao D, et al.</strong> Part 10: Special Circumstances. Circulation. 2025;152(suppl 2):S578–S672.</li>
 <li><strong>Hirsch KG, et al.</strong> Part 11: Post–Cardiac Arrest Care. Circulation. 2025;152(suppl 2):S673–S718.</li>
 </ul>
 </div>
-<div class="card reveal" style="transition-delay:0.3s;">
+<div class="card reveal" style="transition-delay:0.25s;">
 <div class="card-title">Supporting Guidelines</div>
 <ul class="bullets" style="font-size:0.82rem;">
 <li><strong>Perman SM, et al.</strong> 2023 AHA Focused Update on Adult ACLS. Circulation. 2024;149:e254–e273.</li>
@@ -1887,9 +2224,9 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 </ul>
 </div>
 </div>
-<div class="takeaway reveal" style="transition-delay:0.4s;margin-top:20px;text-align:center;">
+<div class="takeaway reveal" style="transition-delay:0.35s;margin-top:16px;text-align:center;">
 <div class="takeaway-label" style="text-align:center;">End of Teaching Slides</div>
-<p style="font-size:1rem;line-height:1.6;">ฝึกฝนกับ <strong>10 Case Scenarios</strong> → คลิก "Case Scenarios" ในหน้าหลัก<br>หรือกด <span class="mono">→</span เพื่อไปยังสไลด์ถัดไป</p>
+<p style="font-size:0.95rem;line-height:1.6;">ฝึกฝนกับ <strong>10 Case Scenarios</strong> → คลิก "Case Scenarios" ในหน้าหลัก<br>หรือกด <span class="mono">→</span> เพื่อไปยังสไลด์ถัดไป</p>
 </div>
 </div>
 </div>
@@ -1900,7 +2237,7 @@ body{font-family:'DM Sans',sans-serif;color:var(--navy);}
 <!-- === NAV CONTROLS === -->
 <div class="deck-controls">
 <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
-<span class="nav-counter" id="slideCounter">01 / 44</span>
+<span class="nav-counter" id="slideCounter">01 / 54</span>
 <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
 </div>
 
@@ -1935,10 +2272,6 @@ class SlidePresentation {
     const scaleX = vw / 1920;
     const scaleY = vh / 1080;
     this.scale = Math.min(scaleX, scaleY);
-    this.stage.style.transform = `translate(-50%, -50%) scale(${this.scale})`;
-    this.stage.style.left = '50%';
-    this.stage.style.top = '50%';
-    // Center with letterbox
     const offsetX = (vw - 1920 * this.scale) / 2;
     const offsetY = (vh - 1080 * this.scale) / 2;
     this.stage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${this.scale})`;
@@ -1949,7 +2282,17 @@ class SlidePresentation {
   goToSlide(index) {
     if (index < 0 || index >= this.totalSlides) return;
     this.slides[this.currentSlide].classList.remove('active');
+    if (index < this.currentSlide) {
+      this.slides[this.currentSlide].classList.add('prev');
+    } else {
+      this.slides[this.currentSlide].classList.remove('prev');
+    }
     this.currentSlide = index;
+    // Clear prev from all others
+    this.slides.forEach((s, i) => {
+      if (i !== this.currentSlide) s.classList.remove('active');
+    });
+    this.slides[this.currentSlide].classList.remove('prev');
     this.slides[this.currentSlide].classList.add('active');
     this.updateCounter();
     this.updateProgress();
@@ -1972,7 +2315,7 @@ class SlidePresentation {
 
   bindKeyboard() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.getAttribute('contenteditable')) return;
+      if (e.target.getAttribute('contenteditable') === 'true') return;
       switch(e.key) {
         case 'ArrowRight': case ' ': case 'PageDown':
           e.preventDefault(); this.changeSlide(1); break;
@@ -1981,7 +2324,7 @@ class SlidePresentation {
         case 'Home': this.goToSlide(0); break;
         case 'End': this.goToSlide(this.totalSlides - 1); break;
         case 'e': case 'E':
-          if (!e.target.getAttribute('contenteditable')) this.editor.toggle();
+          if (!e.target.getAttribute('contenteditable')) this.editor && this.editor.toggle();
           break;
       }
     });
@@ -2032,7 +2375,7 @@ class InlineEditor {
       el.setAttribute('contenteditable', this.isActive ? 'true' : 'false');
     });
     if (this.isActive) {
-      document.querySelectorAll('.slide.active .slide-title, .slide.active .card-title, .slide-active .bullets li').forEach(el => {
+      document.querySelectorAll('.slide.active .slide-title, .slide.active .card-title').forEach(el => {
         el.setAttribute('contenteditable', 'true');
       });
     }
@@ -2062,6 +2405,7 @@ class InlineEditor {
 /* === INITIALIZE === */
 const presentation = new SlidePresentation();
 const editor = new InlineEditor();
+presentation.editor = editor;
 
 /* === NAV BUTTONS === */
 document.getElementById('prevBtn').addEventListener('click', () => presentation.changeSlide(-1));

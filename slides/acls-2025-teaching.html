@@ -16,8 +16,9 @@ html {
   --bg-primary: #F0EBDE;    /* Warm cream paper */
   --bg-secondary: #E6E0CE;  /* Deeper cream paper */
   --text-primary: #1F2BE0;  /* Electric cobalt ink */
-  --text-secondary: #5560E5;/* Soft cobalt ink */
-  --text-muted: rgba(31, 43, 224, 0.18); /* Faint cobalt */
+  --text-secondary: #2D39BF;/* Darker soft cobalt ink for WCAG AA readability */
+  --text-muted: rgba(31, 43, 224, 0.55); /* Muted cobalt for readable sub-text */
+  --border-faint: rgba(31, 43, 224, 0.15); /* Faint cobalt for borders and dividers */
   
   --blue: #1F2BE0;
   --blue-light: #5560E5;
@@ -305,7 +306,7 @@ html, body {
   font-size: 0.95rem;
   line-height: 1.5;
   color: var(--text-primary);
-  border-bottom: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--border-faint);
 }
 .bullets li:last-child {
   border-bottom: none;
@@ -426,7 +427,7 @@ html, body {
 }
 .data-table td {
   padding: 12px 16px;
-  border-bottom: 1.5px solid var(--text-muted); /* Faint cobalt row divider */
+  border-bottom: 1.5px solid var(--border-faint); /* Faint cobalt row divider */
   color: var(--text-primary);
   font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
 }
@@ -884,7 +885,7 @@ html, body {
   display: flex;
   gap: 4px;
   margin-bottom: 16px;
-  border-bottom: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--border-faint);
   padding-bottom: 8px;
   overflow-x: auto;
 }

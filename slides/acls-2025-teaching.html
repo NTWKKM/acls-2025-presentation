@@ -28,9 +28,9 @@ html {
   --red-light: #E05A6F;
   --red-glow: rgba(196, 30, 58, 0.1);
   
-  --green: #0F8259;        /* Deep medical green */
-  --green-light: #3AB083;
-  --green-glow: rgba(15, 130, 89, 0.1);
+  --green: #0A5C36;        /* Much darker medical green for text readability */
+  --green-light: #2A9D70;  /* Slightly darker green-light, but still bright for dark background text/SVG */
+  --green-glow: rgba(10, 92, 54, 0.08); /* Adjusted alpha for subtle glow */
   
   --amber: #C97A00;        /* Warning amber/ochre */
   --amber-light: #E8A838;
@@ -512,6 +512,36 @@ html, body {
 .slide.active .grid-3 > .reveal:nth-child(1) { transition-delay: 0.15s; }
 .slide.active .grid-3 > .reveal:nth-child(2) { transition-delay: 0.25s; }
 .slide.active .grid-3 > .reveal:nth-child(3) { transition-delay: 0.35s; }
+
+/* Compact Layout Utilities */
+.card.compact {
+  padding: 24px;
+}
+.card.compact .card-title {
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+}
+.stat-card.compact {
+  padding: 8px 4px;
+}
+.stat-card.compact .stat-num {
+  font-size: 1.4rem;
+}
+.stat-card.compact .stat-label {
+  font-size: 0.7rem;
+}
+.data-table.compact th,
+.data-table.compact td {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+}
+.bullets.compact li {
+  padding: 6px 0 6px 20px;
+  font-size: 0.85rem;
+}
+.bullets.compact li::before {
+  top: 0.65rem;
+}
 
 /* === SPECIALIZED VISUALS === */
 /* ECG Strip */
@@ -1237,16 +1267,16 @@ html, body {
     <h2 class="slide-title reveal">การกดหน้าอกคุณภาพสูง (High-Quality CPR)<span>Metrics and Key Update 2025</span></h2>
     <div class="title-accent reveal"></div>
     <div class="grid-2">
-      <div class="card reveal">
+      <div class="card compact reveal">
         <div class="card-title">5 Key Metrics of High-Quality CPR</div>
-        <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:18px;">
-          <div class="stat-card"><div class="stat-num">100-120</div><div class="stat-label">Rate /min</div></div>
-          <div class="stat-card"><div class="stat-num">≥ 5 cm</div><div class="stat-label">Depth</div></div>
-          <div class="stat-card"><div class="stat-num">Full</div><div class="stat-label">Recoil</div></div>
-          <div class="stat-card"><div class="stat-num">Min</div><div class="stat-label">Interrupt</div></div>
-          <div class="stat-card"><div class="stat-num">30:2</div><div class="stat-label">C:V Ratio</div></div>
+        <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:8px; margin-bottom:12px;">
+          <div class="stat-card compact"><div class="stat-num">100-120</div><div class="stat-label">Rate /min</div></div>
+          <div class="stat-card compact"><div class="stat-num">≥ 5 cm</div><div class="stat-label">Depth</div></div>
+          <div class="stat-card compact"><div class="stat-num">Full</div><div class="stat-label">Recoil</div></div>
+          <div class="stat-card compact"><div class="stat-num">Min</div><div class="stat-label">Interrupt</div></div>
+          <div class="stat-card compact"><div class="stat-num">30:2</div><div class="stat-label">C:V Ratio</div></div>
         </div>
-        <table class="data-table">
+        <table class="data-table compact">
           <thead>
             <tr><th>ตัวชี้วัด (Metric)</th><th>เป้าหมายที่แนะนำ (Target)</th></tr>
           </thead>
@@ -1259,9 +1289,9 @@ html, body {
           </tbody>
         </table>
       </div>
-      <div class="card reveal">
+      <div class="card compact reveal">
         <div class="card-title">สิ่งที่อัปเดตและเน้นย้ำในปี 2025</div>
-        <ul class="bullets">
+        <ul class="bullets compact">
           <li><strong>Dominant Hand Placement <span class="cor-badge cor-2a">2a</span></strong>: แนะนำให้วางมือข้างที่ถนัด (Dominant hand) ลงสัมผัสกระดูกหน้าอกของผู้ป่วยโดยตรง เพื่อส่งผ่านแรงกดได้มั่นคงและลึกตามเกณฑ์</li>
           <li><strong>Mechanical CPR Devices <span class="cor-badge cor-3">Class 3 (No Benefit)</span></strong>:
             <br>ห้ามใช้ทดแทนเครื่องกดหน้าอกด้วยมือเป็นประจำ เนื่องจากบ่อนทำลายอัตราการรอดชีวิตในระยะยาว (PARAMEDIC trial) แต่พิจารณาใช้ได้ในที่แคบ, รถกู้ชีพเคลื่อนที่เร็ว หรือสถานการณ์ที่ขาดแคลนกำลังพล <span class="cor-badge cor-2b">2b</span>
@@ -2927,7 +2957,7 @@ html, body {
           <li>3. <strong>ไม่เกิดภาวะ ROSC</strong> ก่อนส่งขึ้นรถกู้ภัย</li>
           <li>4. <strong>ไม่มีการยิงช็อกไฟฟ้า</strong> จาก AED สักหน</li>
         </ul>
-        <p style="font-size:0.82rem; color:var(--green-light); margin-top:8px;"><strong>ครบเงื่อนไขทั้งหมด ➔ แนะนำหยุดกู้ชีพ</strong></p>
+        <p style="font-size:0.82rem; color:var(--green); margin-top:8px;"><strong>ครบเงื่อนไขทั้งหมด ➔ แนะนำหยุดกู้ชีพ</strong></p>
       </div>
       <div class="card reveal">
         <div class="card-title">ALS TOR Rule <span class="cor-badge cor-2a">Class 2a</span></div>
@@ -2939,7 +2969,7 @@ html, body {
           <li>4. <strong>ไม่มีการช็อกไฟฟ้า</strong> ใดๆ</li>
           <li>5. ปั๊มกู้ชีพเต็มที่ครบถ้วน <strong>ไม่น้อยกว่า 20 นาที</strong></li>
         </ul>
-        <p style="font-size:0.82rem; color:var(--green-light); margin-top:8px;"><strong>ครบเงื่อนไขทั้งหมด ➔ แนะนำหยุดกู้ชีพ</strong></p>
+        <p style="font-size:0.82rem; color:var(--green); margin-top:8px;"><strong>ครบเงื่อนไขทั้งหมด ➔ แนะนำหยุดกู้ชีพ</strong></p>
       </div>
       <div class="card reveal">
         <div class="card-title">กติกาพิเศษและข้อควรระวังวิกฤต</div>

@@ -8,7 +8,7 @@
 - **Soft Light Background (`--smokewhite`)**: `#f4f4f6` — Landing page and viewport background.
 - **Vibrant Blue (`--blue`)**: `#2563eb` — Theme accent color and standard links.
 - **Vibrant Red (`--red`)**: `#dc2626` — Critical alerts (Class 3 / Shockable).
-- **Emerald Green (`--green`)**: `#16a34a` — Success indicators (ROSC / Class 1).
+- **Emerald Green (`--green`)**: `#0A5C36` (Slides) / `#16a34a` (Landing) — Success indicators (ROSC / Class 1).
 - **Amber Orange (`--amber`)**: `#d97706` — Warnings and Class 2b recommendations.
 
 ### Typography

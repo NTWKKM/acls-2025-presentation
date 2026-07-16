@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* === DESIGN SYSTEM TOKENS === */
+html {
+  font-size: 21px; /* Scaled up by ~31.25% from browser default (16px) for 1920x1080 visibility */
+}
 :root {
   --navy: #0f172a;
   --navy-light: #1e293b;
@@ -202,7 +205,7 @@ html, body {
 .slide-title {
   font-family: 'Sora', sans-serif;
   font-weight: 800;
-  font-size: 2.6rem;
+  font-size: 3.2rem;
   line-height: 1.2;
   margin-bottom: 8px;
   color: var(--text-primary);
@@ -210,7 +213,7 @@ html, body {
 
 .slide-title span {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 400;
   color: var(--text-secondary);
   margin-top: 4px;
@@ -225,16 +228,16 @@ html, body {
 }
 
 /* Grid Layouts */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex-grow: 1; min-height: 0; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex-grow: 1; min-height: 0; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; flex-grow: 1; min-height: 0; }
-.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; flex-grow: 1; min-height: 0; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex-grow: 1; min-height: 0; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; flex-grow: 1; min-height: 0; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex-grow: 1; min-height: 0; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; flex-grow: 1; min-height: 0; }
 
 /* Cards */
 .card {
   background: var(--bg-secondary);
   border-radius: var(--card-radius);
-  padding: 32px;
+  padding: 40px;
   color: var(--text-primary);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -248,8 +251,8 @@ html, body {
 .card-title {
   font-family: 'Sora', sans-serif;
   font-weight: 700;
-  font-size: 1.25rem;
-  margin-bottom: 20px;
+  font-size: 1.4rem;
+  margin-bottom: 24px;
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -262,9 +265,9 @@ html, body {
   padding: 0; margin: 0;
 }
 .bullets li {
-  padding: 9px 0 9px 28px;
+  padding: 12px 0 12px 32px;
   position: relative;
-  font-size: 1rem;
+  font-size: 1.15rem;
   line-height: 1.6;
   color: #cbd5e1;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -275,7 +278,7 @@ html, body {
 .bullets li::before {
   content: '';
   position: absolute;
-  left: 0; top: 18px;
+  left: 0; top: 1.05rem;
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--blue-light);
@@ -308,12 +311,12 @@ html, body {
 .drug-box .drug-name {
   font-family: 'Sora', sans-serif;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   color: #ffffff;
 }
 .drug-box .drug-dose {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   color: var(--blue-light);
   margin-top: 4px;
 }
@@ -332,7 +335,7 @@ html, body {
 }
 .takeaway-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--blue-light);
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -350,7 +353,7 @@ html, body {
 }
 .stat-card .stat-num {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 700;
   color: var(--blue-light);
 }
@@ -358,7 +361,7 @@ html, body {
 .stat-card.amber .stat-num { color: var(--amber-light); }
 .stat-card.green .stat-num { color: var(--green-light); }
 .stat-card .stat-label {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   margin-top: 4px;
 }
@@ -367,21 +370,21 @@ html, body {
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 .data-table th {
   background: rgba(59, 130, 246, 0.15);
   color: var(--blue-light);
-  padding: 12px 16px;
+  padding: 14px 18px;
   text-align: left;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 2px solid rgba(59, 130, 246, 0.3);
 }
 .data-table td {
-  padding: 12px 16px;
+  padding: 14px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: #cbd5e1;
 }
@@ -397,10 +400,10 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 6px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
 }
 .cor-1 { background: rgba(16, 185, 129, 0.2); color: var(--green-light); border: 1px solid var(--green); }
@@ -413,9 +416,9 @@ html, body {
   background: var(--bg-secondary);
   color: #fff;
   border-radius: 10px;
-  padding: 14px 20px;
+  padding: 16px 24px;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 1.0rem;
   font-weight: 600;
   border: 2px solid rgba(59, 130, 246, 0.3);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -555,43 +558,114 @@ html, body {
   font-weight: 700;
 }
 
-/* H's & T's Grid Cards */
+/* H's & T's Grid 3D Flip Cards */
 .ht-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  gap: 20px;
+  perspective: 1000px;
 }
 .ht-card {
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 18px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
+  background: transparent;
+  height: 220px; /* roomy height */
+  perspective: 1000px;
+  cursor: pointer;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
 }
-.ht-card:hover {
+.ht-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s var(--ease-out-expo);
+  transform-style: preserve-3d;
+}
+.ht-card.flipped .ht-card-inner {
+  transform: rotateY(180deg);
+}
+.ht-card-front, .ht-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.ht-card-front {
+  background: var(--bg-secondary);
+  color: white;
+}
+.ht-card-front:hover {
   border-color: var(--blue-light);
-  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
+}
+.ht-card.red-style .ht-card-front:hover {
+  border-color: var(--red-light);
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+}
+.ht-card-back {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--navy-deep) 100%);
+  color: white;
+  transform: rotateY(180deg);
+}
+.ht-card.red-style .ht-card-back {
+  background: linear-gradient(135deg, var(--red) 0%, var(--navy-deep) 100%);
 }
 .ht-card .ht-title {
   font-family: 'Sora', sans-serif;
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-weight: 800;
+  font-size: 1.6rem;
   color: var(--blue-light);
+  margin-bottom: 8px;
+}
+.ht-card.red-style .ht-title {
+  color: var(--red-light);
+}
+.ht-card .ht-name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
   margin-bottom: 6px;
 }
-.ht-card.red-style .ht-title { color: var(--red-light); }
-.ht-card .ht-name {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #ffffff;
-  margin-bottom: 4px;
-}
 .ht-card .ht-desc {
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
-  line-height: 1.3;
+  line-height: 1.4;
+}
+.click-prompt {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+  animation: pulseOpacity 1.5s infinite;
+}
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.treatment-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+}
+.treatment-desc {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #ffffff;
 }
 
 /* === SECTION DIVIDER SLIDES === */
@@ -667,6 +741,136 @@ html, body {
   opacity: 0.05;
   pointer-events: none;
 }
+
+/* Flash animation for shock simulator */
+@keyframes flashEffect {
+  0% { background-color: rgba(255, 255, 255, 1); box-shadow: 0 0 50px #ffffff; }
+  100% { background-color: var(--navy-deep); box-shadow: none; }
+}
+
+/* Floating Drug Quick Reference Overlay */
+.drug-overlay-toggle {
+  position: absolute;
+  bottom: 36px;
+  right: 48px;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: var(--blue-light);
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1001;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+.drug-overlay-toggle:hover {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--blue-glow);
+}
+.drug-overlay-panel {
+  position: absolute;
+  bottom: 96px;
+  right: 48px;
+  width: 500px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  z-index: 1002;
+  display: none;
+  flex-direction: column;
+  transform-origin: bottom right;
+  animation: overlayPop 0.3s var(--ease-out-expo) forwards;
+}
+@keyframes overlayPop {
+  0% { opacity: 0; transform: scale(0.85) translateY(20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.drug-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+.drug-overlay-header h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.05rem;
+  color: #fff;
+  font-weight: 700;
+}
+.drug-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.drug-close-btn:hover { color: #fff; }
+.drug-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+  overflow-x: auto;
+}
+.drug-tab-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.drug-tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+.drug-tab-btn.active {
+  background: var(--blue-glow);
+  color: var(--blue-light);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.drug-tab-content {
+  display: none;
+}
+.drug-tab-content.active {
+  display: block;
+}
+.drug-tab-content h4 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  color: var(--blue-light);
+  margin-bottom: 10px;
+}
+.drug-tab-content p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 10px;
+}
+.drug-tab-content ul {
+  padding-left: 20px;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  margin-bottom: 10px;
+}
+.drug-tab-content li {
+  margin-bottom: 6px;
+}
 </style>
 </head>
 <body>
@@ -686,6 +890,57 @@ html, body {
   <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
   <span class="nav-counter" id="slideCounter">01 / 56</span>
   <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<!-- Floating Drug Quick Reference Overlay -->
+<div class="drug-overlay-toggle" onclick="toggleDrugOverlay()">💊 Drug Ref</div>
+<div class="drug-overlay-panel" id="drugOverlayPanel">
+  <div class="drug-overlay-header">
+    <h3>ACLS 2025 Drug Quick Reference</h3>
+    <button class="drug-close-btn" onclick="toggleDrugOverlay()">✕</button>
+  </div>
+  <div class="drug-tabs">
+    <button class="drug-tab-btn active" onclick="switchDrugTab('epi')">Epinephrine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('amiodarone')">Amiodarone</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('lidocaine')">Lidocaine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('atropine')">Atropine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('adenosine')">Adenosine</button>
+  </div>
+  <div class="drug-tab-content active" id="tab-epi">
+    <h4>Epinephrine (อะดรีนาลีน)</h4>
+    <p><strong>Cardiac Arrest</strong>: 1 mg IV/IO ทุก 3-5 นาที (ให้เร็วที่สุดใน non-shockable; ให้หลังช็อกครั้งที่ 2 ใน shockable)</p>
+    <p><strong>Bradycardia/Post-ROSC Infusion</strong>: 2-10 mcg/min IV infusion (หยดเข้าเส้นเลือดตามการตอบสนองความดัน)</p>
+  </div>
+  <div class="drug-tab-content" id="tab-amiodarone">
+    <h4>Amiodarone (อะมิโอดาโรน)</h4>
+    <p><strong>Cardiac Arrest (VF/pVT)</strong>: ให้หลังช็อกไฟฟ้าครั้งที่ 3 ดื้อยา</p>
+    <ul>
+      <li>Dose 1: <strong>300 mg</strong> IV/IO bolus</li>
+      <li>Dose 2: <strong>150 mg</strong> IV/IO bolus (หากยังคงเป็น VF/pVT)</li>
+    </ul>
+  </div>
+  <div class="drug-tab-content" id="tab-lidocaine">
+    <h4>Lidocaine (ลิโดเคน)</h4>
+    <p><strong>Cardiac Arrest (VF/pVT)</strong>: ใช้เป็นทางเลือกแทน Amiodarone</p>
+    <ul>
+      <li>Dose 1: <strong>1 - 1.5 mg/kg</strong> IV/IO</li>
+      <li>Dose 2: <strong>0.5 - 0.75 mg/kg</strong> IV/IO (สูงสุด 3 mg/kg)</li>
+    </ul>
+  </div>
+  <div class="drug-tab-content" id="tab-atropine">
+    <h4>Atropine (อะโทรปีน)</h4>
+    <p><strong>Symptomatic Bradycardia</strong>: รักษาภาวะชีพจรช้าที่มีอาการ</p>
+    <p><strong>ACLS 2025 Dose</strong>: <strong>1 mg IV/IO</strong> ทุก 3-5 นาที (สูงสุดรวม <strong>3 mg</strong> หรือ 3 โดส) <span class="cor-badge cor-2a">2a</span></p>
+    <p style="font-size:0.7rem; color:var(--text-muted);">*ปรับปรุงจากขนาดเดิม 0.5 mg เป็น 1 mg ในปี 2020/2025</p>
+  </div>
+  <div class="drug-tab-content" id="tab-adenosine">
+    <h4>Adenosine (อะดีโนซีน)</h4>
+    <p><strong>Symptomatic Narrow QRS SVT</strong>: รักษาหัวใจเต้นเร็วผิดจังหวะชนิด QRS แคบ</p>
+    <ul>
+      <li>Dose 1: <strong>6 mg</strong> rapid IV push (บีบยาเร็วมากตามด้วย Flush น้ำ)</li>
+      <li>Dose 2: <strong>12 mg</strong> rapid IV push (ถ้าไม่เปลี่ยนภายใน 1-2 นาที)</li>
+    </ul>
+  </div>
 </div>
 
 <!-- ==========================================
@@ -1207,11 +1462,18 @@ html, body {
       </div>
       <div class="card reveal">
         <div class="card-title">ความล้มเหลวของการช็อกไฟฟ้า (Refractory VF)</div>
-        <div class="ecg-strip">
-          <div class="ecg-label">VENTRICULAR FIBRILLATION (VF)</div>
-          <svg viewBox="0 0 400 80" preserveAspectRatio="none">
-            <path d="M0,40 L10,35 L20,45 L30,20 L40,65 L50,30 L60,50 L70,10 L80,75 L90,25 L100,60 L110,15 L120,65 L130,30 L140,55 L150,20 L160,70 L170,35 L180,50 L190,10 L200,75 L210,30 L220,60 L230,20 L240,65 L250,30 L260,50 L270,15 L280,70 L290,25 L300,60 L310,20 L320,65 L330,30 L340,50 L350,15 L360,75 L370,30 L380,60 L390,25 L400,40" stroke="#ef4444" stroke-width="2.5" fill="none" class="ecg-line"/>
-          </svg>
+        <div class="ecg-simulator" id="ecgSim" style="margin-bottom: 12px;">
+          <div class="ecg-strip" id="simEcgStrip">
+            <div class="ecg-label" id="simEcgLabel">VENTRICULAR FIBRILLATION (VF)</div>
+            <svg viewBox="0 0 400 80" preserveAspectRatio="none" id="simEcgSvg">
+              <path id="ecgPath" d="M0,40 L10,35 L20,45 L30,20 L40,65 L50,30 L60,50 L70,10 L80,75 L90,25 L100,60 L110,15 L120,65 L130,30 L140,55 L150,20 L160,70 L170,35 L180,50 L190,10 L200,75 L210,30 L220,60 L230,20 L240,65 L250,30 L260,50 L270,15 L280,70 L290,25 L300,60 L310,20 L320,65 L330,30 L340,50 L350,15 L360,75 L370,30 L380,60 L390,25 L400,40" stroke="#ef4444" stroke-width="2.5" fill="none" class="ecg-line"/>
+            </svg>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button class="nav-btn" style="flex:1; margin:0; font-size:0.8rem; background:var(--red); border-color:var(--red-light); color:#fff;" onclick="triggerShock()">⚡ Deliver Shock</button>
+            <button class="nav-btn" style="flex:1; margin:0; font-size:0.8rem;" id="simResetBtn" onclick="resetShockSim()">Reset</button>
+          </div>
+          <div id="simStatus" style="font-size:0.75rem; color:var(--text-secondary); margin-top:8px; line-height: 1.4;">คลิก 'Deliver Shock' เพื่อจำลองการช็อกไฟฟ้าและประเมินผลการแปลงคลื่นหัวใจ</div>
         </div>
         <ul class="bullets" style="font-size:0.9rem; margin-top:10px;">
           <li>หากทำ CPR คุณภาพดีและช็อกครบ 3 ครั้งแล้วยังทนทานต่อการช็อกไฟฟ้า ➔ ให้รีบหา Reversible Causes (H's & T's) โดยเฉพาะภาวะ <strong>Hypoxia, Hypovolemia, Acidosis, Hyperkalemia, และ Coronary Thrombosis</strong></li>
@@ -1620,77 +1882,157 @@ html, body {
     <div class="title-accent reveal"></div>
     <div class="ht-grid reveal" style="margin-bottom:20px;">
       <!-- H1 -->
-      <div class="ht-card">
-        <div class="ht-title">H1</div>
-        <div class="ht-name">Hypovolemia</div>
-        <div class="ht-desc">ขาดสารน้ำ/เลือด</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: โหลด IV fluids / Blood transfusions</div>
+      <div class="ht-card" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">H1</div>
+            <div class="ht-name">Hypovolemia</div>
+            <div class="ht-desc">ขาดสารน้ำ/เลือด</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">โหลด IV fluids / Blood transfusions</div>
+          </div>
+        </div>
       </div>
       <!-- H2 -->
-      <div class="ht-card">
-        <div class="ht-title">H2</div>
-        <div class="ht-name">Hypoxia</div>
-        <div class="ht-desc">พร่องออกซิเจน</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: จัดทางเดินหายใจ ช่วยหายใจ ให้ 100% O₂</div>
+      <div class="ht-card" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">H2</div>
+            <div class="ht-name">Hypoxia</div>
+            <div class="ht-desc">พร่องออกซิเจน</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">จัดทางเดินหายใจ ช่วยหายใจ ให้ 100% O₂</div>
+          </div>
+        </div>
       </div>
       <!-- H3 -->
-      <div class="ht-card">
-        <div class="ht-title">H3</div>
-        <div class="ht-name">Hydrogen Ion</div>
-        <div class="ht-desc">เลือดเป็นกรด</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: หายใจระบายกรด, ให้ Sodium Bicarbonate</div>
+      <div class="ht-card" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">H3</div>
+            <div class="ht-name">Hydrogen Ion</div>
+            <div class="ht-desc">เลือดเป็นกรด</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">หายใจระบายกรด, ให้ Sodium Bicarbonate</div>
+          </div>
+        </div>
       </div>
       <!-- H4 -->
-      <div class="ht-card">
-        <div class="ht-title">H4</div>
-        <div class="ht-name">Hypo/Hyper-K</div>
-        <div class="ht-desc">เกลือแร่ผิดปกติ</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: ให้ Calcium, Insulin+Dex, หรือ K supplement</div>
+      <div class="ht-card" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">H4</div>
+            <div class="ht-name">Hypo/Hyper-K</div>
+            <div class="ht-desc">เกลือแร่ผิดปกติ</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">ให้ Calcium, Insulin+Dex, หรือ K supplement</div>
+          </div>
+        </div>
       </div>
       <!-- H5 -->
-      <div class="ht-card">
-        <div class="ht-title">H5</div>
-        <div class="ht-name">Hypothermia</div>
-        <div class="ht-desc">ตัวเย็นเกิน</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: ห่มผ้าอุ่น, ให้สารน้ำอุ่น, Core rewarming</div>
+      <div class="ht-card" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">H5</div>
+            <div class="ht-name">Hypothermia</div>
+            <div class="ht-desc">ตัวเย็นเกิน</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">ห่มผ้าอุ่น, ให้สารน้ำอุ่น, Core rewarming</div>
+          </div>
+        </div>
       </div>
     </div>
     
     <div class="ht-grid reveal red-style">
       <!-- T1 -->
-      <div class="ht-card red-style">
-        <div class="ht-title">T1</div>
-        <div class="ht-name">Tension Pn.</div>
-        <div class="ht-desc">ลมดันในโพรงอก</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: เจาะระบายลม (Needle decompress), ICD</div>
+      <div class="ht-card red-style" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">T1</div>
+            <div class="ht-name">Tension Pn.</div>
+            <div class="ht-desc">ลมดันในโพรงอก</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">เจาะระบายลม (Needle decompress), ICD</div>
+          </div>
+        </div>
       </div>
       <!-- T2 -->
-      <div class="ht-card red-style">
-        <div class="ht-title">T2</div>
-        <div class="ht-name">Tamponade</div>
-        <div class="ht-desc">น้ำบีบรัดหัวใจ</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: เจาะระบายน้ำรอบหัวใจ (Pericardiocentesis)</div>
+      <div class="ht-card red-style" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">T2</div>
+            <div class="ht-name">Tamponade</div>
+            <div class="ht-desc">น้ำบีบรัดหัวใจ</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">เจาะระบายน้ำรอบหัวใจ (Pericardiocentesis)</div>
+          </div>
+        </div>
       </div>
       <!-- T3 -->
-      <div class="ht-card red-style">
-        <div class="ht-title">T3</div>
-        <div class="ht-name">Toxins</div>
-        <div class="ht-desc">สารพิษเกินขนาด</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: ให้ยาถอนพิษเฉพาะเจาะจง, ล้างท้อง, ประคับประคอง</div>
+      <div class="ht-card red-style" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">T3</div>
+            <div class="ht-name">Toxins</div>
+            <div class="ht-desc">สารพิษเกินขนาด</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">ให้ยาถอนพิษเฉพาะเจาะจง, ล้างท้อง, ประคับประคอง</div>
+          </div>
+        </div>
       </div>
       <!-- T4 -->
-      <div class="ht-card red-style">
-        <div class="ht-title">T4</div>
-        <div class="ht-name">Thrombosis (P)</div>
-        <div class="ht-desc">ลิ่มเลือดอุดหลอดปอด</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: ให้ยาละลายลิ่มเลือด (Fibrinolytic) / ผ่าตัด</div>
+      <div class="ht-card red-style" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">T4</div>
+            <div class="ht-name">Thrombosis (P)</div>
+            <div class="ht-desc">ลิ่มเลือดอุดหลอดปอด</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">ให้ยาละลายลิ่มเลือด (Fibrinolytic) / ผ่าตัด</div>
+          </div>
+        </div>
       </div>
       <!-- T5 -->
-      <div class="ht-card red-style">
-        <div class="ht-title">T5</div>
-        <div class="ht-name">Thrombosis (C)</div>
-        <div class="ht-desc">หลอดเลือดสมอง/ใจ</div>
-        <div style="font-size:0.7rem; color:var(--text-muted); margin-top:6px;">รักษา: ส่งสวนหลอดเลือดหัวใจ (PCI) / ผ่าตัดด่วน</div>
+      <div class="ht-card red-style" onclick="this.classList.toggle('flipped')">
+        <div class="ht-card-inner">
+          <div class="ht-card-front">
+            <div class="ht-title">T5</div>
+            <div class="ht-name">Thrombosis (C)</div>
+            <div class="ht-desc">หลอดเลือดสมอง/ใจ</div>
+            <div class="click-prompt">คลิกดูการรักษา ➔</div>
+          </div>
+          <div class="ht-card-back">
+            <div class="treatment-title">ACLS 2025 Treatment</div>
+            <div class="treatment-desc">ส่งสวนหลอดเลือดหัวใจ (PCI) / ผ่าตัดด่วน</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2761,6 +3103,92 @@ class InlineEditor {
 const presentation = new SlidePresentation();
 const editor = new InlineEditor();
 presentation.editor = editor;
+
+
+/* === INTERACTIVE LEARNING FUNCTIONS === */
+// ECG Shock Simulator
+function triggerShock() {
+  const ecgPath = document.getElementById('ecgPath');
+  const simEcgLabel = document.getElementById('simEcgLabel');
+  const simStatus = document.getElementById('simStatus');
+  const simEcgStrip = document.getElementById('simEcgStrip');
+  
+  if (!ecgPath) return;
+  
+  // Flash visual effect
+  simEcgStrip.style.animation = 'none';
+  setTimeout(() => {
+    simEcgStrip.style.animation = 'flashEffect 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+  }, 10);
+  
+  // Convert rhythm to Normal Sinus Rhythm (NSR) SVG path
+  const nsrPath = "M0,40 L100,40 L110,40 L120,40 L125,35 L130,45 L135,40 L140,40 L143,15 L147,75 L151,40 L158,40 L168,36 L175,44 L180,40 L280,40 L290,40 L300,40 L305,35 L310,45 L315,40 L320,40 L323,15 L327,75 L331,40 L338,40 L348,36 L355,44 L360,40 L400,40";
+  
+  ecgPath.setAttribute('d', nsrPath);
+  ecgPath.setAttribute('stroke', 'var(--green-light)');
+  
+  if (simEcgLabel) {
+    simEcgLabel.textContent = "NORMAL SINUS RHYTHM (ROSC)";
+    simEcgLabel.style.color = "var(--green-light)";
+  }
+  
+  if (simStatus) {
+    simStatus.innerHTML = "<span style='color:var(--green-light); font-weight:bold;'>Defibrillation Successful! ROSC achieved (หัวใจกลับมาเต้นปกติ).</span> ตรวจคลำชีพจร และเตรียมเริ่มดูแลหลังการกู้ชีพทันที (Post-ROSC Care)";
+  }
+}
+
+function resetShockSim() {
+  const ecgPath = document.getElementById('ecgPath');
+  const simEcgLabel = document.getElementById('simEcgLabel');
+  const simStatus = document.getElementById('simStatus');
+  
+  if (!ecgPath) return;
+  
+  const vfPath = "M0,40 L10,35 L20,45 L30,20 L40,65 L50,30 L60,50 L70,10 L80,75 L90,25 L100,60 L110,15 L120,65 L130,30 L140,55 L150,20 L160,70 L170,35 L180,50 L190,10 L200,75 L210,30 L220,60 L230,20 L240,65 L250,30 L260,50 L270,15 L280,70 L290,25 L300,60 L310,20 L320,65 L330,30 L340,50 L350,15 L360,75 L370,30 L380,60 L390,25 L400,40";
+  
+  ecgPath.setAttribute('d', vfPath);
+  ecgPath.setAttribute('stroke', '#ef4444');
+  
+  if (simEcgLabel) {
+    simEcgLabel.textContent = "VENTRICULAR FIBRILLATION (VF)";
+    simEcgLabel.style.color = "var(--blue-light)";
+  }
+  
+  if (simStatus) {
+    simStatus.textContent = "คลิก 'Deliver Shock' เพื่อจำลองการช็อกไฟฟ้าและประเมินผลการแปลงคลื่นหัวใจ";
+  }
+}
+
+// Drug Quick Reference Panel Toggle
+function toggleDrugOverlay() {
+  const panel = document.getElementById('drugOverlayPanel');
+  if (!panel) return;
+  
+  if (panel.style.display === 'flex') {
+    panel.style.display = 'none';
+  } else {
+    panel.style.display = 'flex';
+  }
+}
+
+function switchDrugTab(drugKey) {
+  // Deactivate all tabs & contents
+  document.querySelectorAll('.drug-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.drug-tab-content').forEach(content => content.classList.remove('active'));
+  
+  // Find matching tab button and content
+  let matchingBtn = null;
+  document.querySelectorAll('.drug-tab-btn').forEach(btn => {
+    if (btn.getAttribute('onclick').includes(drugKey)) {
+      matchingBtn = btn;
+    }
+  });
+  
+  if (matchingBtn) matchingBtn.classList.add('active');
+  
+  const content = document.getElementById('tab-' + drugKey);
+  if (content) content.classList.add('active');
+}
 
 
 /* === GLOBAL FUNCTION === */

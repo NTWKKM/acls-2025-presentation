@@ -490,6 +490,23 @@ html, body {
   line-height: 1;
 }
 
+/* Compact Flow for longer algorithms */
+.flow-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.flow-compact .flow-box {
+  padding: 6px 10px;
+  margin-bottom: 0;
+  font-size: 0.78rem;
+}
+.flow-compact .flow-arrow {
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1;
+}
+
 /* Staggered Reveals */
 .reveal {
   opacity: 0;
@@ -1130,7 +1147,7 @@ html, body {
           <div class="chain-arrow-flat" style="margin: 0; line-height:0.8; text-align:center;">↓</div>
           <div class="chain-link green" style="flex-direction:row; justify-content:flex-start; width:100%; padding:10px 16px;">
             <div class="chain-num">5</div>
-            <div style="text-align:left; margin-left:14px;"><strong style="font-size:0.95rem; color:#a7f3d0;">Post-Arrest Care & Recovery</strong> — การควบคุมอุณหภูมิ, ออกซิเจน, ความดัน, คืนสภาพประสาท</div>
+            <div style="text-align:left; margin-left:14px;"><strong style="font-size:0.95rem; color:var(--green);">Post-Arrest Care & Recovery</strong> — การควบคุมอุณหภูมิ, ออกซิเจน, ความดัน, คืนสภาพประสาท</div>
           </div>
         </div>
       </div>
@@ -1222,7 +1239,7 @@ html, body {
     <div class="grid-2">
       <div class="card reveal">
         <div class="card-title">Flowchart การช่วยชีวิตขั้นพื้นฐาน</div>
-        <div style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+        <div class="flow-compact">
           <div class="flow-box">ประเมินความปลอดภัยสถานที่ (Scene Safety)</div>
           <div class="flow-arrow">↓</div>
           <div class="flow-box">ดูการตอบสนอง ➔ เรียกทีมช่วยเหลือ ➔ นำ AED มา</div>
@@ -1230,15 +1247,15 @@ html, body {
           <div class="flow-box amber">ประเมินการหายใจและการคลำชีพจรพร้อมกัน (≤10 วินาที)</div>
           <div class="flow-arrow">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="flow-box green" style="font-size:0.75rem; padding:10px;">มีชีพจรแต่ไม่หายใจ<br>➔ Rescue breath 1 ครั้ง/6 วินาที<br>ตรวจชีพจรทุก 2 นาที</div>
-            <div class="flow-box red" style="font-size:0.75rem; padding:10px;">ไม่มีชีพจร & ไม่หายใจ<br>➔ เริ่ม CPR (30:2)<br>ใช้ AED/Defibrillator ทันทีที่พร้อม</div>
+            <div class="flow-box green" style="font-size:0.72rem; padding:6px 8px;">มีชีพจรแต่ไม่หายใจ<br>➔ Rescue breath 1 ครั้ง/6 วินาที<br>ตรวจชีพจรทุก 2 นาที</div>
+            <div class="flow-box red" style="font-size:0.72rem; padding:6px 8px;">ไม่มีชีพจร & ไม่หายใจ<br>➔ เริ่ม CPR (30:2)<br>ใช้ AED/Defibrillator ทันทีที่พร้อม</div>
           </div>
           <div class="flow-arrow">↓</div>
           <div class="flow-box">AED วิเคราะห์จังหวะหัวใจ (Analyze Rhythm)</div>
           <div class="flow-arrow">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="flow-box red" style="font-size:0.75rem; padding:10px;">Shockable Rhythm<br>➔ Shock 1 ครั้ง ➔ เริ่ม CPR ทันที 2 นาที</div>
-            <div class="flow-box" style="font-size:0.75rem; padding:10px;">Non-shockable Rhythm<br>➔ เริ่ม CPR ทันที 2 นาที</div>
+            <div class="flow-box red" style="font-size:0.72rem; padding:6px 8px;">Shockable Rhythm<br>➔ Shock 1 ครั้ง ➔ เริ่ม CPR ทันที 2 นาที</div>
+            <div class="flow-box" style="font-size:0.72rem; padding:6px 8px;">Non-shockable Rhythm<br>➔ เริ่ม CPR ทันที 2 นาที</div>
           </div>
         </div>
       </div>

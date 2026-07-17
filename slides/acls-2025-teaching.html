@@ -612,6 +612,37 @@ html, body {
 .nav-btn:disabled, #shockBtn.charging {
   opacity: 0.5; cursor: default; pointer-events: none;
 }
+
+/* Slide 16 Read-Only Charge Demo */
+.charge-demo {
+  margin-top: 14px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.charge-demo-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.75rem; color: var(--text-secondary);
+}
+.charge-demo-row .charge-bar { margin: 0; height: 12px; flex: 1; }
+.charge-demo-row .charge-fill { transition: none; }
+.charge-demo-row .joule-tag {
+  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-size: 0.7rem; font-weight: 600; min-width: 48px;
+}
+.slide.active .charge-demo-row[data-j="120"] .charge-fill {
+  animation: chargeDemo 3.6s infinite;
+}
+.slide.active .charge-demo-row[data-j="150"] .charge-fill {
+  animation: chargeDemo 3.6s infinite 1.2s;
+}
+.slide.active .charge-demo-row[data-j="200"] .charge-fill {
+  animation: chargeDemo 3.6s infinite 2.4s;
+}
+@keyframes chargeDemo {
+  0%   { width: 0%; background: var(--amber); }
+  33%  { width: 100%; background: var(--amber); }
+  66%  { width: 100%; background: var(--red); }
+  100% { width: 0%; background: var(--amber); }
+}
 .ecg-label {
   position: absolute; top: 6px; left: 12px;
   font-family: 'DM Mono', 'JetBrains Mono', monospace;
@@ -1726,6 +1757,21 @@ html, body {
           <li><strong>Upper Limit of Vulnerability</strong>: พลังงานที่ระดับสูงพอจะชะล้างคลื่นป่วนหัวใจและป้องกันไม่ให้หัวใจกลับไปสั่นพริ้วใหม่ได้ดีกว่า</li>
           <li>ไม่มีหลักฐานเชื่อมโยงว่าการช็อกไฟฟ้า 360 J จะทำลายเซลล์กล้ามเนื้อหัวใจรุนแรงจนมีนัยสำคัญทางลบ</li>
         </ul>
+        <div class="charge-demo">
+          <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:2px;">Capacitor Charge Demo (auto-cycling)</div>
+          <div class="charge-demo-row" data-j="120">
+            <span class="joule-tag" style="color:var(--blue);">120 J</span>
+            <div class="charge-bar"><div class="charge-fill"></div></div>
+          </div>
+          <div class="charge-demo-row" data-j="150">
+            <span class="joule-tag" style="color:var(--blue);">150 J</span>
+            <div class="charge-bar"><div class="charge-fill"></div></div>
+          </div>
+          <div class="charge-demo-row" data-j="200">
+            <span class="joule-tag" style="color:var(--blue);">200 J</span>
+            <div class="charge-bar"><div class="charge-fill"></div></div>
+          </div>
+        </div>
       </div>
       <div class="card reveal">
         <div class="card-title">เทคนิคการวางแผ่นและช็อกอย่างปลอดภัย</div>

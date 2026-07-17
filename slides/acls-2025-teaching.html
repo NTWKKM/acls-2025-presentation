@@ -572,6 +572,46 @@ html, body {
   border: 1.5px solid var(--text-primary);
 }
 .ecg-strip svg { width: 100%; height: 100%; }
+.ecg-strip canvas { width: 100%; height: 100%; display: block; }
+
+/* Defibrillator Charge Bar + Joule Selector */
+.charge-bar {
+  width: 100%; height: 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-faint);
+  position: relative; overflow: hidden;
+  margin-top: 8px;
+}
+.charge-fill {
+  width: 0%; height: 100%;
+  background: var(--amber);
+  transition: width 1.2s linear, background-color 1.2s linear;
+}
+.charge-fill.charged { background: var(--red); }
+.charge-label {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-size: 0.65rem; font-weight: 600;
+  color: var(--text-primary);
+  z-index: 2; letter-spacing: 0.04em;
+}
+.joule-btn {
+  font-size: 0.7rem; padding: 4px 10px;
+  border: 1px solid var(--border-faint);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.2s var(--ease-out-expo);
+}
+.joule-btn.active {
+  background: var(--blue); color: #fff;
+  border-color: var(--blue);
+}
+.joule-btn:disabled { opacity: 0.5; cursor: default; }
+.nav-btn:disabled, #shockBtn.charging {
+  opacity: 0.5; cursor: default; pointer-events: none;
+}
 .ecg-label {
   position: absolute; top: 6px; left: 12px;
   font-family: 'DM Mono', 'JetBrains Mono', monospace;
@@ -1593,12 +1633,20 @@ html, body {
         <div class="ecg-simulator" id="ecgSim">
           <div class="ecg-strip" id="simEcgStrip">
             <div class="ecg-label" id="simEcgLabel">VENTRICULAR FIBRILLATION (VF)</div>
-            <svg viewBox="0 0 400 80" preserveAspectRatio="none" id="simEcgSvg">
-              <path id="ecgPath" d="M0,40 L10,35 L20,45 L30,20 L40,65 L50,30 L60,50 L70,10 L80,75 L90,25 L100,60 L110,15 L120,65 L130,30 L140,55 L150,20 L160,70 L170,35 L180,50 L190,10 L200,75 L210,30 L220,60 L230,20 L240,65 L250,30 L260,50 L270,15 L280,70 L290,25 L300,60 L310,20 L320,65 L330,30 L340,50 L350,15 L360,75 L370,30 L380,60 L390,25 L400,40" stroke="#ef4444" stroke-width="2.5" fill="none" class="ecg-line"/>
-            </svg>
+            <canvas id="simEcgCanvas"></canvas>
+          </div>
+          <div class="charge-bar" id="chargeBar">
+            <div class="charge-fill" id="chargeFill"></div>
+            <span class="charge-label" id="chargeLabel">0 J</span>
+          </div>
+          <div style="display:flex; gap:6px; margin-top:8px; align-items:center;">
+            <span style="font-size:0.7rem; color:var(--text-secondary);">Energy:</span>
+            <button class="joule-btn active" data-joules="120" onclick="selectJoules(120)">120 J</button>
+            <button class="joule-btn" data-joules="150" onclick="selectJoules(150)">150 J</button>
+            <button class="joule-btn" data-joules="200" onclick="selectJoules(200)">200 J</button>
           </div>
           <div style="display:flex; gap:10px; margin-top:8px;">
-            <button class="nav-btn" style="flex:1; margin:0; font-size:0.8rem; background:var(--red); border-color:var(--red-light); color:#fff;" onclick="triggerShock()">⚡ Deliver Shock</button>
+            <button class="nav-btn" style="flex:1; margin:0; font-size:0.8rem; background:var(--red); border-color:var(--red-light); color:#fff;" id="shockBtn" onclick="triggerShock()">⚡ Deliver Shock</button>
             <button class="nav-btn" style="flex:1; margin:0; font-size:0.8rem;" id="simResetBtn" onclick="resetShockSim()">Reset</button>
           </div>
           <div id="simStatus" style="font-size:0.75rem; color:var(--text-secondary); margin-top:8px; line-height: 1.4;">คลิก 'Deliver Shock' เพื่อจำลองผลการแปลงคลื่นหัวใจ</div>
@@ -2355,9 +2403,7 @@ html, body {
         <div class="card-title">การจัดการตามลักษณะคลื่นและข้อบ่งชี้</div>
         <div class="ecg-strip">
           <div class="ecg-label">TORSADES DE POINTES (SPINDLE WAVE)</div>
-          <svg viewBox="0 0 400 80" preserveAspectRatio="none">
-            <path d="M0,40 L10,35 L20,45 L30,10 L40,70 L50,20 L60,60 L70,30 L80,50 L90,38 L100,42 L110,35 L120,45 L130,15 L140,65 L150,20 L160,60 L170,30 L180,50 L190,40 L200,40 L210,35 L220,45 L230,10 L240,70 L250,20 L260,60 L270,30 L280,50 L290,38 L300,42 L310,35 L320,45 L330,15 L340,65 L350,20 L360,60 L370,30 L380,50 L390,40 L400,40" stroke="#ef4444" stroke-width="2.5" fill="none" class="ecg-line"/>
-          </svg>
+          <canvas id="torsadesCanvas"></canvas>
         </div>
         <table class="data-table">
           <thead>
@@ -2490,6 +2536,10 @@ html, body {
     <div class="grid-1">
       <div class="card reveal">
         <div class="card-title">ข้อแนะนำการทำ Transcutaneous Pacing (TCP)</div>
+        <div class="ecg-strip" style="margin-bottom:12px;">
+          <div class="ecg-label" style="color:var(--blue-light);">TRANSCUTANEOUS PACING (SPIKE + CAPTURE)</div>
+          <canvas id="tcpCanvas"></canvas>
+        </div>
         <ul class="bullets">
           <li><strong>TCP Placement</strong>: ติดแผ่นนำไฟฟ้าแบบหน้า-หลัง (Anteroposterior) เพื่อส่งกระแสไฟกระตุ้นหัวใจได้ลึกที่สุด</li>
           <li><strong>Output Settings</strong>: เริ่มตั้งค่ากระแสไฟที่ 60-80 mA และปรับขึ้นทีละ 10 mA จนเกิดกระบวนการ **Electrical Capture** (มีคลื่น Pacing spike นำหน้า QRS เสมอ)</li>
@@ -3226,6 +3276,7 @@ class SlidePresentation {
 
   goToSlide(index) {
     if (index < 0 || index >= this.totalSlides) return;
+    ecgManager.stopAll();
     this.slides[this.currentSlide].classList.remove('active');
     if (index < this.currentSlide) {
       this.slides[this.currentSlide].classList.add('prev');
@@ -3241,6 +3292,7 @@ class SlidePresentation {
     this.slides[this.currentSlide].classList.add('active');
     this.updateCounter();
     this.updateProgress();
+    ecgManager.startForSlide(this.currentSlide);
   }
 
   changeSlide(dir) {
@@ -3358,61 +3410,225 @@ class InlineEditor {
   }
 }
 
+/* === ECG MONITOR COMPONENT === */
+function mod(n, m) { return ((n % m) + m) % m; }
+
+class ECGMonitor {
+  static RHYTHMS = {
+    vf:       t => Math.sin(t*0.4)*18 + Math.sin(t*1.1)*9 + (Math.random()-0.5)*14,
+    asystole: t => (Math.random()-0.5)*1.5,
+    pea:      t => (mod(t,70)<4 ? -25 : mod(t,70)<8 ? 35 : 0) + (Math.random()-0.5)*2,
+    nsr:      t => (mod(t,50)<3 ? -35 : mod(t,50)<6 ? 55 : (mod(t,50)>35 && mod(t,50)<42 ? -8 : 0)),
+    torsades: t => {
+      const cycle = mod(t, 140);
+      const envelope = Math.sin(cycle / 140 * Math.PI);
+      return envelope * (Math.sin(cycle * 0.35) * 25 + Math.sin(cycle * 0.7) * 18) + (Math.random()-0.5)*4;
+    },
+    pacing:   t => (mod(t,45)<2 ? -60 : mod(t,45)<5 ? 45 : 0)
+  };
+  constructor(canvasId, rhythm, colorVar = '--red') {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.t = 0;
+    this.rhythm = rhythm;
+    this.colorVar = colorVar;
+    this.running = false;
+    this._resize();
+  }
+  _resize() {
+    const r = this.canvas.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return;
+    this.canvas.width = r.width * devicePixelRatio;
+    this.canvas.height = r.height * devicePixelRatio;
+  }
+  setRhythm(rhythm, colorVar) { this.rhythm = rhythm; if (colorVar) this.colorVar = colorVar; }
+  start() {
+    if (this.running) return;
+    this.running = true;
+    this._retries = 0;
+    this._resize();
+    this._loop();
+  }
+  stop() { this.running = false; }
+  _loop() {
+    if (!this.running) return;
+    const { ctx, canvas } = this;
+    if (!canvas.width) {
+      this._resize();
+      if (!canvas.width) {
+        this._retries = (this._retries || 0) + 1;
+        if (this._retries > 20) { this.running = false; return; }
+        requestAnimationFrame(() => this._loop());
+        return;
+      }
+      this._retries = 0;
+    }
+    const gen = ECGMonitor.RHYTHMS[this.rhythm];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    const mid = canvas.height / 2;
+    const scale = canvas.height / 160;
+    for (let x = 0; x < canvas.width; x++) {
+      const y = mid - gen(this.t - x / devicePixelRatio) * scale;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue(this.colorVar).trim() || '#C41E3A';
+    ctx.lineWidth = 2.5 * devicePixelRatio;
+    ctx.stroke();
+    this.t++;
+    requestAnimationFrame(() => this._loop());
+  }
+}
+
+class ECGMonitorManager {
+  constructor() {
+    this.monitors = new Map();
+    this.config = {
+      15: [{ canvasId: 'simEcgCanvas', rhythm: 'vf', colorVar: '--red' }],
+      35: [{ canvasId: 'torsadesCanvas', rhythm: 'torsades', colorVar: '--red' }],
+      39: [{ canvasId: 'tcpCanvas', rhythm: 'pacing', colorVar: '--blue' }],
+    };
+  }
+  stopAll() {
+    this.monitors.forEach(arr => arr.forEach(m => m.stop()));
+    this.monitors.clear();
+  }
+  getActiveECGMonitor(canvasId) {
+    for (const arr of this.monitors.values()) {
+      for (const m of arr) {
+        if (m.canvas && m.canvas.id === canvasId) return m;
+      }
+    }
+    return null;
+  }
+  startForSlide(slideIndex) {
+    if (this.monitors.has(slideIndex)) {
+      this.monitors.get(slideIndex).forEach(m => m.stop());
+      this.monitors.delete(slideIndex);
+    }
+    const configs = this.config[slideIndex];
+    if (!configs) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Guard: only create monitors if slide is still active (handles rapid nav race)
+      const slide = document.querySelectorAll('.slide')[slideIndex];
+      if (!slide || !slide.classList.contains('active')) return;
+      const arr = [];
+      configs.forEach(c => {
+        const m = new ECGMonitor(c.canvasId, c.rhythm, c.colorVar);
+        m.start();
+        arr.push(m);
+      });
+      this.monitors.set(slideIndex, arr);
+    }));
+  }
+}
+const ecgManager = new ECGMonitorManager();
+
 /* === INITIALIZE === */
 const presentation = new SlidePresentation();
+ecgManager.startForSlide(presentation.currentSlide);
 const editor = new InlineEditor();
 presentation.editor = editor;
 
 
 /* === INTERACTIVE LEARNING FUNCTIONS === */
-// ECG Shock Simulator
+// ECG Shock Simulator — state
+let selectedJoules = 120;
+let chargeTimer = null;
+
+function selectJoules(j) {
+  if (chargeTimer) return; // can't change during charge
+  selectedJoules = j;
+  document.querySelectorAll('.joule-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.joules) === j);
+  });
+}
+
 function triggerShock() {
-  const ecgPath = document.getElementById('ecgPath');
+  const shockBtn = document.getElementById('shockBtn');
   const simEcgLabel = document.getElementById('simEcgLabel');
   const simStatus = document.getElementById('simStatus');
   const simEcgStrip = document.getElementById('simEcgStrip');
-  
-  if (!ecgPath) return;
-  
-  // Flash visual effect
-  simEcgStrip.style.animation = 'none';
-  setTimeout(() => {
+  const chargeFill = document.getElementById('chargeFill');
+  const chargeLabel = document.getElementById('chargeLabel');
+
+  // Abort any existing charge
+  if (chargeTimer) { clearTimeout(chargeTimer); chargeTimer = null; }
+
+  // Disable controls during charge
+  shockBtn.classList.add('charging');
+  document.querySelectorAll('.joule-btn').forEach(b => b.disabled = true);
+  if (simStatus) simStatus.textContent = `Charging ${selectedJoules} J…`;
+
+  // Reset charge bar to 0% with forced reflow
+  chargeFill.classList.remove('charged');
+  chargeFill.style.transition = 'none';
+  chargeFill.style.width = '0%';
+  chargeLabel.textContent = `0 / ${selectedJoules} J`;
+  void chargeFill.offsetWidth; // force reflow
+
+  // Animate to 100% over 1.2s
+  chargeFill.style.transition = 'width 1.2s linear, background-color 1.2s linear';
+  chargeFill.style.width = '100%';
+  chargeLabel.textContent = `${selectedJoules} / ${selectedJoules} J`;
+
+  // After charge completes, discharge
+  chargeTimer = setTimeout(() => {
+    chargeTimer = null;
+    chargeFill.classList.add('charged');
+
+    // Flash visual effect
+    simEcgStrip.style.animation = 'none';
+    void simEcgStrip.offsetWidth;
     simEcgStrip.style.animation = 'flashEffect 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-  }, 10);
-  
-  // Convert rhythm to Normal Sinus Rhythm (NSR) SVG path
-  const nsrPath = "M0,40 L100,40 L110,40 L120,40 L125,35 L130,45 L135,40 L140,40 L143,15 L147,75 L151,40 L158,40 L168,36 L175,44 L180,40 L280,40 L290,40 L300,40 L305,35 L310,45 L315,40 L320,40 L323,15 L327,75 L331,40 L338,40 L348,36 L355,44 L360,40 L400,40";
-  
-  ecgPath.setAttribute('d', nsrPath);
-  ecgPath.setAttribute('stroke', 'var(--green-light)');
-  
-  if (simEcgLabel) {
-    simEcgLabel.textContent = "NORMAL SINUS RHYTHM (ROSC)";
-    simEcgLabel.style.color = "var(--green-light)";
-  }
-  
-  if (simStatus) {
-    simStatus.innerHTML = "<span style='color:var(--green-light); font-weight:bold;'>Defibrillation Successful! ROSC achieved (หัวใจกลับมาเต้นปกติ).</span> ตรวจคลำชีพจร และเตรียมเริ่มดูแลหลังการกู้ชีพทันที (Post-ROSC Care)";
-  }
+
+    // Convert rhythm to NSR via live canvas monitor
+    const monitor = ecgManager.getActiveECGMonitor('simEcgCanvas');
+    if (monitor) monitor.setRhythm('nsr', '--green-light');
+
+    if (simEcgLabel) {
+      simEcgLabel.textContent = "NORMAL SINUS RHYTHM (ROSC)";
+      simEcgLabel.style.color = "var(--green-light)";
+    }
+    if (simStatus) {
+      simStatus.innerHTML = `<span style='color:var(--green-light); font-weight:bold;'>${selectedJoules} J Delivered! ROSC achieved (หัวใจกลับมาเต้นปกติ).</span> ตรวจคลำชีพจร และเตรียมเริ่มดูแลหลังการกู้ชีพทันที (Post-ROSC Care)`;
+    }
+
+    // Re-enable controls
+    shockBtn.classList.remove('charging');
+    document.querySelectorAll('.joule-btn').forEach(b => b.disabled = false);
+  }, 1200);
 }
 
 function resetShockSim() {
-  const ecgPath = document.getElementById('ecgPath');
   const simEcgLabel = document.getElementById('simEcgLabel');
   const simStatus = document.getElementById('simStatus');
-  
-  if (!ecgPath) return;
-  
-  const vfPath = "M0,40 L10,35 L20,45 L30,20 L40,65 L50,30 L60,50 L70,10 L80,75 L90,25 L100,60 L110,15 L120,65 L130,30 L140,55 L150,20 L160,70 L170,35 L180,50 L190,10 L200,75 L210,30 L220,60 L230,20 L240,65 L250,30 L260,50 L270,15 L280,70 L290,25 L300,60 L310,20 L320,65 L330,30 L340,50 L350,15 L360,75 L370,30 L380,60 L390,25 L400,40";
-  
-  ecgPath.setAttribute('d', vfPath);
-  ecgPath.setAttribute('stroke', '#ef4444');
-  
+  const shockBtn = document.getElementById('shockBtn');
+  const chargeFill = document.getElementById('chargeFill');
+  const chargeLabel = document.getElementById('chargeLabel');
+
+  // Cancel any pending charge
+  if (chargeTimer) { clearTimeout(chargeTimer); chargeTimer = null; }
+
+  // Reset charge bar
+  chargeFill.style.transition = 'none';
+  chargeFill.style.width = '0%';
+  chargeFill.classList.remove('charged');
+  chargeLabel.textContent = '0 J';
+
+  // Re-enable controls
+  shockBtn.classList.remove('charging');
+  document.querySelectorAll('.joule-btn').forEach(b => b.disabled = false);
+
+  // Convert rhythm back to VF via live canvas monitor
+  const monitor = ecgManager.getActiveECGMonitor('simEcgCanvas');
+  if (monitor) monitor.setRhythm('vf', '--red');
+
   if (simEcgLabel) {
     simEcgLabel.textContent = "VENTRICULAR FIBRILLATION (VF)";
     simEcgLabel.style.color = "var(--blue-light)";
   }
-  
   if (simStatus) {
     simStatus.textContent = "คลิก 'Deliver Shock' เพื่อจำลองการช็อกไฟฟ้าและประเมินผลการแปลงคลื่นหัวใจ";
   }

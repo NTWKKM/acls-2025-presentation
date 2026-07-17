@@ -706,6 +706,20 @@ html, body {
   font-size: 0.7rem; color: var(--text-secondary);
 }
 .cpr-metronome-labels strong { color: var(--text-primary); }
+
+/* Algorithm Auto-Stepper */
+.flow-box.step-active {
+  box-shadow: 0 0 0 3px var(--blue), 0 8px 24px var(--blue-glow);
+  transform: scale(1.03);
+  z-index: 2;
+  transition: box-shadow 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo);
+}
+.stepper-controls {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+.stepper-controls .nav-btn {
+  font-size: 0.72rem; padding: 4px 12px; flex: none;
+}
 .ecg-label {
   position: absolute; top: 6px; left: 12px;
   font-family: 'DM Mono', 'JetBrains Mono', monospace;
@@ -1397,24 +1411,28 @@ html, body {
     <div class="grid-2">
       <div class="card reveal">
         <div class="card-title">Flowchart การช่วยชีวิตขั้นพื้นฐาน</div>
-        <div class="flow-compact">
-          <div class="flow-box">ประเมินความปลอดภัยสถานที่ (Scene Safety)</div>
+        <div class="flow-compact" id="stepperTrack6">
+          <div class="flow-box step-item">ประเมินความปลอดภัยสถานที่ (Scene Safety)</div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box">ดูการตอบสนอง ➔ เรียกทีมช่วยเหลือ ➔ นำ AED มา</div>
+          <div class="flow-box step-item">ดูการตอบสนอง ➔ เรียกทีมช่วยเหลือ ➔ นำ AED มา</div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box amber">ประเมินการหายใจและการคลำชีพจรพร้อมกัน (≤10 วินาที)</div>
+          <div class="flow-box amber step-item">ประเมินการหายใจและการคลำชีพจรพร้อมกัน (≤10 วินาที)</div>
           <div class="flow-arrow">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="flow-box green" style="font-size:0.72rem; padding:6px 8px;">มีชีพจรแต่ไม่หายใจ<br>➔ Rescue breath 1 ครั้ง/6 วินาที<br>ตรวจชีพจรทุก 2 นาที</div>
             <div class="flow-box red" style="font-size:0.72rem; padding:6px 8px;">ไม่มีชีพจร & ไม่หายใจ<br>➔ เริ่ม CPR (30:2)<br>ใช้ AED/Defibrillator ทันทีที่พร้อม</div>
           </div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box">AED วิเคราะห์จังหวะหัวใจ (Analyze Rhythm)</div>
+          <div class="flow-box step-item">AED วิเคราะห์จังหวะหัวใจ (Analyze Rhythm)</div>
           <div class="flow-arrow">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="flow-box red" style="font-size:0.72rem; padding:6px 8px;">Shockable Rhythm<br>➔ Shock 1 ครั้ง ➔ เริ่ม CPR ทันที 2 นาที</div>
             <div class="flow-box" style="font-size:0.72rem; padding:6px 8px;">Non-shockable Rhythm<br>➔ เริ่ม CPR ทันที 2 นาที</div>
           </div>
+        </div>
+        <div class="stepper-controls">
+          <button class="nav-btn" onclick="playAlgorithmStepper('#stepperTrack6')">▶ Play</button>
+          <button class="nav-btn" onclick="resetAlgorithmStepper()">Reset</button>
         </div>
       </div>
       <div class="card reveal">
@@ -1541,19 +1559,23 @@ html, body {
     <div class="grid-2">
       <div class="card reveal">
         <div class="card-title">ลำดับการใช้งาน AED</div>
-        <div style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
-          <div class="flow-box">1. เปิดเครื่อง AED ทันทีที่มาถึง (Turn ON)</div>
+        <div class="stepper-track" id="stepperTrack9" style="display:flex; flex-direction:column; gap:6px; font-size:0.85rem;">
+          <div class="flow-box step-item">1. เปิดเครื่อง AED ทันทีที่มาถึง (Turn ON)</div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box">2. ติดแผ่นนำไฟฟ้า (Pads) บนอกเปลือยของผู้ป่วย (บนขวา และล่างซ้าย)</div>
+          <div class="flow-box step-item">2. ติดแผ่นนำไฟฟ้า (Pads) บนอกเปลือยของผู้ป่วย (บนขวา และล่างซ้าย)</div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box amber">3. ห้ามแตะต้องผู้ป่วย! ให้เครื่องวิเคราะห์คลื่นไฟฟ้า (Analyze)</div>
+          <div class="flow-box amber step-item">3. ห้ามแตะต้องผู้ป่วย! ให้เครื่องวิเคราะห์คลื่นไฟฟ้า (Analyze)</div>
           <div class="flow-arrow">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="flow-box red" style="font-size:0.75rem; padding:10px;">Shockable (VF/pVT)<br>➔ เคลียร์คน ➔ กดปุ่มช็อก<br>➔ เริ่ม CPR ทันที</div>
             <div class="flow-box" style="font-size:0.75rem; padding:10px;">Non-shockable<br>➔ เริ่ม CPR ทันที 2 นาที<br>(ไม่ต้องช็อก)</div>
           </div>
           <div class="flow-arrow">↓</div>
-          <div class="flow-box green">4. ทำ CPR ต่อเนื่อง 2 นาที (เครื่องจะเตือนให้ประเมินซ้ำเมื่อครบ 2 นาที)</div>
+          <div class="flow-box green step-item">4. ทำ CPR ต่อเนื่อง 2 นาที (เครื่องจะเตือนให้ประเมินซ้ำเมื่อครบ 2 นาที)</div>
+        </div>
+        <div class="stepper-controls">
+          <button class="nav-btn" onclick="playAlgorithmStepper('#stepperTrack9')">▶ Play</button>
+          <button class="nav-btn" onclick="resetAlgorithmStepper()">Reset</button>
         </div>
       </div>
       <div class="card reveal">
@@ -1697,17 +1719,21 @@ html, body {
     <div class="grid-2">
       <div class="card reveal">
         <div class="card-title">Algorithm Pathways</div>
-        <div style="display:flex; flex-direction:column; gap:4px; font-size:0.8rem;">
-          <div class="flow-box">ภาวะหัวใจหยุดเต้น (Cardiac Arrest) ➔ เริ่มทำ CPR ➔ ต่อมอนิเตอร์/ช็อกไฟฟ้า</div>
+        <div class="stepper-track" id="stepperTrack14" style="display:flex; flex-direction:column; gap:4px; font-size:0.8rem;">
+          <div class="flow-box step-item">ภาวะหัวใจหยุดเต้น (Cardiac Arrest) ➔ เริ่มทำ CPR ➔ ต่อมอนิเตอร์/ช็อกไฟฟ้า</div>
           <div class="flow-arrow" style="margin:2px 0;">↓</div>
-          <div class="flow-box amber">ประเมินจังหวะหัวใจ (Assess Rhythm)</div>
+          <div class="flow-box amber step-item">ประเมินจังหวะหัวใจ (Assess Rhythm)</div>
           <div class="flow-arrow" style="margin:2px 0;">↓</div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
             <div class="flow-box red" style="font-size:0.75rem; padding:8px;">SHOCKABLE (VF / pVT)<br>➔ Shock ➔ CPR 2 นาที<br>➔ Epinephrine หลังช็อกครั้งที่ 2<br>➔ Amiodarone หลังช็อกครั้งที่ 3</div>
             <div class="flow-box" style="font-size:0.75rem; padding:8px;">NON-SHOCKABLE (PEA / Asystole)<br>➔ Epinephrine ทันที ASAP!<br>➔ CPR 2 นาที ➔ ค้นหา H's & T's</div>
           </div>
           <div class="flow-arrow" style="margin:2px 0;">↓</div>
-          <div class="flow-box green">ประเมินจังหวะหัวใจประเมินคลื่นซ้ำทุก 2 นาที (สลับคนกดหน้าอก)</div>
+          <div class="flow-box green step-item">ประเมินจังหวะหัวใจประเมินคลื่นซ้ำทุก 2 นาที (สลับคนกดหน้าอก)</div>
+        </div>
+        <div class="stepper-controls">
+          <button class="nav-btn" onclick="playAlgorithmStepper('#stepperTrack14')">▶ Play</button>
+          <button class="nav-btn" onclick="resetAlgorithmStepper()">Reset</button>
         </div>
       </div>
       <div class="card reveal">
@@ -3408,6 +3434,7 @@ class SlidePresentation {
   goToSlide(index) {
     if (index < 0 || index >= this.totalSlides) return;
     ecgManager.stopAll();
+    resetAlgorithmStepper();
     this.slides[this.currentSlide].classList.remove('active');
     if (index < this.currentSlide) {
       this.slides[this.currentSlide].classList.add('prev');
@@ -3660,6 +3687,31 @@ class ECGMonitorManager {
   }
 }
 const ecgManager = new ECGMonitorManager();
+
+/* === ALGORITHM AUTO-STEPPER === */
+let stepTimer = null;
+
+function resetAlgorithmStepper() {
+  if (stepTimer) { clearInterval(stepTimer); stepTimer = null; }
+  document.querySelectorAll('.slide.active .flow-box.step-active').forEach(el => el.classList.remove('step-active'));
+}
+
+function playAlgorithmStepper(containerSelector) {
+  resetAlgorithmStepper();
+  const container = document.querySelector(`.slide.active ${containerSelector}`);
+  if (!container) return;
+  // Direct children only — avoids highlighting nested branch boxes
+  const boxes = container.querySelectorAll(':scope > .flow-box.step-item');
+  if (!boxes.length) return;
+  let i = 0;
+  boxes[0].classList.add('step-active');
+  stepTimer = setInterval(() => {
+    boxes[i].classList.remove('step-active');
+    i++;
+    if (i >= boxes.length) { clearInterval(stepTimer); stepTimer = null; return; }
+    boxes[i].classList.add('step-active');
+  }, 1500);
+}
 
 /* === INITIALIZE === */
 const presentation = new SlidePresentation();

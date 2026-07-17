@@ -3435,6 +3435,8 @@ class ECGMonitor {
     this.colorVar = colorVar;
     this.running = false;
     this._resize();
+    this._resizeHandler = () => this._resize();
+    window.addEventListener('resize', this._resizeHandler);
   }
   _resize() {
     const r = this.canvas.getBoundingClientRect();
@@ -3450,7 +3452,10 @@ class ECGMonitor {
     this._resize();
     this._loop();
   }
-  stop() { this.running = false; }
+  stop() {
+    this.running = false;
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+  }
   _loop() {
     if (!this.running) return;
     const { ctx, canvas } = this;

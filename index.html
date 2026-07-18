@@ -271,7 +271,7 @@
 
     <div class="info-bar reveal">
       <div class="info-item">
-        <span class="info-num">65</span>
+        <span class="info-num" id="slideCountVal">66</span>
         <span class="info-label">Teaching Slides</span>
       </div>
       <div class="info-item">
@@ -299,7 +299,7 @@
           Arrhythmia Algorithms (Brady/Tachy), Special Circumstances (Pregnancy, LVAD, Hyperthermia), Post-Cardiac Arrest Care และ Termination of Resuscitation
         </p>
         <div class="card-footer">
-          <span class="card-tag">~65 SLIDES · HIGH DENSITY</span>
+          <span class="card-tag" id="slideCardTag">~66 SLIDES · HIGH DENSITY</span>
           <span class="card-arrow">→</span>
         </div>
       </a>
@@ -328,5 +328,28 @@
       </p>
     </div>
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('slides/acls-2025-teaching.html')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to load slides');
+          return response.text();
+        })
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const slideCount = doc.querySelectorAll('.slide').length;
+          if (slideCount > 0) {
+            const slideCountVal = document.getElementById('slideCountVal');
+            if (slideCountVal) slideCountVal.textContent = slideCount;
+            
+            const slideCardTag = document.getElementById('slideCardTag');
+            if (slideCardTag) slideCardTag.textContent = `~${slideCount} SLIDES · HIGH DENSITY`;
+          }
+        })
+        .catch(err => console.warn('Could not auto-sync slide count (likely local file protocol context):', err));
+    });
+  </script>
 </body>
 </html>

@@ -2,3 +2,8 @@
 *.DS_Store
 ._*
 node_modules/
+acls2025/
+acls2025-md/
+fonts/
+dist/
+_site/

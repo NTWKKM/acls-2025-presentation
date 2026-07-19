@@ -4,7 +4,7 @@ Adult Advanced Life Support presentation based on AHA 2025 Guidelines (Parts 7, 
 
 ## Contents
 
-- **Teaching Slides** — 44 slides covering BLS → ALS → ROSC + Special Conditions + Brady/Tachy algorithms
+- **Teaching Slides** — 66 slides (58 teaching slides + 8 section dividers) covering BLS → ALS → ROSC + Special Conditions + Brady/Tachy algorithms
 - **Case Scenarios** — 10 interactive case-based learning modules
 - **Landing Page** — Index page linking both sections
 

@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ACLS 2025 - Interactive Case Scenarios</title>
   
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../fonts/fonts.css">
   
   <style>
     /* ===== RESET & BASE ===== */
@@ -24,7 +21,7 @@
     }
     
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Inter', 'Noto Sans Thai', sans-serif;
       background: #0f1e3d;
       color: #ffffff;
       display: flex;
@@ -64,7 +61,7 @@
     
     /* ===== TYPOGRAPHY ===== */
     h1, h2, h3, h4 {
-      font-family: 'Sora', sans-serif;
+      font-family: 'Sora', 'Noto Sans Thai', sans-serif;
       font-weight: 700;
     }
     
@@ -193,6 +190,14 @@
     .option-card:hover {
       border-color: #60a5fa;
       background: rgba(37,99,235,0.1);
+      transform: translateY(-2px);
+    }
+    
+    .option-card:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.4);
+      background: rgba(37, 99, 235, 0.1);
       transform: translateY(-2px);
     }
     
@@ -1558,6 +1563,17 @@
     // ===== OPTION SELECTION =====
     function setupOptionHandlers() {
       document.querySelectorAll('.option-card').forEach(card => {
+        card.setAttribute('role', 'button');
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('aria-disabled', 'false');
+        
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+
         card.addEventListener('click', function() {
           const parentSlide = this.closest('.slide');
           const isCorrect = this.getAttribute('data-correct') === 'true';
@@ -1565,23 +1581,30 @@
           // Disable all options
           parentSlide.querySelectorAll('.option-card').forEach(opt => {
             opt.classList.add('disabled');
+            opt.setAttribute('aria-disabled', 'true');
+            opt.setAttribute('tabindex', '-1');
           });
           
           // Mark selected
           if (isCorrect) {
             this.classList.add('correct');
+            this.setAttribute('aria-label', this.textContent + ' - ถูกต้อง');
             state.score++;
             updateStatusBar();
           } else {
             this.classList.add('incorrect');
+            this.setAttribute('aria-label', this.textContent + ' - ไม่ถูกต้อง');
             // Show correct answer
-            parentSlide.querySelector('.option-card[data-correct="true"]').classList.add('correct');
+            const correctOpt = parentSlide.querySelector('.option-card[data-correct="true"]');
+            correctOpt.classList.add('correct');
+            correctOpt.setAttribute('aria-label', correctOpt.textContent + ' - คำตอบที่ถูกต้อง');
           }
           
           // Show explanation
           const explanation = parentSlide.querySelector('.explanation-panel');
           if (explanation) {
             explanation.classList.add('visible');
+            explanation.setAttribute('aria-live', 'polite');
           }
           
           // Show nav buttons

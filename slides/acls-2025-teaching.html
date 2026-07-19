@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ACLS 2025 Teaching Slides — Clinical Edition</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Hanken+Grotesk:wght@400;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../fonts/fonts.css">
 <style>
 /* === DESIGN SYSTEM TOKENS === */
 html {
@@ -49,7 +47,7 @@ html, body {
   overflow: hidden;
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
 }
 
 .deck-viewport {
@@ -90,7 +88,7 @@ html, body {
   content: "ACLS 2025 CLINICAL INSTRUCTOR DECK — USE ← / → OR SPACE TO NAVIGATE";
   position: absolute;
   bottom: 48px; left: 60px;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   color: var(--text-primary);
   letter-spacing: 0.08em;
@@ -144,7 +142,7 @@ html, body {
 .section-ind {
   position: absolute;
   top: 48px; left: 60px;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
   color: var(--text-primary);
   letter-spacing: 0.08em;
@@ -156,7 +154,7 @@ html, body {
 .slide-num {
   position: absolute;
   bottom: 48px; right: 60px;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
   color: var(--text-primary);
   font-weight: 500;
@@ -197,7 +195,7 @@ html, body {
   padding: 6px 16px;
   border-radius: 0px;
   cursor: pointer;
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   margin: 0 4px;
@@ -210,7 +208,7 @@ html, body {
 }
 
 .nav-counter {
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   color: var(--text-primary);
   font-size: 0.85rem;
   padding: 0 8px;
@@ -227,7 +225,7 @@ html, body {
 }
 
 .section-badge {
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -237,7 +235,7 @@ html, body {
 }
 
 .slide-title {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 2.8rem;
   line-height: 1.1;
@@ -252,7 +250,7 @@ html, body {
   font-weight: 400;
   color: var(--text-secondary);
   margin-top: 4px;
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   letter-spacing: 0;
 }
 
@@ -290,7 +288,7 @@ html, body {
 
 
 .card-title {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 1.3rem;
   margin-bottom: 20px;
@@ -358,14 +356,14 @@ html, body {
 }
 
 .drug-box .drug-name {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-size: 1.15rem;
   margin-bottom: 4px;
   font-weight: 400;
   color: inherit;
 }
 .drug-box .drug-dose {
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
   color: inherit;
   margin-top: 4px;
@@ -382,7 +380,7 @@ html, body {
   margin-top: auto;
 }
 .takeaway-label {
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
   color: var(--text-primary);
   letter-spacing: 0.08em;
@@ -400,7 +398,7 @@ html, body {
   border: 1.5px solid var(--text-primary);
 }
 .stat-card .stat-num {
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-size: 2.2rem;
   font-weight: 400;
   color: var(--text-primary);
@@ -409,7 +407,7 @@ html, body {
 .stat-card.amber .stat-num { color: var(--amber); }
 .stat-card.green .stat-num { color: var(--green); }
 .stat-card .stat-label {
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: 4px;
@@ -426,7 +424,7 @@ html, body {
   color: var(--text-primary);
   padding: 12px 16px;
   text-align: left;
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -436,7 +434,7 @@ html, body {
   padding: 12px 16px;
   border-bottom: 1.5px solid var(--border-faint); /* Faint cobalt row divider */
   color: var(--text-primary);
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
 }
 .data-table tr:nth-child(even) td {
   background: rgba(31, 43, 224, 0.03);
@@ -452,7 +450,7 @@ html, body {
   justify-content: center;
   padding: 2px 10px;
   border-radius: 0px;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 500;
 }
@@ -616,7 +614,7 @@ html, body {
 .charge-label {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem; font-weight: 600;
   color: var(--text-primary);
   z-index: 2; letter-spacing: 0.04em;
@@ -650,7 +648,7 @@ html, body {
   border: 3px solid var(--blue);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem; font-weight: 600;
   color: var(--blue); text-align: center; line-height: 1.2;
   position: relative;
@@ -709,7 +707,7 @@ html, body {
 }
 .ecg-label {
   position: absolute; top: 6px; left: 12px;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
   color: var(--text-primary);
   z-index: 2;
@@ -770,7 +768,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 1.15rem;
   color: var(--bg-primary);
@@ -779,7 +777,7 @@ html, body {
 }
 .chain-link.green .chain-num { background: var(--green); }
 .chain-link .chain-title {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 0.95rem;
   color: var(--text-primary);
@@ -857,7 +855,7 @@ html, body {
   border-color: var(--red);
 }
 .ht-card .ht-title {
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 1.5rem;
   color: var(--text-primary);
@@ -890,7 +888,7 @@ html, body {
   color: var(--bg-secondary);
 }
 .click-prompt {
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -903,7 +901,7 @@ html, body {
   50% { opacity: 1; }
 }
 .treatment-title {
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -911,7 +909,7 @@ html, body {
   margin-bottom: 12px;
 }
 .treatment-desc {
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   line-height: 1.4;
@@ -928,7 +926,7 @@ html, body {
   text-align: center;
 }
 .divider-num {
-  font-family: 'Newsreader', Georgia, serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 8rem;
   color: rgba(31, 43, 224, 0.12);
@@ -943,7 +941,7 @@ html, body {
 }
 
 .divider-title {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-weight: 400;
   font-size: 3.2rem;
   color: var(--text-primary);
@@ -951,7 +949,7 @@ html, body {
   letter-spacing: -0.005em;
 }
 .divider-sub {
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 1.2rem;
   color: var(--text-secondary);
   max-width: 800px;
@@ -983,7 +981,7 @@ html, body {
   border: 1.5px solid var(--text-primary);
   padding: 6px 14px;
   border-radius: 0px;
-  font-family: 'Hanken Grotesk', 'Noto Sans Thai', sans-serif;
+  font-family: 'Inter', 'Noto Sans Thai', sans-serif;
   font-size: 0.8rem;
   cursor: pointer;
 }
@@ -1019,7 +1017,7 @@ html, body {
   border-radius: 0px;
   cursor: pointer;
   z-index: 1001;
-  font-family: 'DM Mono', 'JetBrains Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -1063,7 +1061,7 @@ html, body {
   padding-bottom: 10px;
 }
 .drug-overlay-header h3 {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-size: 1.15rem;
   color: var(--text-primary);
   font-weight: 400;
@@ -1110,7 +1108,7 @@ html, body {
   display: block;
 }
 .drug-tab-content h4 {
-  font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
+  font-family: 'Sora', 'Noto Sans Thai', sans-serif;
   font-size: 1.15rem;
   color: var(--text-primary);
   margin-bottom: 10px;
@@ -1809,9 +1807,10 @@ html, body {
             <br>• ช็อกครั้งที่ 1 ➔ CPR 2 นาที
             <br>• ช็อกครั้งที่ 2 ➔ CPR + <strong>Epinephrine 1 mg</strong> ทุก 3-5 นาที
           </li>
-          <li><strong>รอบช็อกที่ 3-4</strong>:
+          <li><strong>รอบช็อกที่ 3-5+</strong>:
             <br>• ช็อกครั้งที่ 3 ➔ CPR + <strong>Amiodarone 300 mg</strong> (หรือ Lidocaine 1-1.5 mg/kg)
-            <br>• ช็อกครั้งที่ 4 ➔ CPR + <strong>Amiodarone 150 mg</strong>
+            <br>• ช็อกครั้งที่ 4 ➔ CPR + <strong>Epinephrine 1 mg</strong> (ถ้าครบ 3-5 นาที)
+            <br>• ช็อกครั้งที่ 5 ➔ CPR + <strong>Amiodarone 150 mg</strong> (หรือ Lidocaine 0.5-0.75 mg/kg)
           </li>
         </ul>
       </div>
@@ -3429,6 +3428,7 @@ class SlidePresentation {
     this.viewport = document.getElementById('deckViewport');
     this.counter = document.getElementById('slideCounter');
     this.progressBar = document.getElementById('progressBar');
+    this.lastEPress = 0;
     this.init();
   }
 
@@ -3516,7 +3516,15 @@ class SlidePresentation {
         case 'Home': this.goToSlide(0); break;
         case 'End': this.goToSlide(this.totalSlides - 1); break;
         case 'e': case 'E':
-          if (!e.target.getAttribute('contenteditable')) this.editor && this.editor.toggle();
+          if (!e.target.getAttribute('contenteditable')) {
+            const now = Date.now();
+            if (this.lastEPress && (now - this.lastEPress < 500)) {
+              this.editor && this.editor.toggle();
+              this.lastEPress = 0;
+            } else {
+              this.lastEPress = now;
+            }
+          }
           break;
         case 'd': case 'D':
           if (!e.target.getAttribute('contenteditable')) toggleDrugOverlay();
@@ -3577,7 +3585,10 @@ class InlineEditor {
   }
 
   bindEvents() {
-    this.toggleBtn.addEventListener('click', () => this.toggle());
+    this.toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.toggle();
+    });
     this.hotzone.addEventListener('mouseenter', () => {
       clearTimeout(this.hideTimeout);
       this.toggleBtn.classList.add('show');
@@ -3593,7 +3604,24 @@ class InlineEditor {
         if (!this.isActive) this.toggleBtn.classList.remove('show');
       }, 400);
     });
-    this.hotzone.addEventListener('click', () => this.toggle());
+    
+    // Touch & Tap Support: clicking the hotzone toggles showing the button
+    this.hotzone.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.toggleBtn.classList.contains('show')) {
+        this.toggleBtn.classList.remove('show');
+      } else {
+        clearTimeout(this.hideTimeout);
+        this.toggleBtn.classList.add('show');
+      }
+    });
+    
+    // Tap outside to hide the button when not active
+    document.addEventListener('click', () => {
+      if (!this.isActive) {
+        this.toggleBtn.classList.remove('show');
+      }
+    });
   }
 }
 

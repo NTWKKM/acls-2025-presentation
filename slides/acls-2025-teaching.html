@@ -281,7 +281,13 @@ html, body {
   justify-content: flex-start;
   min-height: 0;
   overflow: hidden;
+  transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo);
 }
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(31, 43, 224, 0.08);
+}
+
 
 .card-title {
   font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
@@ -567,12 +573,19 @@ html, body {
 .ecg-strip {
   width: 100%; height: 80px;
   background: #050510;
+  background-image: 
+    linear-gradient(to right, rgba(31, 43, 224, 0.08) 1px, transparent 1px), 
+    linear-gradient(to bottom, rgba(31, 43, 224, 0.08) 1px, transparent 1px),
+    linear-gradient(to right, rgba(31, 43, 224, 0.03) 1px, transparent 1px), 
+    linear-gradient(to bottom, rgba(31, 43, 224, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
   border-radius: 0px;
   overflow: hidden;
   position: relative;
   margin: 10px 0;
   border: 1.5px solid var(--text-primary);
 }
+
 .ecg-strip svg { width: 100%; height: 100%; }
 .ecg-strip canvas { width: 100%; height: 100%; display: block; }
 
@@ -583,7 +596,17 @@ html, body {
   border: 1px solid var(--border-faint);
   position: relative; overflow: hidden;
   margin-top: 8px;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
+.charge-bar.charging {
+  border-color: var(--amber);
+  animation: chargePulse 1s infinite alternate;
+}
+@keyframes chargePulse {
+  0% { box-shadow: 0 0 4px var(--amber-glow); }
+  100% { box-shadow: 0 0 16px rgba(201, 122, 0, 0.4); }
+}
+
 .charge-fill {
   width: 0%; height: 100%;
   background: var(--amber);
@@ -910,7 +933,15 @@ html, body {
   font-size: 8rem;
   color: rgba(31, 43, 224, 0.12);
   line-height: 1;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-spring);
 }
+.slide.active .divider-num {
+  opacity: 0.12;
+  transform: scale(1);
+}
+
 .divider-title {
   font-family: 'Newsreader', Georgia, 'Noto Sans Thai', serif;
   font-weight: 400;
@@ -1008,14 +1039,20 @@ html, body {
   padding: 24px;
   box-shadow: 0 15px 35px rgba(31, 43, 224, 0.15);
   z-index: 1002;
-  display: none;
+  display: flex;
   flex-direction: column;
   transform-origin: bottom right;
-  animation: overlayPop 0.3s var(--ease-out-expo) forwards;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.85) translateY(20px);
+  transition: opacity 0.3s var(--ease-out-expo), transform 0.3s var(--ease-out-expo), visibility 0.3s;
 }
-@keyframes overlayPop {
-  0% { opacity: 0; transform: scale(0.85) translateY(20px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+.drug-overlay-panel.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: scale(1) translateY(0);
 }
 .drug-overlay-header {
   display: flex;
@@ -1094,7 +1131,37 @@ html, body {
 .drug-tab-content li {
   margin-bottom: 6px;
 }
+
+/* === PREFERS REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .slide {
+    transition: none !important;
+  }
+  .cpr-rate-circle::before, .slide.active .cpr-rate-circle::before {
+    animation: none !important;
+    opacity: 0.2 !important;
+  }
+  .cpr-depth-fill, .slide.active .cpr-depth-fill {
+    animation: none !important;
+  }
+  .heart-icon {
+    animation: none !important;
+  }
+  .ht-card-inner {
+    transition: none !important;
+  }
+  .charge-bar.charging {
+    animation: none !important;
+    box-shadow: 0 0 8px rgba(201, 122, 0, 0.3) !important;
+  }
+}
 </style>
+
 </head>
 <body>
 
@@ -1110,25 +1177,25 @@ html, body {
 
 <!-- Navigation Controls (inside stage) -->
 <div class="deck-controls">
-  <button class="nav-btn" onclick="location.href='../index.html'">Index</button>
-  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">← Prev</button>
+  <button class="nav-btn" onclick="location.href='../index.html'" aria-label="Back to main directory index">Index</button>
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="Go to previous slide">← Prev</button>
   <span class="nav-counter" id="slideCounter">01 / 66</span>
-  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="Go to next slide">Next →</button>
 </div>
 
 <!-- Floating Drug Quick Reference Overlay -->
-<div class="drug-overlay-toggle" onclick="toggleDrugOverlay()">💊 Drug Ref</div>
+<div class="drug-overlay-toggle" onclick="toggleDrugOverlay()" aria-label="Toggle Drug Quick Reference Overlay">💊 Drug Ref</div>
 <div class="drug-overlay-panel" id="drugOverlayPanel">
   <div class="drug-overlay-header">
     <h3>ACLS 2025 Drug Quick Reference</h3>
-    <button class="drug-close-btn" onclick="toggleDrugOverlay()">✕</button>
+    <button class="drug-close-btn" onclick="toggleDrugOverlay()" aria-label="Close Drug Quick Reference Overlay">✕</button>
   </div>
   <div class="drug-tabs">
-    <button class="drug-tab-btn active" onclick="switchDrugTab('epi')">Epinephrine</button>
-    <button class="drug-tab-btn" onclick="switchDrugTab('amiodarone')">Amiodarone</button>
-    <button class="drug-tab-btn" onclick="switchDrugTab('lidocaine')">Lidocaine</button>
-    <button class="drug-tab-btn" onclick="switchDrugTab('atropine')">Atropine</button>
-    <button class="drug-tab-btn" onclick="switchDrugTab('adenosine')">Adenosine</button>
+    <button class="drug-tab-btn active" onclick="switchDrugTab('epi')" aria-label="Show Epinephrine drug details">Epinephrine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('amiodarone')" aria-label="Show Amiodarone drug details">Amiodarone</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('lidocaine')" aria-label="Show Lidocaine drug details">Lidocaine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('atropine')" aria-label="Show Atropine drug details">Atropine</button>
+    <button class="drug-tab-btn" onclick="switchDrugTab('adenosine')" aria-label="Show Adenosine drug details">Adenosine</button>
   </div>
   <div class="drug-tab-content active" id="tab-epi">
     <h4>Epinephrine (อะดรีนาลีน)</h4>
@@ -1753,7 +1820,7 @@ html, body {
         <div class="ecg-simulator" id="ecgSim">
           <div class="ecg-strip" id="simEcgStrip">
             <div class="ecg-label" id="simEcgLabel">VENTRICULAR FIBRILLATION (VF)</div>
-            <canvas id="simEcgCanvas"></canvas>
+            <canvas id="simEcgCanvas" role="img" aria-label="Defibrillator simulator ECG monitor showing Ventricular Fibrillation (VF) rhythm"></canvas>
           </div>
           <div class="charge-bar" id="chargeBar">
             <div class="charge-fill" id="chargeFill"></div>
@@ -2219,6 +2286,10 @@ html, body {
     <div class="section-badge reveal">H's & T's</div>
     <h2 class="slide-title reveal">สาเหตุแก้ไขได้ของหัวใจหยุดเต้น (H's & T's)<span>Reversible Causes of Cardiac Arrest: The Grid</span></h2>
     <div class="title-accent reveal"></div>
+    <div class="stepper-controls reveal" style="margin-bottom: 20px;">
+      <button class="nav-btn" onclick="toggleAllHTCards(true)" aria-label="Reveal all H and T causes">Reveal All (แสดงทั้งหมด)</button>
+      <button class="nav-btn" onclick="toggleAllHTCards(false)" aria-label="Hide all H and T causes">Hide All (ซ่อนทั้งหมด)</button>
+    </div>
     <div class="ht-grid reveal" style="margin-bottom:20px;">
       <!-- H1 -->
       <div class="ht-card" onclick="this.classList.toggle('flipped')">
@@ -2523,7 +2594,7 @@ html, body {
         <div class="card-title">การจัดการตามลักษณะคลื่นและข้อบ่งชี้</div>
         <div class="ecg-strip">
           <div class="ecg-label">TORSADES DE POINTES (SPINDLE WAVE)</div>
-          <canvas id="torsadesCanvas"></canvas>
+          <canvas id="torsadesCanvas" role="img" aria-label="ECG simulator monitor showing Torsades de Pointes rhythm"></canvas>
         </div>
         <table class="data-table">
           <thead>
@@ -2658,7 +2729,7 @@ html, body {
         <div class="card-title">ข้อแนะนำการทำ Transcutaneous Pacing (TCP)</div>
         <div class="ecg-strip" style="margin-bottom:12px;">
           <div class="ecg-label" style="color:var(--blue-light);">TRANSCUTANEOUS PACING (SPIKE + CAPTURE)</div>
-          <canvas id="tcpCanvas"></canvas>
+          <canvas id="tcpCanvas" role="img" aria-label="ECG simulator monitor showing Transcutaneous Pacing rhythm with spike and capture beats"></canvas>
         </div>
         <ul class="bullets">
           <li><strong>TCP Placement</strong>: ติดแผ่นนำไฟฟ้าแบบหน้า-หลัง (Anteroposterior) เพื่อส่งกระแสไฟกระตุ้นหัวใจได้ลึกที่สุด</li>
@@ -3389,6 +3460,7 @@ class SlidePresentation {
     if (index < 0 || index >= this.totalSlides) return;
     ecgManager.stopAll();
     resetAlgorithmStepper();
+    toggleAllHTCards(false);
     this.slides[this.currentSlide].classList.remove('active');
     if (index < this.currentSlide) {
       this.slides[this.currentSlide].classList.add('prev');
@@ -3445,6 +3517,9 @@ class SlidePresentation {
         case 'End': this.goToSlide(this.totalSlides - 1); break;
         case 'e': case 'E':
           if (!e.target.getAttribute('contenteditable')) this.editor && this.editor.toggle();
+          break;
+        case 'd': case 'D':
+          if (!e.target.getAttribute('contenteditable')) toggleDrugOverlay();
           break;
       }
     });
@@ -3556,12 +3631,39 @@ class ECGMonitor {
     this.canvas.width = r.width * devicePixelRatio;
     this.canvas.height = r.height * devicePixelRatio;
   }
-  setRhythm(rhythm, colorVar) { this.rhythm = rhythm; if (colorVar) this.colorVar = colorVar; }
+  setRhythm(rhythm, colorVar) {
+    this.rhythm = rhythm;
+    if (colorVar) this.colorVar = colorVar;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this._drawStatic();
+    }
+  }
+  _drawStatic() {
+    const { ctx, canvas } = this;
+    if (!canvas.width) this._resize();
+    if (!canvas.width) return;
+    const gen = ECGMonitor.RHYTHMS[this.rhythm];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.beginPath();
+    const mid = canvas.height / 2;
+    const scale = canvas.height / 160;
+    for (let x = 0; x < canvas.width; x++) {
+      const y = mid - gen(x / devicePixelRatio) * scale;
+      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue(this.colorVar).trim() || '#C41E3A';
+    ctx.lineWidth = 2.5 * devicePixelRatio;
+    ctx.stroke();
+  }
   start() {
     if (this.running) return;
     this.running = true;
     this._retries = 0;
     this._resize();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this._drawStatic();
+      return;
+    }
     this._loop();
   }
   stop() {
@@ -3581,6 +3683,10 @@ class ECGMonitor {
       }
       this._retries = 0;
     }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this._drawStatic();
+      return;
+    }
     const gen = ECGMonitor.RHYTHMS[this.rhythm];
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -3590,9 +3696,21 @@ class ECGMonitor {
       const y = mid - gen(this.t - x / devicePixelRatio) * scale;
       x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue(this.colorVar).trim() || '#C41E3A';
+    const strokeColor = getComputedStyle(document.documentElement).getPropertyValue(this.colorVar).trim() || '#C41E3A';
+    ctx.strokeStyle = strokeColor;
     ctx.lineWidth = 2.5 * devicePixelRatio;
     ctx.stroke();
+    
+    // Draw scan line at the drawing head (right edge)
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - 2 * devicePixelRatio, 0);
+    ctx.lineTo(canvas.width - 2 * devicePixelRatio, canvas.height);
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2 * devicePixelRatio;
+    ctx.globalAlpha = 0.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1.0;
+
     this.t++;
     requestAnimationFrame(() => this._loop());
   }
@@ -3694,12 +3812,14 @@ function triggerShock() {
   const simEcgStrip = document.getElementById('simEcgStrip');
   const chargeFill = document.getElementById('chargeFill');
   const chargeLabel = document.getElementById('chargeLabel');
+  const chargeBar = document.getElementById('chargeBar');
 
   // Abort any existing charge
   if (chargeTimer) { clearTimeout(chargeTimer); chargeTimer = null; }
 
   // Disable controls during charge
   shockBtn.classList.add('charging');
+  if (chargeBar) chargeBar.classList.add('charging');
   document.querySelectorAll('.joule-btn').forEach(b => b.disabled = true);
   if (simStatus) simStatus.textContent = `Charging ${selectedJoules} J…`;
 
@@ -3739,6 +3859,7 @@ function triggerShock() {
 
     // Re-enable controls
     shockBtn.classList.remove('charging');
+    if (chargeBar) chargeBar.classList.remove('charging');
     document.querySelectorAll('.joule-btn').forEach(b => b.disabled = false);
   }, 1200);
 }
@@ -3749,6 +3870,7 @@ function resetShockSim() {
   const shockBtn = document.getElementById('shockBtn');
   const chargeFill = document.getElementById('chargeFill');
   const chargeLabel = document.getElementById('chargeLabel');
+  const chargeBar = document.getElementById('chargeBar');
 
   // Cancel any pending charge
   if (chargeTimer) { clearTimeout(chargeTimer); chargeTimer = null; }
@@ -3757,6 +3879,7 @@ function resetShockSim() {
   chargeFill.style.transition = 'none';
   chargeFill.style.width = '0%';
   chargeFill.classList.remove('charged');
+  if (chargeBar) chargeBar.classList.remove('charging');
   chargeLabel.textContent = '0 J';
 
   // Re-enable controls
@@ -3769,7 +3892,7 @@ function resetShockSim() {
 
   if (simEcgLabel) {
     simEcgLabel.textContent = "VENTRICULAR FIBRILLATION (VF)";
-    simEcgLabel.style.color = "var(--blue-light)";
+    simEcgLabel.style.color = "var(--text-primary)";
   }
   if (simStatus) {
     simStatus.textContent = "คลิก 'Deliver Shock' เพื่อจำลองการช็อกไฟฟ้าและประเมินผลการแปลงคลื่นหัวใจ";
@@ -3780,12 +3903,14 @@ function resetShockSim() {
 function toggleDrugOverlay() {
   const panel = document.getElementById('drugOverlayPanel');
   if (!panel) return;
-  
-  if (panel.style.display === 'flex') {
-    panel.style.display = 'none';
-  } else {
-    panel.style.display = 'flex';
-  }
+  panel.classList.toggle('open');
+}
+
+// Reversible Causes H's & T's Reveal/Hide Controls
+function toggleAllHTCards(reveal) {
+  document.querySelectorAll('.slide.active .ht-card').forEach(card => {
+    card.classList.toggle('flipped', reveal);
+  });
 }
 
 function switchDrugTab(drugKey) {

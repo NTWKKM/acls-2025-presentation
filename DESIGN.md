@@ -11,11 +11,23 @@
 - **Emerald Green (`--green`)**: `#0A5C36` (Slides) / `#16a34a` (Landing) — Success indicators (ROSC / Class 1).
 - **Amber Orange (`--amber`)**: `#d97706` — Warnings and Class 2b recommendations.
 
-### Typography
-- **Root Scale**: `html { font-size: 21px; }` — Scales all `rem`-based typography and spacing elements up by ~31.25% to maximize readability on the 1920x1080 canvas.
-- **Display Font**: `'Sora'`, sans-serif — Used for bold headers (`3.2rem`), numbers, and hero titles.
-- **Thai & Body Font**: `'Noto Sans Thai'`, `'Inter'`, sans-serif — Used for content blocks, bullets (`1.15rem`), and labels.
-- **Monospace Font**: `'JetBrains Mono'`, monospace — Used for drug doses, levels of evidence, and status counters.
+### Typography (Multi-page Layout Preservation)
+To preserve the original, fine-tuned layouts without layout shifting or text clipping, the typography is not unified across the pages. The specific font stacks for each page are:
+- **Landing Hub (`index.html`)**:
+  - Headings: `'Sora'`, sans-serif
+  - Body: `'DM Sans'`, sans-serif
+  - Monospace: `'JetBrains Mono'`, monospace
+- **Case Scenarios (`cases/acls-2025-cases.html`)**:
+  - Headings: `'Sora'`, sans-serif
+  - Body: `'DM Sans'`, sans-serif
+  - Monospace: `'JetBrains Mono'`, monospace
+- **Instructor Deck (`slides/acls-2025-teaching.html`)**:
+  - Display/Titles: `'Newsreader'`, Georgia, `'Noto Sans Thai'`, serif (or `'Newsreader'`, Georgia, serif)
+  - Body/Content: `'Hanken Grotesk'`, `'Noto Sans Thai'`, sans-serif
+  - Monospace/Metadata: `'DM Mono'`, `'JetBrains Mono'`, monospace
+
+> [!NOTE]
+> Unifying the font stacks across these three pages requires comprehensive layout QA to ensure that custom margins, line heights, and absolute positions on the 16:9 stage scaling container are not broken. Unification is deferred to user decision.
 
 ## UI States
 1. **Slide Transition**:

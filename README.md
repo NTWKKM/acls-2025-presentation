@@ -5,7 +5,7 @@ Adult Advanced Life Support presentation based on AHA 2025 Guidelines (Parts 7, 
 ## Contents
 
 - **Teaching Slides** — 66 slides (58 teaching slides + 8 section dividers) covering BLS → ALS → ROSC + Special Conditions + Brady/Tachy algorithms
-- **Case Scenarios** — 10 interactive case-based learning modules
+- **Case Scenarios** — 15 interactive case-based learning modules with interactive ECG waveforms and difficulty tags
 - **Landing Page** — Index page linking both sections
 
 ## Access via GitHub Pages

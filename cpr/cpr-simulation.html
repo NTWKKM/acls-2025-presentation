@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACLS 2025 — Bedside Vital Sign Monitor (Simulation Mode)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #000000;
+      --panel-bg: #0b0f19;
+      --border-color: #1e293b;
+      --ecg-green: #00ff66;
+      --etco2-yellow: #ffcc00;
+      --spo2-cyan: #00e5ff;
+      --nibp-red: #ff3366;
+      --text-muted: #64748b;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sora: 'Sora', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg-dark);
+      color: #ffffff;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    header {
+      background: var(--panel-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .badge-sim {
+      background: #dc2626;
+      color: white;
+      font-family: var(--font-sora);
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      animation: pulseAlert 2s infinite;
+    }
+    @keyframes pulseAlert { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .title {
+      font-family: var(--font-sora);
+      font-weight: 700;
+      font-size: 1rem;
+      color: #f8fafc;
+    }
+
+    .status-info {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--ecg-green);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Main Monitor Layout */
+    .monitor-grid {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 2px;
+      background: var(--border-color);
+      flex: 1;
+      height: calc(100vh - 55px);
+    }
+
+    .wave-cell {
+      background: var(--bg-dark);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 8px 12px;
+      overflow: hidden;
+    }
+
+    .vital-cell {
+      background: var(--panel-bg);
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 2px solid var(--border-color);
+    }
+
+    .wave-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      z-index: 5;
+    }
+    .wave-header.ecg { color: var(--ecg-green); }
+    .wave-header.etco2 { color: var(--etco2-yellow); }
+    .wave-header.spo2 { color: var(--spo2-cyan); }
+
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;
+    }
+
+    .vital-label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .vital-value {
+      font-family: var(--font-mono);
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1;
+      text-align: right;
+    }
+    .vital-unit {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .vital-cell.ecg-cell { color: var(--ecg-green); }
+    .vital-cell.etco2-cell { color: var(--etco2-yellow); }
+    .vital-cell.spo2-cell { color: var(--spo2-cyan); }
+    .vital-cell.nibp-cell { color: var(--nibp-red); }
+
+    /* Shock Flash Effect Overlay */
+    .shock-overlay {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+      transition: opacity 0.05s ease-out;
+    }
+    .shock-overlay.flash {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="shock-overlay" id="shockOverlay"></div>
+
+  <header>
+    <div class="brand">
+      <span class="badge-sim">SIMULATION MONITOR</span>
+      <div class="title">ACLS Bedside Code Blue Vital Sign Monitor</div>
+    </div>
+    <div class="status-info">
+      <span>Rhythm: <strong id="lblRhythm">VF (Coarse)</strong></span>
+      <span>Sync: <strong id="lblSyncState">Connected (BroadcastChannel)</strong></span>
+    </div>
+  </header>
+
+  <div class="monitor-grid">
+    
+    <!-- Row 1: ECG Waveform & HR -->
+    <div class="wave-cell">
+      <div class="wave-header ecg">
+        <span>II (ECG) 25mm/s 10mm/mV</span>
+        <span id="lblLeadInfo">LEAD II</span>
+      </div>
+      <canvas id="canvasECG"></canvas>
+    </div>
+    <div class="vital-cell ecg-cell">
+      <div class="vital-label">HR / Pulse</div>
+      <div class="vital-value" id="valHR">--</div>
+      <div class="vital-unit">bpm</div>
+    </div>
+
+    <!-- Row 2: ETCO2 Capnography & Value -->
+    <div class="wave-cell">
+      <div class="wave-header etco2">
+        <span>EtCO2 Capnography (mmHg)</span>
+        <span id="lblEtco2Status">Low Perfusing CPR</span>
+      </div>
+      <canvas id="canvasETCO2"></canvas>
+    </div>
+    <div class="vital-cell etco2-cell">
+      <div class="vital-label">EtCO2</div>
+      <div class="vital-value" id="valETCO2">10</div>
+      <div class="vital-unit">mmHg</div>
+    </div>
+
+    <!-- Row 3: SpO2 Waveform & NIBP -->
+    <div class="wave-cell">
+      <div class="wave-header spo2">
+        <span>SpO2 Pleth Waveform</span>
+        <span>%SpO2</span>
+      </div>
+      <canvas id="canvasSpO2"></canvas>
+    </div>
+    <div class="vital-cell spo2-cell">
+      <div class="vital-label">SpO2 %</div>
+      <div class="vital-value" id="valSpO2">--</div>
+      <div class="vital-unit">% O2 Sat</div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ==========================================================================
+       ACLS BEDSIDE VITAL SIGN SIMULATOR MONITOR - REALTIME CANVAS ENGINE
+       Listens to BroadcastChannel 'ACLS_SIM_CHANNEL' or direct window messages
+       ========================================================================== */
+
+    const channel = new BroadcastChannel('ACLS_SIM_CHANNEL');
+
+    let currentRhythm = 'VF'; // VF, Asystole, PEA, Sinus, Brady, Torsades
+    let currentHR = 0;
+    let currentETCO2 = 10;
+    let currentSpO2 = 0;
+    let isROSC = false;
+
+    // Audio context for monitor beeps
+    let audioCtx = null;
+
+    function playQRSBeep() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = isROSC ? 800 : 440;
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (err) {}
+    }
+
+    function triggerShockFlash() {
+      const overlay = document.getElementById('shockOverlay');
+      overlay.classList.add('flash');
+      setTimeout(() => overlay.classList.remove('flash'), 120);
+    }
+
+    // Update Vitals State
+    function updateVitalsState(rhythm, etco2Val, hrVal, spo2Val) {
+      currentRhythm = rhythm;
+      currentETCO2 = etco2Val;
+      currentHR = hrVal;
+      currentSpO2 = spo2Val;
+      isROSC = (rhythm === 'Sinus' || rhythm === 'ROSC' || rhythm === 'Normal Sinus');
+
+      document.getElementById('lblRhythm').textContent = rhythm;
+      document.getElementById('valETCO2').textContent = etco2Val;
+      document.getElementById('valHR').textContent = hrVal > 0 ? hrVal : '--';
+      document.getElementById('valSpO2').textContent = spo2Val > 0 ? spo2Val : '--';
+
+      if (isROSC) {
+        document.getElementById('lblEtco2Status').textContent = 'ROSC Achieved (Normal Capnogram)';
+      } else {
+        document.getElementById('lblEtco2Status').textContent = 'CPR Quality ETCO2 Monitor';
+      }
+    }
+
+    // Listen to Broadcast Events from CPR Recorder
+    channel.onmessage = (event) => {
+      const data = event.data;
+      console.log('[SimMonitor] Received Broadcast:', data);
+
+      if (data.type === 'SHOCK') {
+        triggerShockFlash();
+      } else if (data.type === 'STATE_UPDATE') {
+        updateVitalsState(data.rhythm, data.etco2, data.hr, data.spo2);
+      } else if (data.type === 'ROSC') {
+        updateVitalsState('Sinus', 38, 85, 98);
+      }
+    };
+
+    // Canvas Rendering Loops
+    const canvasECG = document.getElementById('canvasECG');
+    const ctxECG = canvasECG.getContext('2d');
+
+    const canvasETCO2 = document.getElementById('canvasETCO2');
+    const ctxETCO2 = canvasETCO2.getContext('2d');
+
+    const canvasSpO2 = document.getElementById('canvasSpO2');
+    const ctxSpO2 = canvasSpO2.getContext('2d');
+
+    function resizeCanvases() {
+      [canvasECG, canvasETCO2, canvasSpO2].forEach(c => {
+        c.width = c.parentElement.clientWidth;
+        c.height = c.parentElement.clientHeight;
+      });
+    }
+    window.addEventListener('resize', resizeCanvases);
+    resizeCanvases();
+
+    let xECG = 0, xETCO2 = 0, xSpO2 = 0;
+    const speed = 2.5;
+
+    // ECG Math Generation Function
+    function getECGY(x, h, rhythm) {
+      const mid = h / 2;
+      if (rhythm === 'Asystole') {
+        return mid + (Math.random() * 4 - 2); // Flatline with subtle noise
+      } else if (rhythm === 'VF') {
+        return mid + Math.sin(x * 0.15) * 35 + (Math.random() * 30 - 15); // Coarse VF
+      } else if (rhythm === 'PEA') {
+        // Slow wide QRS
+        const phase = (x % 160);
+        if (phase > 40 && phase < 50) return mid - 25;
+        if (phase >= 50 && phase < 65) return mid + 35;
+        if (phase >= 65 && phase < 75) return mid - 15;
+        return mid + (Math.random() * 2 - 1);
+      } else if (rhythm === 'Sinus' || rhythm === 'ROSC' || rhythm === 'Normal Sinus') {
+        // Normal Sinus Rhythm (QRS Complex)
+        const cycleLength = 90;
+        const phase = (x % cycleLength);
+        if (phase === 0) playQRSBeep();
+        if (phase > 30 && phase < 35) return mid - 8; // P wave
+        if (phase > 40 && phase < 43) return mid + 8; // Q wave
+        if (phase >= 43 && phase < 48) return mid - 55; // R wave peak
+        if (phase >= 48 && phase < 52) return mid + 20; // S wave
+        if (phase > 60 && phase < 72) return mid - 12; // T wave
+        return mid;
+      } else if (rhythm === 'Torsades') {
+        return mid + Math.sin(x * 0.08) * (Math.sin(x * 0.01) * 45); // Spindle-shaped polymorph VT
+      }
+      return mid;
+    }
+
+    // ETCO2 Capnography Curve Generator
+    function getETCO2Y(x, h, val) {
+      const base = h - 20;
+      const heightScale = (val / 50) * (h - 40);
+      const cycle = (x % 120);
+      
+      if (cycle < 30) return base; // Expiratory baseline (Phase I)
+      if (cycle >= 30 && cycle < 40) return base - heightScale * ((cycle - 30) / 10); // Phase II upstroke
+      if (cycle >= 40 && cycle < 80) return base - heightScale + (Math.random() * 2 - 1); // Phase III plateau
+      if (cycle >= 80 && cycle < 90) return base - heightScale * (1 - (cycle - 80) / 10); // Phase IV inspiratory downstroke
+      return base;
+    }
+
+    function animate() {
+      // ECG Draw Loop
+      const hE = canvasECG.height;
+      const yE = getECGY(xECG, hE, currentRhythm);
+      ctxECG.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctxECG.fillRect(xECG, 0, speed * 3, hE);
+
+      ctxECG.strokeStyle = '#00ff66';
+      ctxECG.lineWidth = 2.5;
+      ctxECG.beginPath();
+      ctxECG.moveTo(xECG, yE);
+      xECG += speed;
+      if (xECG >= canvasECG.width) xECG = 0;
+      ctxECG.lineTo(xECG, getECGY(xECG, hE, currentRhythm));
+      ctxECG.stroke();
+
+      // ETCO2 Draw Loop
+      const hEt = canvasETCO2.height;
+      const yEt = getETCO2Y(xETCO2, hEt, currentETCO2);
+      ctxETCO2.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctxETCO2.fillRect(xETCO2, 0, speed * 3, hEt);
+
+      ctxETCO2.strokeStyle = '#ffcc00';
+      ctxETCO2.lineWidth = 2.5;
+      ctxETCO2.beginPath();
+      ctxETCO2.moveTo(xETCO2, yEt);
+      xETCO2 += speed;
+      if (xETCO2 >= canvasETCO2.width) xETCO2 = 0;
+      ctxETCO2.lineTo(xETCO2, getETCO2Y(xETCO2, hEt, currentETCO2));
+      ctxETCO2.stroke();
+
+      // SpO2 Draw Loop
+      const hSp = canvasSpO2.height;
+      const midSp = hSp / 2;
+      const ySp = isROSC ? midSp + Math.sin(xSpO2 * 0.1) * 20 : midSp;
+      ctxSpO2.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      ctxSpO2.fillRect(xSpO2, 0, speed * 3, hSp);
+
+      ctxSpO2.strokeStyle = '#00e5ff';
+      ctxSpO2.lineWidth = 2.0;
+      ctxSpO2.beginPath();
+      ctxSpO2.moveTo(xSpO2, ySp);
+      xSpO2 += speed;
+      if (xSpO2 >= canvasSpO2.width) xSpO2 = 0;
+      ctxSpO2.lineTo(xSpO2, ySp);
+      ctxSpO2.stroke();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

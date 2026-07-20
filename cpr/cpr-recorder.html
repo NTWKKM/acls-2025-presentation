@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACLS 2025 — CPR Code Blue Recorder & Simulation Mode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy-dark: #070d19;
+      --navy: #0f1e3d;
+      --navy-light: #1a2d52;
+      --navy-card: #142447;
+      --blue-accent: #2563eb;
+      --blue-light: #3b82f6;
+      --red-alert: #dc2626;
+      --red-hover: #b91c1c;
+      --green-success: #16a34a;
+      --green-hover: #15803d;
+      --amber-warn: #d97706;
+      --amber-hover: #b45309;
+      --purple-accent: #8b5cf6;
+      --cyan-accent: #06b6d4;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --font-sora: 'Sora', sans-serif;
+      --font-sans: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--navy-dark);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: rgba(15, 30, 61, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      background: linear-gradient(135deg, var(--red-alert), var(--blue-accent));
+      color: white;
+      font-family: var(--font-sora);
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      letter-spacing: 0.05em;
+    }
+    .brand-title {
+      font-family: var(--font-sora);
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+    }
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-nav {
+      background: var(--navy-light);
+      color: white;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-nav:hover {
+      background: var(--blue-accent);
+      border-color: var(--blue-light);
+    }
+    .btn-nav.btn-danger {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: var(--red-alert);
+      color: #fca5a5;
+    }
+    .btn-nav.btn-danger:hover {
+      background: var(--red-alert);
+      color: white;
+    }
+    .btn-nav.btn-sim {
+      background: rgba(139, 92, 246, 0.25);
+      border-color: var(--purple-accent);
+      color: #c4b5fd;
+    }
+    .btn-nav.btn-sim.active {
+      background: var(--purple-accent);
+      color: white;
+    }
+
+    /* Simulation Mode Controller Bar */
+    .sim-bar {
+      background: linear-gradient(90deg, #1e1b4b, #0f172a);
+      border-bottom: 1px solid var(--purple-accent);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      animation: slideDown 0.3s ease;
+    }
+    @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+    .sim-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sim-title {
+      font-family: var(--font-sora);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #c4b5fd;
+    }
+
+    .sim-select {
+      background: var(--navy-dark);
+      border: 1px solid var(--purple-accent);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    /* Main Grid Layout */
+    .cpr-container {
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-grow: 1;
+    }
+
+    /* Embedded Live Mini ECG Monitor */
+    .sim-monitor-card {
+      background: #000000;
+      border: 1px solid var(--purple-accent);
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (max-width: 900px) {
+      .sim-monitor-card { grid-template-columns: 1fr; }
+    }
+
+    .mini-canvas-container {
+      position: relative;
+      height: 140px;
+      width: 100%;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+    .mini-canvas-container canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .mini-vitals-panel {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #0b0f19;
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid #1e293b;
+    }
+    .mini-vital-item {
+      text-align: center;
+      font-family: var(--font-mono);
+    }
+    .mini-vital-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .mini-vital-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    /* Timer & Metronome Dashboard Card */
+    .dashboard-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    @media (max-width: 1100px) {
+      .dashboard-card { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 650px) {
+      .dashboard-card { grid-template-columns: 1fr; }
+    }
+
+    .timer-block {
+      background: var(--navy);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+    .timer-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .timer-display {
+      font-family: var(--font-mono);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1;
+      margin: 6px 0;
+    }
+    .timer-display.text-red { color: #f87171; }
+    .timer-display.text-amber { color: #fbbf24; }
+    .timer-display.text-green { color: #4ade80; }
+    
+    .timer-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      width: 100%;
+    }
+    .btn-timer {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-start { background: var(--green-success); color: white; }
+    .btn-start:hover { background: var(--green-hover); }
+    .btn-pause { background: var(--amber-warn); color: white; }
+    .btn-pause:hover { background: var(--amber-hover); }
+    .btn-stop { background: var(--red-alert); color: white; }
+    .btn-stop:hover { background: var(--red-hover); }
+
+    /* Metronome Specifics */
+    .metronome-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      width: 100%;
+    }
+    .bpm-btn {
+      flex: 1;
+      padding: 6px 4px;
+      background: var(--navy-light);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bpm-btn.active {
+      background: var(--blue-accent);
+      color: white;
+      border-color: var(--blue-light);
+    }
+    .metronome-pulse {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #475569;
+      display: inline-block;
+      margin-left: 6px;
+      transition: transform 0.1s, background 0.1s;
+    }
+    .metronome-pulse.pulse-active {
+      background: #ef4444;
+      transform: scale(1.4);
+      box-shadow: 0 0 10px #ef4444;
+    }
+
+    /* Main Interactive Action Panel Grid */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1200px) {
+      .action-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 700px) {
+      .action-grid { grid-template-columns: 1fr; }
+    }
+
+    .section-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-sora);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+
+    /* Action Buttons */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn-act {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .btn-act:active {
+      transform: scale(0.97);
+    }
+
+    .btn-shock {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      color: white;
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+      font-size: 1.05rem;
+      padding: 16px;
+    }
+    .btn-shock:hover { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .btn-rhythm-shockable {
+      background: rgba(220, 38, 38, 0.15);
+      border-color: rgba(220, 38, 38, 0.4);
+      color: #fca5a5;
+    }
+    .btn-rhythm-shockable:hover { background: rgba(220, 38, 38, 0.3); }
+
+    .btn-rhythm-nonshockable {
+      background: rgba(217, 119, 6, 0.15);
+      border-color: rgba(217, 119, 6, 0.4);
+      color: #fcd34d;
+    }
+    .btn-rhythm-nonshockable:hover { background: rgba(217, 119, 6, 0.3); }
+
+    .btn-rosc {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: white;
+      box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
+      font-size: 1rem;
+      padding: 14px;
+    }
+    .btn-rosc:hover { background: linear-gradient(135deg, #22c55e, #16a34a); }
+
+    .btn-drug {
+      background: rgba(37, 99, 235, 0.15);
+      border-color: rgba(37, 99, 235, 0.4);
+      color: #93c5fd;
+    }
+    .btn-drug:hover { background: rgba(37, 99, 235, 0.3); }
+
+    .btn-airway {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.4);
+      color: #c4b5fd;
+    }
+    .btn-airway:hover { background: rgba(139, 92, 246, 0.3); }
+
+    .btn-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* H's and T's Grid Checklist */
+    .ht-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .ht-item {
+      background: var(--navy);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .ht-item.active {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: var(--cyan-accent);
+      color: #67e8f9;
+    }
+
+    /* Lower Section: Live Stream Log & Case Details */
+    .bottom-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 1000px) {
+      .bottom-layout { grid-template-columns: 1fr; }
+    }
+
+    .log-panel {
+      background: var(--navy-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+    }
+    .log-stream {
+      flex: 1;
+      overflow-y: auto;
+      margin: 12px 0;
+      padding-right: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .log-entry {
+      background: var(--navy);
+      border-left: 4px solid var(--blue-accent);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .log-entry.entry-shock { border-left-color: var(--red-alert); background: rgba(220, 38, 38, 0.08); }
+    .log-entry.entry-rosc { border-left-color: var(--green-success); background: rgba(22, 163, 74, 0.08); }
+    .log-entry.entry-drug { border-left-color: var(--blue-accent); background: rgba(37, 99, 235, 0.08); }
+    .log-entry.entry-airway { border-left-color: var(--purple-accent); background: rgba(139, 92, 246, 0.08); }
+    .log-entry.entry-sim { border-left-color: #a855f7; background: rgba(168, 85, 247, 0.1); font-weight: 600; }
+
+    .log-time {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #60a5fa;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+    .log-content { flex: 1; color: #f1f5f9; }
+    .log-del {
+      color: #64748b;
+      cursor: pointer;
+      font-size: 0.8rem;
+      border: none;
+      background: none;
+    }
+    .log-del:hover { color: #f87171; }
+
+    .note-input-row {
+      display: flex;
+      gap: 8px;
+    }
+    .input-text {
+      flex: 1;
+      background: var(--navy);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: white;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .input-text:focus { border-color: var(--blue-accent); }
+
+    /* Case Info Form Panel */
+    .case-form-panel {
+      background: var(--navy-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .form-control {
+      background: var(--navy);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      color: white;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .form-control:focus { border-color: var(--blue-accent); }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-family: var(--font-sora);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* History Table */
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .history-table th, .history-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .history-table th {
+      background: var(--navy);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .history-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .badge-rosc { background: rgba(22, 163, 74, 0.2); color: #4ade80; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+    .badge-tor { background: rgba(220, 38, 38, 0.2); color: #f87171; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+
+    textarea.summary-text {
+      width: 100%;
+      height: 250px;
+      background: var(--navy);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="brand">
+      <span class="brand-logo">ACLS 2025</span>
+      <div>
+        <div class="brand-title">Real-Time CPR Code Blue Recorder</div>
+        <div class="brand-subtitle">ระบบบันทึกเวชปฏิบัติ CPR & Local Database Storage (Offline-First)</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="../index.html" class="btn-nav">← Landing Hub</a>
+      <button class="btn-nav btn-sim" id="btnToggleSimMode">🎮 โหมด Simulation (Off)</button>
+      <button class="btn-nav" id="btnOpenHistory">📁 ประวัติเคสที่บันทึกไว้</button>
+      <button class="btn-nav btn-danger" id="btnNewCase">⚡ เริ่มเคสใหม่ (Reset)</button>
+    </div>
+  </header>
+
+  <!-- Simulation Control Bar (Shown in Simulation Mode) -->
+  <div class="sim-bar" id="simBar" style="display: none;">
+    <div class="sim-info">
+      <span class="sim-title">🎮 Simulation Control:</span>
+      <select class="sim-select" id="simScenarioSelect">
+        <option value="scen1">Scenario 1: Refractory VF (Shock 2x + Amiodarone 300mg -> ROSC)</option>
+        <option value="scen2">Scenario 2: PEA from Hyperkalemia (Give Ca Gluconate -> ROSC)</option>
+        <option value="scen3">Scenario 3: Asystole & Airway (ETT Insertion -> CPR -> ROSC)</option>
+        <option value="scen4">Scenario 4: Torsades de Pointes (Defib + MgSO4 -> ROSC)</option>
+        <option value="scen5">Scenario 5: Post-ROSC Rearrest (ROSC -> Recurrent VF)</option>
+      </select>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button class="btn-nav" id="btnPopoutMonitor" style="background: #6b21a8; color: white;">📺 เปิด Popout Bedside Monitor</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="cpr-container">
+
+    <!-- Embedded Mini Monitor (Shown in Simulation Mode) -->
+    <div class="sim-monitor-card" id="simMonitorCard" style="display: none;">
+      <div class="mini-canvas-container">
+        <div style="position: absolute; top: 6px; left: 10px; font-family: var(--font-mono); font-size: 0.75rem; color: #00ff66; z-index: 5;">
+          ECG LEAD II — Rhythm: <strong id="miniRhythmText">VF</strong>
+        </div>
+        <canvas id="miniECGCanvas"></canvas>
+      </div>
+      <div class="mini-vitals-panel">
+        <div class="mini-vital-item" style="color: #00ff66;">
+          <div class="mini-vital-label">HR (BPM)</div>
+          <div class="mini-vital-val" id="miniHRVal">--</div>
+        </div>
+        <div class="mini-vital-item" style="color: #ffcc00;">
+          <div class="mini-vital-label">EtCO2 (mmHg)</div>
+          <div class="mini-vital-val" id="miniEtco2Val">10</div>
+        </div>
+        <div class="mini-vital-item" style="color: #00e5ff;">
+          <div class="mini-vital-label">SpO2 (%)</div>
+          <div class="mini-vital-val" id="miniSpo2Val">--</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Dashboard Timers & Metronome -->
+    <div class="dashboard-card">
+      
+      <!-- Total CPR Timer -->
+      <div class="timer-block">
+        <div class="timer-label">⏱️ สรุปเวลา CPR รวม (Total CPR)</div>
+        <div class="timer-display" id="totalTimer">00:00</div>
+        <div class="timer-controls">
+          <button class="btn-timer btn-start" id="btnStartTotal">START</button>
+          <button class="btn-timer btn-pause" id="btnPauseTotal">PAUSE</button>
+        </div>
+      </div>
+
+      <!-- 2-Minute CPR Cycle Timer -->
+      <div class="timer-block">
+        <div class="timer-label">🔄 รอบ CPR 2 นาที (Cycle)</div>
+        <div class="timer-display text-amber" id="cycleTimer">02:00</div>
+        <div class="timer-controls">
+          <button class="btn-timer btn-start" id="btnResetCycle">RESTART 2 MIN</button>
+        </div>
+      </div>
+
+      <!-- Adrenaline Interval Timer (3-5 min) -->
+      <div class="timer-block">
+        <div class="timer-label">💉 ระยะเวลารอยา Adrenaline (3-5 Min)</div>
+        <div class="timer-display text-green" id="adrenTimer">00:00</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;" id="adrenStatus">
+          ยังไม่ได้ให้ Adrenaline
+        </div>
+      </div>
+
+      <!-- Metronome Control -->
+      <div class="timer-block">
+        <div class="timer-label">
+          🎵 CPR Metronome 
+          <span class="metronome-pulse" id="metroPulse"></span>
+        </div>
+        <div class="metronome-controls">
+          <button class="bpm-btn" data-bpm="100">100 BPM</button>
+          <button class="bpm-btn active" data-bpm="110">110 BPM</button>
+          <button class="bpm-btn" data-bpm="120">120 BPM</button>
+        </div>
+        <button class="btn-timer btn-start" id="btnToggleMetro" style="margin-top: 8px; width: 100%;">START METRONOME</button>
+      </div>
+
+    </div>
+
+    <!-- 2. Action Grid (Rhythm / Shock / Meds / Airway / H's & T's) -->
+    <div class="action-grid">
+      
+      <!-- Column 1: Rhythm & Defibrillation -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">⚡ Rhythm & Shock</div>
+          <span class="section-badge" id="shockCountBadge">Shock: 0 ครั้ง</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn-act btn-shock" id="btnShock">
+            <span>⚡ SHOCK 200J</span>
+            <span class="btn-badge">Deliver Defib</span>
+          </button>
+          <button class="btn-act btn-rhythm-shockable" id="btnVF">
+            <span>Rhythm: VF / Pulseless VT</span>
+            <span class="btn-badge">Shockable</span>
+          </button>
+          <button class="btn-act btn-rhythm-nonshockable" id="btnAsystole">
+            <span>Rhythm: Asystole / PEA</span>
+            <span class="btn-badge">Non-Shockable</span>
+          </button>
+          <button class="btn-act btn-rosc" id="btnROSC">
+            <span>🎉 ROSC Achieved!</span>
+            <span class="btn-badge">Pulse Present</span>
+          </button>
+          <button class="btn-act btn-rhythm-shockable" id="btnRearrest" style="background: rgba(185, 28, 28, 0.2);">
+            <span>⚠️ Rearrest / Recurrent VF</span>
+            <span class="btn-badge">Lost Pulse</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Column 2: ACLS Medications (AHA 2025) -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">💉 ยากู้ชีพ (ACLS Drugs)</div>
+          <span class="section-badge" id="adrenCountBadge">Adren: 0 เข็ม</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn-act btn-drug" id="btnAdren">
+            <span>Adrenaline 1 mg IV/IO</span>
+            <span class="btn-badge">ทุก 3-5 นาที</span>
+          </button>
+          <button class="btn-act btn-drug" id="btnAmio300">
+            <span>Amiodarone 300 mg</span>
+            <span class="btn-badge">Dose 1 (VF/pVT)</span>
+          </button>
+          <button class="btn-act btn-drug" id="btnAmio150">
+            <span>Amiodarone 150 mg</span>
+            <span class="btn-badge">Dose 2 (Refractory)</span>
+          </button>
+          <button class="btn-act btn-drug" id="btnLido">
+            <span>Lidocaine 1 - 1.5 mg/kg</span>
+            <span class="btn-badge">Alt. to Amio</span>
+          </button>
+          <button class="btn-act btn-drug" id="btnNaHCO3">
+            <span>Sodium Bicarbonate 50 mEq</span>
+            <span class="btn-badge">Severe Acidosis</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Column 3: Airway & Procedure -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">🫁 Airway & Interventions</div>
+          <span class="section-badge">Procedure</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn-act btn-airway" id="btnETT">
+            <span>ETT Tube Insertion</span>
+            <span class="btn-badge">Advanced Airway</span>
+          </button>
+          <button class="btn-act btn-airway" id="btnBVM">
+            <span>BVM Airway / SGA</span>
+            <span class="btn-badge">30:2 or Cont.</span>
+          </button>
+          <button class="btn-act btn-airway" id="btnIVIO">
+            <span>IV / IO Access Established</span>
+            <span class="btn-badge">Peripheral/IO</span>
+          </button>
+          <button class="btn-act btn-airway" id="btnMechCPR">
+            <span>Mechanical CPR Started</span>
+            <span class="btn-badge">AutoCPR</span>
+          </button>
+          <button class="btn-act btn-airway" id="btnPOCUS">
+            <span>Bedside POCUS Ultrasound</span>
+            <span class="btn-badge">Check Standstill</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Column 4: 5H's & 5T's Checklist -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-title">🔍 H's & T's Checklist</div>
+          <span class="section-badge">Reversible Causes</span>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">คลิกเพื่อบันทึกสาเหตุที่สงสัย/ได้รับการแก้ไข:</div>
+        <div class="ht-grid">
+          <div class="ht-item" data-ht="Hypoxia"><span>🫁 Hypoxia</span></div>
+          <div class="ht-item" data-ht="Hypovolemia"><span>🩸 Hypovolemia</span></div>
+          <div class="ht-item" data-ht="Hydrogen Ion (Acidosis)"><span>🧪 Acidosis (H+)</span></div>
+          <div class="ht-item" data-ht="Hypo/Hyperkalemia"><span>⚡ Hypo/HyperK+</span></div>
+          <div class="ht-item" data-ht="Hypothermia"><span>❄️ Hypothermia</span></div>
+          <div class="ht-item" data-ht="Tension Pneumothorax"><span>💨 Tension Pneumo</span></div>
+          <div class="ht-item" data-ht="Tamponade (Cardiac)"><span>🫀 Tamponade</span></div>
+          <div class="ht-item" data-ht="Toxins / Overdose"><span>💊 Toxins</span></div>
+          <div class="ht-item" data-ht="Thrombosis (Pulmonary)"><span>🫁 PE (Thrombosis)</span></div>
+          <div class="ht-item" data-ht="Thrombosis (Coronary)"><span>🫀 MI (Coronary)</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. Bottom Layout: Live Log Stream & Case Form -->
+    <div class="bottom-layout">
+      
+      <!-- Live Log Stream Panel -->
+      <div class="log-panel">
+        <div class="section-header">
+          <div class="section-title">📝 Live Event Log (ไทม์ไลน์เหตุการณ์)</div>
+          <button class="btn-nav" id="btnCopySummary" style="padding: 4px 10px; font-size: 0.75rem;">📋 Copy Summary</button>
+        </div>
+        <div class="log-stream" id="logStream">
+          <div class="log-entry">
+            <span class="log-time">[00:00]</span>
+            <span class="log-content">ระบบพร้อมบันทึกเคส CPR (Ready to record)</span>
+          </div>
+        </div>
+        <div class="note-input-row">
+          <input type="text" class="input-text" id="noteInput" placeholder="พิมพ์บันทึกเพิ่มเติม (เช่น ETCO2 = 35, BP = 90/60)...">
+          <button class="btn-nav" id="btnAddNote" style="background: var(--blue-accent);">+ เพิ่ม Note</button>
+        </div>
+      </div>
+
+      <!-- Case Information & Outcome Panel -->
+      <div class="case-form-panel">
+        <div class="section-header">
+          <div class="section-title">👤 ข้อมูลเคส & บันทึกผลลัพธ์ (Case Record)</div>
+          <button class="btn-nav" id="btnSaveCase" style="background: var(--green-success); color: white; padding: 4px 12px;">💾 บันทึกเคสลง DB</button>
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">HN / Patient Ref</label>
+            <input type="text" class="form-control" id="caseHN" placeholder="e.g. CPR-2026-001">
+          </div>
+          <div class="form-group">
+            <label class="form-label">สถานที่ (Location)</label>
+            <select class="form-control" id="caseLoc">
+              <option value="ER">ห้องฉุกเฉิน (ER)</option>
+              <option value="ICU">ไอซียู (ICU)</option>
+              <option value="Ward">หอผู้ป่วย (Ward)</option>
+              <option value="OPD">ผู้ป่วยนอก (OPD)</option>
+              <option value="EMS">กู้ชีพนอก รพ. (EMS)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">อายุ (Age)</label>
+            <input type="number" class="form-control" id="caseAge" placeholder="ปี">
+          </div>
+          <div class="form-group">
+            <label class="form-label">เพศ (Sex)</label>
+            <select class="form-control" id="caseSex">
+              <option value="Male">ชาย (Male)</option>
+              <option value="Female">หญิง (Female)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Initial Rhythm</label>
+            <select class="form-control" id="caseInitRhythm">
+              <option value="VF">VF</option>
+              <option value="pVT">Pulseless VT</option>
+              <option value="Asystole">Asystole</option>
+              <option value="PEA">PEA</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">ผลลัพธ์ (Outcome)</label>
+            <select class="form-control" id="caseOutcome">
+              <option value="Ongoing">กำลัง CPR (Ongoing)</option>
+              <option value="ROSC">ROSC (สำเร็จ)</option>
+              <option value="TOR">TOR (เสียชีวิต)</option>
+              <option value="Transferred">ส่งต่อ (Transferred)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Post-ROSC Care & Special Notes</label>
+          <textarea class="form-control" id="caseNotes" rows="3" placeholder="ระบุรายละเอียดเพิ่มเติม เช่น Target MAP > 65, TTM, ETCO2 post-ROSC..."></textarea>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- History Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📁 ประวัติเคส CPR ที่บันทึกไว้ใน Browser (IndexedDB)</div>
+        <button class="modal-close" id="btnCloseHistory">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button class="btn-nav" id="btnExportJSON">📥 Export JSON ( Backup )</button>
+          <button class="btn-nav" id="btnExportCSV">📊 Export CSV ( Excel )</button>
+        </div>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>วันที่/เวลา</th>
+              <th>HN/Ref</th>
+              <th>สถานที่</th>
+              <th>ระยะเวลา</th>
+              <th>Shock</th>
+              <th>Adrenaline</th>
+              <th>ผลลัพธ์</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Modal -->
+  <div class="modal-overlay" id="summaryModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">📋 สรุปรายงานเคส CPR (สำหรับคัดลอกลง EMR / Medical Record)</div>
+        <button class="modal-close" id="btnCloseSummary">&times;</button>
+      </div>
+      <div class="modal-body">
+        <textarea class="summary-text" id="summaryText" readonly></textarea>
+        <button class="btn-nav" id="btnCopyText" style="margin-top: 12px; background: var(--blue-accent); width: 100%;">
+          ✂️ คัดลอกข้อความสรุป (Copy to Clipboard)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Logic & DB Engine Script -->
+  <script>
+    /* ==========================================================================
+       ACLS 2025 CPR RECORDER & SIMULATION MODE ENGINE
+       IndexedDB Storage & BroadcastChannel Event Sync
+       ========================================================================== */
+
+    const simChannel = new BroadcastChannel('ACLS_SIM_CHANNEL');
+
+    let simModeActive = false;
+    let currentScenarioKey = 'scen1';
+    let simRhythm = 'VF';
+    let simHR = 0;
+    let simETCO2 = 10;
+    let simSpO2 = 0;
+    let amioGiven = false;
+    let caGluconateGiven = false;
+    let mgso4Given = false;
+
+    // Global Extensible Event Bus
+    window.CPRRecorderEventBus = {
+      listeners: {},
+      on(event, callback) {
+        if (!this.listeners[event]) this.listeners[event] = [];
+        this.listeners[event].push(callback);
+      },
+      emit(event, data) {
+        if (this.listeners[event]) {
+          this.listeners[event].forEach(cb => cb(data));
+        }
+      }
+    };
+
+    // State Variables
+    let totalSeconds = 0;
+    let cycleSeconds = 120;
+    let adrenSeconds = 0;
+    let adrenActive = false;
+
+    let timerInterval = null;
+    let cycleInterval = null;
+    let adrenInterval = null;
+
+    let metronomeActive = false;
+    let metronomeBpm = 110;
+    let metronomeInterval = null;
+    let audioCtx = null;
+
+    let shockCount = 0;
+    let adrenCount = 0;
+
+    let activeEvents = [];
+    let activeHTs = new Set();
+    let currentCaseId = 'CASE-' + Date.now();
+
+    // Database Initialization (IndexedDB with LocalStorage Fallback)
+    const DB_NAME = 'ACLS2025_CPR_DB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'cpr_cases';
+    let db = null;
+
+    function initDB() {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) {
+          resolve(null);
+          return;
+        }
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+          const dbInstance = e.target.result;
+          if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+            dbInstance.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = (e) => {
+          db = e.target.result;
+          resolve(db);
+        };
+        request.onerror = () => resolve(null);
+      });
+    }
+
+    async function saveCaseToDB(caseData) {
+      if (db) {
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          store.put(caseData);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => reject(tx.error);
+        });
+      } else {
+        let cases = JSON.parse(localStorage.getItem('cpr_cases') || '[]');
+        const idx = cases.findIndex(c => c.id === caseData.id);
+        if (idx >= 0) cases[idx] = caseData;
+        else cases.push(caseData);
+        localStorage.setItem('cpr_cases', JSON.stringify(cases));
+        return Promise.resolve(true);
+      }
+    }
+
+    async function getAllCasesFromDB() {
+      if (db) {
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const req = store.getAll();
+          req.onsuccess = () => resolve(req.result || []);
+          req.onerror = () => resolve([]);
+        });
+      } else {
+        return Promise.resolve(JSON.parse(localStorage.getItem('cpr_cases') || '[]'));
+      }
+    }
+
+    async function deleteCaseFromDB(id) {
+      if (db) {
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readwrite');
+          const store = tx.objectStore(STORE_NAME);
+          store.delete(id);
+          tx.oncomplete = () => resolve(true);
+        });
+      } else {
+        let cases = JSON.parse(localStorage.getItem('cpr_cases') || '[]');
+        cases = cases.filter(c => c.id !== id);
+        localStorage.setItem('cpr_cases', JSON.stringify(cases));
+        return Promise.resolve(true);
+      }
+    }
+
+    function formatMMSS(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function playBeep(freq = 880, duration = 0.05) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (err) {}
+    }
+
+    function startTimers() {
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          totalSeconds++;
+          document.getElementById('totalTimer').textContent = formatMMSS(totalSeconds);
+        }, 1000);
+      }
+
+      if (!cycleInterval) {
+        cycleInterval = setInterval(() => {
+          if (cycleSeconds > 0) {
+            cycleSeconds--;
+            document.getElementById('cycleTimer').textContent = formatMMSS(cycleSeconds);
+            if (cycleSeconds === 10) playBeep(1000, 0.2);
+          } else {
+            playBeep(1200, 0.4);
+            addLogEntry('⏰ ครบรอบ CPR 2 นาที! (Rhythm & Pulse Check Required)', 'entry-shock');
+            cycleSeconds = 120;
+          }
+        }, 1000);
+      }
+
+      if (adrenActive && !adrenInterval) {
+        adrenInterval = setInterval(() => {
+          adrenSeconds++;
+          const adrenEl = document.getElementById('adrenTimer');
+          adrenEl.textContent = formatMMSS(adrenSeconds);
+          
+          if (adrenSeconds >= 180 && adrenSeconds <= 300) {
+            adrenEl.className = 'timer-display text-amber';
+            document.getElementById('adrenStatus').textContent = '⚠️ ถึงเวลาให้ Adrenaline เข็มถัดไป (3-5 min)';
+          } else if (adrenSeconds > 300) {
+            adrenEl.className = 'timer-display text-red';
+            document.getElementById('adrenStatus').textContent = '🚨 เกิน 5 นาทีแล้ว! Adrenaline Overdue';
+          }
+        }, 1000);
+      }
+    }
+
+    function pauseTimers() {
+      clearInterval(timerInterval); timerInterval = null;
+      clearInterval(cycleInterval); cycleInterval = null;
+      clearInterval(adrenInterval); adrenInterval = null;
+    }
+
+    function toggleMetronome() {
+      metronomeActive = !metronomeActive;
+      const btn = document.getElementById('btnToggleMetro');
+      if (metronomeActive) {
+        btn.textContent = 'STOP METRONOME';
+        btn.className = 'btn-timer btn-stop';
+        const intervalMs = (60 / metronomeBpm) * 1000;
+        metronomeInterval = setInterval(() => {
+          playBeep(750, 0.03);
+          const pulse = document.getElementById('metroPulse');
+          pulse.classList.add('pulse-active');
+          setTimeout(() => pulse.classList.remove('pulse-active'), 80);
+        }, intervalMs);
+      } else {
+        btn.textContent = 'START METRONOME';
+        btn.className = 'btn-timer btn-start';
+        clearInterval(metronomeInterval);
+        metronomeInterval = null;
+      }
+    }
+
+    function addLogEntry(text, typeClass = '') {
+      const timeStr = formatMMSS(totalSeconds);
+      const entryObj = { time: timeStr, text: text, type: typeClass, timestamp: Date.now() };
+      activeEvents.push(entryObj);
+
+      const container = document.getElementById('logStream');
+      const div = document.createElement('div');
+      div.className = `log-entry ${typeClass}`;
+      div.innerHTML = `
+        <span class="log-time">[${timeStr}]</span>
+        <span class="log-content">${text}</span>
+        <button class="log-del" onclick="removeLogEntry(${entryObj.timestamp}, this)">&times;</button>
+      `;
+      container.prepend(div);
+      window.CPRRecorderEventBus.emit('event_logged', entryObj);
+    }
+
+    function removeLogEntry(ts, btnEl) {
+      activeEvents = activeEvents.filter(e => e.timestamp !== ts);
+      btnEl.closest('.log-entry').remove();
+    }
+
+    /* SIMULATION ENGINE SCENARIOS & MONITOR SYNC */
+    function updateSimulationVitals(rhythm, etco2, hr, spo2) {
+      simRhythm = rhythm; simETCO2 = etco2; simHR = hr; simSpO2 = spo2;
+      document.getElementById('miniRhythmText').textContent = rhythm;
+      document.getElementById('miniEtco2Val').textContent = etco2;
+      document.getElementById('miniHRVal').textContent = hr > 0 ? hr : '--';
+      document.getElementById('miniSpo2Val').textContent = spo2 > 0 ? spo2 : '--';
+
+      simChannel.postMessage({
+        type: 'STATE_UPDATE',
+        rhythm: rhythm,
+        etco2: etco2,
+        hr: hr,
+        spo2: spo2
+      });
+    }
+
+    function initScenario(key) {
+      currentScenarioKey = key;
+      amioGiven = false; caGluconateGiven = false; mgso4Given = false;
+      
+      if (key === 'scen1') { // Refractory VF
+        updateSimulationVitals('VF', 10, 0, 0);
+        addLogEntry('[SIM SCENARIO 1 STARTED] Patient collapsed in VF. Shock #1 required.', 'entry-sim');
+      } else if (key === 'scen2') { // PEA HyperK
+        updateSimulationVitals('PEA', 12, 0, 0);
+        addLogEntry('[SIM SCENARIO 2 STARTED] Patient in PEA. Suspect Hyperkalemia.', 'entry-sim');
+      } else if (key === 'scen3') { // Asystole
+        updateSimulationVitals('Asystole', 8, 0, 0);
+        addLogEntry('[SIM SCENARIO 3 STARTED] Patient in Asystole. High Quality CPR & Airway.', 'entry-sim');
+      } else if (key === 'scen4') { // Torsades
+        updateSimulationVitals('Torsades', 10, 0, 0);
+        addLogEntry('[SIM SCENARIO 4 STARTED] Polymorphic VT / Torsades. Give MgSO4 2g.', 'entry-sim');
+      } else if (key === 'scen5') { // Post-ROSC Rearrest
+        updateSimulationVitals('VF', 10, 0, 0);
+        addLogEntry('[SIM SCENARIO 5 STARTED] Patient in VF. Shock -> ROSC -> Rearrest.', 'entry-sim');
+      }
+    }
+
+    function handleSimShock() {
+      simChannel.postMessage({ type: 'SHOCK' });
+      
+      if (currentScenarioKey === 'scen1') {
+        if (shockCount === 1) {
+          addLogEntry('🎮 [SIM RESPONSE] Shock #1 Delivered. Coarse VF persists. Resume CPR & give Adrenaline.', 'entry-sim');
+        } else if (shockCount >= 2 && amioGiven) {
+          updateSimulationVitals('Normal Sinus', 40, 84, 98);
+          document.getElementById('caseOutcome').value = 'ROSC';
+          addLogEntry('🎉 [SIM RESPONSE] Shock #2 + Amiodarone successful! Rhythm converted to Sinus (ROSC)!', 'entry-rosc');
+          pauseTimers();
+        } else if (shockCount >= 2 && !amioGiven) {
+          addLogEntry('🎮 [SIM RESPONSE] Shock #2 Delivered without Antiarrhythmic. Fine VF persists. Consider Amiodarone/Lidocaine.', 'entry-sim');
+        }
+      } else if (currentScenarioKey === 'scen4') {
+        if (mgso4Given) {
+          updateSimulationVitals('Normal Sinus', 38, 76, 97);
+          document.getElementById('caseOutcome').value = 'ROSC';
+          addLogEntry('🎉 [SIM RESPONSE] Defib + MgSO4 2g successful! Rhythm converted to Normal Sinus (ROSC)!', 'entry-rosc');
+          pauseTimers();
+        } else {
+          addLogEntry('🎮 [SIM RESPONSE] Defib alone for Torsades ineffective. Administer MgSO4 2g IV.', 'entry-sim');
+        }
+      } else if (currentScenarioKey === 'scen5') {
+        if (shockCount === 1) {
+          updateSimulationVitals('Normal Sinus', 36, 90, 96);
+          addLogEntry('🎉 [SIM RESPONSE] Initial Shock successful! ROSC achieved.', 'entry-rosc');
+          setTimeout(() => {
+            updateSimulationVitals('VF', 10, 0, 0);
+            addLogEntry('⚠️ [SIM RESPONSE] 2 Min later: Patient REARRESTED into VF! Lost pulse.', 'entry-shock');
+            startTimers();
+          }, 6000);
+        }
+      }
+    }
+
+    // Mini Canvas Loop
+    const miniCanvas = document.getElementById('miniECGCanvas');
+    const miniCtx = miniCanvas.getContext('2d');
+    let miniX = 0;
+
+    function drawMiniECG() {
+      if (!simModeActive) return;
+      const h = miniCanvas.height;
+      const mid = h / 2;
+      let y = mid;
+
+      if (simRhythm === 'VF') y = mid + Math.sin(miniX * 0.15) * 20 + (Math.random() * 20 - 10);
+      else if (simRhythm === 'Asystole') y = mid + (Math.random() * 3 - 1.5);
+      else if (simRhythm === 'PEA') {
+        const ph = (miniX % 100);
+        if (ph > 20 && ph < 30) y = mid - 15;
+        else if (ph >= 30 && ph < 40) y = mid + 20;
+        else y = mid;
+      } else if (simRhythm === 'Normal Sinus' || simRhythm === 'Sinus') {
+        const ph = (miniX % 70);
+        if (ph > 20 && ph < 23) y = mid - 5;
+        else if (ph >= 23 && ph < 26) y = mid - 35;
+        else if (ph >= 26 && ph < 29) y = mid + 12;
+        else if (ph > 35 && ph < 42) y = mid - 8;
+        else y = mid;
+      } else if (simRhythm === 'Torsades') {
+        y = mid + Math.sin(miniX * 0.08) * (Math.sin(miniX * 0.01) * 30);
+      }
+
+      miniCtx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      miniCtx.fillRect(miniX, 0, 8, h);
+
+      miniCtx.strokeStyle = '#00ff66';
+      miniCtx.lineWidth = 2;
+      miniCtx.beginPath();
+      miniCtx.moveTo(miniX, y);
+      miniX += 2.5;
+      if (miniX >= miniCanvas.width) miniX = 0;
+      miniCtx.lineTo(miniX, y);
+      miniCtx.stroke();
+
+      requestAnimationFrame(drawMiniECG);
+    }
+
+    // Event Handler Binding
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initDB();
+
+      // Simulation Mode Toggle Button
+      document.getElementById('btnToggleSimMode').addEventListener('click', () => {
+        simModeActive = !simModeActive;
+        const btn = document.getElementById('btnToggleSimMode');
+        const bar = document.getElementById('simBar');
+        const card = document.getElementById('simMonitorCard');
+
+        if (simModeActive) {
+          btn.textContent = '🎮 โหมด Simulation (ON)';
+          btn.classList.add('active');
+          bar.style.display = 'flex';
+          card.style.display = 'grid';
+          miniCanvas.width = miniCanvas.parentElement.clientWidth;
+          miniCanvas.height = miniCanvas.parentElement.clientHeight;
+          initScenario(document.getElementById('simScenarioSelect').value);
+          drawMiniECG();
+        } else {
+          btn.textContent = '🎮 โหมด Simulation (Off)';
+          btn.classList.remove('active');
+          bar.style.display = 'none';
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('simScenarioSelect').addEventListener('change', (e) => {
+        initScenario(e.target.value);
+      });
+
+      document.getElementById('btnPopoutMonitor').addEventListener('click', () => {
+        window.open('cpr-simulation.html', 'BedsideMonitor', 'width=1200,height=800');
+      });
+
+      // Timers Controls
+      document.getElementById('btnStartTotal').addEventListener('click', startTimers);
+      document.getElementById('btnPauseTotal').addEventListener('click', pauseTimers);
+      document.getElementById('btnResetCycle').addEventListener('click', () => {
+        cycleSeconds = 120;
+        document.getElementById('cycleTimer').textContent = formatMMSS(cycleSeconds);
+        addLogEntry('🔄 เริ่มนับรอบ CPR 2 นาทีใหม่', '');
+      });
+
+      document.querySelectorAll('.bpm-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.bpm-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          metronomeBpm = parseInt(e.target.dataset.bpm);
+          if (metronomeActive) {
+            toggleMetronome(); toggleMetronome();
+          }
+        });
+      });
+      document.getElementById('btnToggleMetro').addEventListener('click', toggleMetronome);
+
+      // Rhythm & Shock Buttons
+      document.getElementById('btnShock').addEventListener('click', () => {
+        shockCount++;
+        document.getElementById('shockCountBadge').textContent = `Shock: ${shockCount} ครั้ง`;
+        addLogEntry(`⚡ Deliver Defibrillation Shock 200J Biphasic (#${shockCount})`, 'entry-shock');
+        window.CPRRecorderEventBus.emit('shock_delivered', { energy: 200, count: shockCount });
+        
+        if (simModeActive) handleSimShock();
+        startTimers();
+      });
+
+      document.getElementById('btnVF').addEventListener('click', () => {
+        addLogEntry('Rhythm Assessment: Ventricular Fibrillation (VF) / Pulseless VT', 'entry-shock');
+        if (simModeActive) updateSimulationVitals('VF', 10, 0, 0);
+      });
+
+      document.getElementById('btnAsystole').addEventListener('click', () => {
+        addLogEntry('Rhythm Assessment: Asystole / Pulseless Electrical Activity (PEA)', '');
+        if (simModeActive) updateSimulationVitals('Asystole', 8, 0, 0);
+      });
+
+      document.getElementById('btnROSC').addEventListener('click', () => {
+        document.getElementById('caseOutcome').value = 'ROSC';
+        addLogEntry('🎉 ROSC (Return of Spontaneous Circulation) Achieved! Palpable pulse present.', 'entry-rosc');
+        if (simModeActive) updateSimulationVitals('Normal Sinus', 38, 85, 98);
+        pauseTimers();
+      });
+
+      document.getElementById('btnRearrest').addEventListener('click', () => {
+        addLogEntry('⚠️ Recurrent Arrest / Recurrent VF detected! Re-starting CPR.', 'entry-shock');
+        if (simModeActive) updateSimulationVitals('VF', 10, 0, 0);
+        startTimers();
+      });
+
+      // ACLS Drug Buttons
+      document.getElementById('btnAdren').addEventListener('click', () => {
+        adrenCount++; adrenSeconds = 0; adrenActive = true;
+        document.getElementById('adrenCountBadge').textContent = `Adren: ${adrenCount} เข็ม`;
+        document.getElementById('adrenTimer').className = 'timer-display text-green';
+        document.getElementById('adrenStatus').textContent = 'ให้ Adrenaline แล้ว (กำลังนับถอยหลังเข็มถัดไป)';
+        addLogEntry(`💉 Adrenaline 1 mg IV/IO Injected (#${adrenCount})`, 'entry-drug');
+        startTimers();
+      });
+
+      document.getElementById('btnAmio300').addEventListener('click', () => {
+        amioGiven = true;
+        addLogEntry('💉 Amiodarone 300 mg IV Bolus (Dose #1)', 'entry-drug');
+      });
+
+      document.getElementById('btnAmio150').addEventListener('click', () => {
+        amioGiven = true;
+        addLogEntry('💉 Amiodarone 150 mg IV Bolus (Dose #2)', 'entry-drug');
+      });
+
+      document.getElementById('btnLido').addEventListener('click', () => {
+        amioGiven = true;
+        addLogEntry('💉 Lidocaine 1 - 1.5 mg/kg IV Bolus', 'entry-drug');
+      });
+
+      document.getElementById('btnNaHCO3').addEventListener('click', () => {
+        caGluconateGiven = true;
+        addLogEntry('💉 Sodium Bicarbonate 50 mEq IV', 'entry-drug');
+        if (simModeActive && currentScenarioKey === 'scen2') {
+          updateSimulationVitals('Normal Sinus', 35, 70, 96);
+          document.getElementById('caseOutcome').value = 'ROSC';
+          addLogEntry('🎉 [SIM RESPONSE] Acidosis/HyperK treated! Rhythm converted to Sinus (ROSC)!', 'entry-rosc');
+          pauseTimers();
+        }
+      });
+
+      // Airway & Intervention Buttons
+      document.getElementById('btnETT').addEventListener('click', () => {
+        const depth = prompt('ระบุขนาดท่อและขีดความลึก ETT (e.g. ETT No. 7.5 @ 21 cm):', 'ETT No. 7.5 @ 21 cm');
+        addLogEntry(`🫁 ETT Insertion Successful: ${depth || 'ETT inserted'} (EtCO2 verified)`, 'entry-airway');
+        if (simModeActive && simETCO2 < 15) {
+          updateSimulationVitals(simRhythm, 18, simHR, simSpO2);
+        }
+      });
+
+      document.getElementById('btnBVM').addEventListener('click', () => {
+        addLogEntry('🫁 Bag-Valve-Mask (BVM) / SGA Airway Management', 'entry-airway');
+      });
+
+      document.getElementById('btnIVIO').addEventListener('click', () => {
+        addLogEntry('🩸 IV / Intraosseous (IO) Access Established', 'entry-airway');
+      });
+
+      document.getElementById('btnMechCPR').addEventListener('click', () => {
+        addLogEntry('🤖 Mechanical CPR Device Started', 'entry-airway');
+      });
+
+      document.getElementById('btnPOCUS').addEventListener('click', () => {
+        addLogEntry('🔍 Bedside POCUS Ultrasound Performed (Cardiac standstill checked)', 'entry-airway');
+      });
+
+      // H's & T's Checklist Toggles
+      document.querySelectorAll('.ht-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const ht = item.dataset.ht;
+          if (activeHTs.has(ht)) {
+            activeHTs.delete(ht);
+            item.classList.remove('active');
+            addLogEntry(`❌ Resolved/Ruled out cause: ${ht}`, '');
+          } else {
+            activeHTs.add(ht);
+            item.classList.add('active');
+            addLogEntry(`🔍 Identified/Treating reversible cause: ${ht}`, '');
+            if (simModeActive && ht === 'Toxics / Overdose') mgso4Given = true;
+          }
+        });
+      });
+
+      // Custom Note Input
+      document.getElementById('btnAddNote').addEventListener('click', () => {
+        const input = document.getElementById('noteInput');
+        if (input.value.trim()) {
+          addLogEntry(`📌 Note: ${input.value.trim()}`, '');
+          input.value = '';
+        }
+      });
+
+      // Reset / New Case Button
+      document.getElementById('btnNewCase').addEventListener('click', () => {
+        if (confirm('คุณต้องการรีเซ็ตเพื่อเริ่มบันทึกเคสใหม่หรือไม่? (โปรดแน่ใจว่าบันทึกเคสปัจจุบันเรียบร้อยแล้ว)')) {
+          location.reload();
+        }
+      });
+
+      // Save Case to Local Database
+      document.getElementById('btnSaveCase').addEventListener('click', async () => {
+        const caseRecord = {
+          id: currentCaseId,
+          date: new Date().toLocaleString('th-TH'),
+          timestamp: Date.now(),
+          hn: document.getElementById('caseHN').value || 'N/A',
+          location: document.getElementById('caseLoc').value,
+          age: document.getElementById('caseAge').value || 'N/A',
+          sex: document.getElementById('caseSex').value,
+          initialRhythm: document.getElementById('caseInitRhythm').value,
+          outcome: document.getElementById('caseOutcome').value,
+          totalDuration: formatMMSS(totalSeconds),
+          totalShocks: shockCount,
+          totalAdrenaline: adrenCount,
+          events: activeEvents,
+          hts: Array.from(activeHTs),
+          notes: document.getElementById('caseNotes').value
+        };
+
+        await saveCaseToDB(caseRecord);
+        alert(`💾 บันทึกเคส ${caseRecord.hn} ลงใน Database เรียบร้อยแล้ว!`);
+      });
+
+      // History Modal Open/Close
+      const historyModal = document.getElementById('historyModal');
+      document.getElementById('btnOpenHistory').addEventListener('click', async () => {
+        await renderHistoryTable();
+        historyModal.classList.add('active');
+      });
+      document.getElementById('btnCloseHistory').addEventListener('click', () => historyModal.classList.remove('active'));
+
+      // Summary Modal Open/Close
+      const summaryModal = document.getElementById('summaryModal');
+      document.getElementById('btnCopySummary').addEventListener('click', () => {
+        document.getElementById('summaryText').value = generateTextSummary();
+        summaryModal.classList.add('active');
+      });
+      document.getElementById('btnCloseSummary').addEventListener('click', () => summaryModal.classList.remove('active'));
+
+      document.getElementById('btnCopyText').addEventListener('click', () => {
+        const txt = document.getElementById('summaryText');
+        txt.select();
+        navigator.clipboard.writeText(txt.value);
+        alert('✂️ คัดลอกรายงานลง Clipboard แล้ว!');
+      });
+
+      // Export JSON / CSV
+      document.getElementById('btnExportJSON').addEventListener('click', async () => {
+        const cases = await getAllCasesFromDB();
+        const blob = new Blob([JSON.stringify(cases, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `acls_cpr_export_${Date.now()}.json`; a.click();
+      });
+
+      document.getElementById('btnExportCSV').addEventListener('click', async () => {
+        const cases = await getAllCasesFromDB();
+        let csv = 'ID,Date,HN,Location,Age,Sex,InitialRhythm,Outcome,Duration,Shocks,AdrenalineDoses\n';
+        cases.forEach(c => {
+          csv += `"${c.id}","${c.date}","${c.hn}","${c.location}","${c.age}","${c.sex}","${c.initialRhythm}","${c.outcome}","${c.totalDuration}",${c.totalShocks},${c.totalAdrenaline}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = `acls_cpr_cases_${Date.now()}.csv`; a.click();
+      });
+    });
+
+    async function renderHistoryTable() {
+      const cases = await getAllCasesFromDB();
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      if (cases.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color: var(--text-muted);">ยังไม่มีประวัติเคสที่บันทึกไว้</td></tr>';
+        return;
+      }
+
+      cases.sort((a,b) => b.timestamp - a.timestamp).forEach(c => {
+        const tr = document.createElement('tr');
+        const outcomeBadge = c.outcome === 'ROSC' ? '<span class="badge-rosc">ROSC</span>' : `<span class="badge-tor">${c.outcome}</span>`;
+        tr.innerHTML = `
+          <td>${c.date}</td>
+          <td><strong>${c.hn}</strong></td>
+          <td>${c.location}</td>
+          <td>${c.totalDuration}</td>
+          <td>${c.totalShocks} ครั้ง</td>
+          <td>${c.totalAdrenaline} เข็ม</td>
+          <td>${outcomeBadge}</td>
+          <td>
+            <button class="btn-nav" style="padding: 2px 6px; font-size: 0.75rem;" onclick="loadCaseDetail('${c.id}')">👁️ ดู</button>
+            <button class="btn-nav btn-danger" style="padding: 2px 6px; font-size: 0.75rem;" onclick="deleteCaseRecord('${c.id}')">🗑️ ลบ</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function deleteCaseRecord(id) {
+      if (confirm('ยืนยันลบเคสนี้ออกจาก Local Database หรือไม่?')) {
+        await deleteCaseFromDB(id);
+        renderHistoryTable();
+      }
+    }
+
+    async function loadCaseDetail(id) {
+      const cases = await getAllCasesFromDB();
+      const c = cases.find(item => item.id === id);
+      if (c) {
+        let text = `=== รายงานเคส CPR (Case ID: ${c.hn}) ===\n`;
+        text += `วันที่บันทึก: ${c.date}\n`;
+        text += `สถานที่: ${c.location} | อายุ: ${c.age} | เพศ: ${c.sex}\n`;
+        text += `Initial Rhythm: ${c.initialRhythm} | Outcome: ${c.outcome}\n`;
+        text += `ระยะเวลา CPR รวม: ${c.totalDuration} | Defib Shocks: ${c.totalShocks} ครั้ง | Adrenaline: ${c.totalAdrenaline} เข็ม\n\n`;
+        text += `--- ไทม์ไลน์เหตุการณ์ (Event Timeline) ---\n`;
+        c.events.forEach(e => text += `[${e.time}] ${e.text}\n`);
+        if (c.notes) text += `\nหมายเหตุเพิ่มเติม: ${c.notes}\n`;
+        
+        document.getElementById('summaryText').value = text;
+        document.getElementById('historyModal').classList.remove('active');
+        document.getElementById('summaryModal').classList.add('active');
+      }
+    }
+
+    function generateTextSummary() {
+      const hn = document.getElementById('caseHN').value || 'N/A';
+      const loc = document.getElementById('caseLoc').value;
+      const age = document.getElementById('caseAge').value || 'N/A';
+      const sex = document.getElementById('caseSex').value;
+      const initRhythm = document.getElementById('caseInitRhythm').value;
+      const outcome = document.getElementById('caseOutcome').value;
+      const notes = document.getElementById('caseNotes').value;
+
+      let summary = `=== ACLS 2025 CPR CODE BLUE RESUSCITATION REPORT ===\n`;
+      summary += `Date/Time: ${new Date().toLocaleString('th-TH')}\n`;
+      summary += `Patient Ref/HN: ${hn} | Location: ${loc}\n`;
+      summary += `Age: ${age} | Sex: ${sex} | Initial Rhythm: ${initRhythm}\n`;
+      summary += `Resuscitation Outcome: ${outcome}\n`;
+      summary += `Total Duration: ${formatMMSS(totalSeconds)} | Shocks Delivered: ${shockCount} | Adrenaline Doses: ${adrenCount}\n`;
+      summary += `Reversible Causes (H's/T's): ${Array.from(activeHTs).join(', ') || 'None specified'}\n\n`;
+      summary += `--- CHRONOLOGICAL EVENT LOG ---\n`;
+      
+      activeEvents.slice().reverse().forEach(e => {
+        summary += `[${e.time}] ${e.text}\n`;
+      });
+
+      if (notes) {
+        summary += `\n--- POST-ROSC / CLINICAL NOTES ---\n${notes}\n`;
+      }
+
+      return summary;
+    }
+  </script>
+</body>
+</html>

@@ -20,3 +20,15 @@
 - **Context**: Fixed-position controls outside the scaled 1920x1080 stage collide with the slide contents when the browser window is small.
 - **Decision**: Move the control bar and progress bar inside the `.deck-stage` wrapper so that they scale down in proportion to the content on smaller screens.
 - **Implications**: Controls remain at the bottom-center of the slides, keeping layout proportions identical.
+
+### ADR 3: CPR Code Blue Recorder & Extensible Simulation Architecture
+- **Context**: ER physicians require a fast, high-contrast, offline-first tool to record resuscitation events during real hospital arrests, with zero network reliance, while leaving an extensible bridge for future ECG simulation mode.
+- **Decision**: Implemented `cpr/cpr-recorder.html` with IndexedDB persistence, selectable metronome (100/110/120 BPM), AHA 2025 event triggers, and a global `window.CPRRecorderEventBus`.
+- **Implications**: Cases are stored safely on device, and future simulation mode can subscribe to CPR recorder events seamlessly.
+
+### ADR 4: Live Vital Sign Monitor & Simulation Scenario State Machine
+- **Context**: Instructors and trainees need an interactive simulation mode where delivering a shock or administering drugs changes bedside ECG waveforms and ETCO2 capnography values dynamically according to clinical scenarios.
+- **Decision**: Created `cpr/cpr-simulation.html` (Bedside Monitor) and integrated an interactive Simulation Engine inside `cpr/cpr-recorder.html` using `BroadcastChannel('ACLS_SIM_CHANNEL')`.
+- **Implications**: Shocking from the recorder flashes the monitor and triggers dynamic rhythm shifts (e.g., VF -> Sinus Rhythm ROSC) instantly across tabs/popouts.
+
+

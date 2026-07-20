@@ -25,6 +25,7 @@ jobs:
           cp index.html _site/
           cp -r slides _site/
           cp -r cases _site/
+          cp -r cpr _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: '_site'

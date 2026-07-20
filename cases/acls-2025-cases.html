@@ -158,15 +158,101 @@
       color: #e8eaf0;
     }
     
-    /* ===== QUESTION SLIDE ===== */
+    /* ===== QUESTION SLIDE (TWO-COLUMN LAYOUT) ===== */
     .question-slide {
       background: #0f1e3d;
       border-radius: 20px;
-      padding: 40px 50px;
+      padding: 0;
       flex: 1;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       color: #e8eaf0;
+      overflow: hidden;
+    }
+
+    /* --- Scenario sidebar (injected by JS) --- */
+    .scenario-sidebar {
+      width: 38%;
+      min-width: 38%;
+      max-width: 38%;
+      background: rgba(15, 30, 61, 0.95);
+      border-right: 2px solid rgba(37, 99, 235, 0.2);
+      padding: 28px 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .scenario-sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .scenario-sidebar::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.3);
+      border-radius: 2px;
+    }
+    .scenario-sidebar .sidebar-case-label {
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #60a5fa;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 2px;
+    }
+    .scenario-sidebar .sidebar-case-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #e8eaf0;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .scenario-sidebar .sidebar-scenario {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+    .scenario-sidebar .sidebar-vitals {
+      background: rgba(37, 99, 235, 0.08);
+      border-left: 3px solid #2563eb;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+    }
+    .scenario-sidebar .sidebar-vitals h4 {
+      color: #60a5fa;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .scenario-sidebar .sidebar-vitals ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3px;
+    }
+    .scenario-sidebar .sidebar-vitals li {
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+    .scenario-sidebar .sidebar-ecg {
+      height: 55px;
+      margin-top: 4px;
+    }
+    .scenario-sidebar .sidebar-ecg .ecg-strip {
+      height: 55px;
+      margin: 0;
+    }
+    .scenario-sidebar .sidebar-ecg .ecg-label {
+      font-size: 9px;
+    }
+
+    /* --- Question panel (right side) --- */
+    .question-panel {
+      flex: 1;
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
     }
     
     .question-text {
@@ -292,7 +378,7 @@
       margin: 0;
     }
     
-    /* ===== NAVIGATION BUTTONS ===== */
+    /* ===== PER-SLIDE NAV BUTTONS (shown after answering) ===== */
     .nav-buttons {
       display: flex;
       gap: 16px;
@@ -305,6 +391,57 @@
     .nav-buttons.visible {
       opacity: 1;
       visibility: visible;
+    }
+
+    /* ===== FLOATING PREV/NEXT NAVIGATION ===== */
+    .floating-nav {
+      position: absolute;
+      bottom: 70px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .floating-nav button {
+      pointer-events: auto;
+      font-family: 'Sora', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border: 2px solid rgba(96, 165, 250, 0.4);
+      border-radius: 12px;
+      background: rgba(15, 30, 61, 0.9);
+      backdrop-filter: blur(8px);
+      color: #e8eaf0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .floating-nav button:hover {
+      background: rgba(37, 99, 235, 0.3);
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+    }
+    .floating-nav button:disabled {
+      opacity: 0.25;
+      cursor: default;
+      transform: none;
+    }
+    .floating-nav button:disabled:hover {
+      background: rgba(15, 30, 61, 0.9);
+      border-color: rgba(96, 165, 250, 0.4);
+      transform: none;
+    }
+    .floating-nav .nav-arrow {
+      font-size: 18px;
     }
     
     .btn {
@@ -2250,6 +2387,12 @@
       </div>
     </div>
     
+    <!-- Floating Navigation Controls -->
+    <div class="floating-nav">
+      <button id="btn-prev-float" onclick="prevSlide()"><span class="nav-arrow">‹</span> Prev</button>
+      <button id="btn-next-float" onclick="nextSlide()">Next <span class="nav-arrow">›</span></button>
+    </div>
+
   </div>
   
   <!-- Status Bar -->
@@ -2483,6 +2626,75 @@
     window.addEventListener('resize', scaleStage);
     scaleStage();
     
+    // ===== SIDEBAR FOR QUESTION SLIDES =====
+    function prepareQuestionSlide(slideId) {
+      const slide = document.getElementById(slideId);
+      if (!slide) return;
+      const qSlide = slide.querySelector('.question-slide');
+      if (!qSlide) return;
+
+      // Ensure question content is wrapped in .question-panel
+      if (!qSlide.querySelector('.question-panel')) {
+        const panel = document.createElement('div');
+        panel.className = 'question-panel';
+        while (qSlide.firstChild) {
+          panel.appendChild(qSlide.firstChild);
+        }
+        qSlide.appendChild(panel);
+      }
+
+      // Ensure sidebar exists with case scenario details
+      if (!qSlide.querySelector('.scenario-sidebar')) {
+        let introSlide = null;
+        let caseNum = 0;
+        for (const c in caseMap) {
+          if (caseMap[c].includes(slideId)) {
+            introSlide = document.getElementById(caseMap[c][0]);
+            caseNum = c;
+            break;
+          }
+        }
+
+        if (introSlide) {
+          const caseIntro = introSlide.querySelector('.case-intro');
+          if (caseIntro) {
+            const sidebar = document.createElement('div');
+            sidebar.className = 'scenario-sidebar';
+
+            const caseNumText = caseIntro.querySelector('.case-number')?.textContent || `Case ${caseNum}`;
+            const titleText = caseIntro.querySelector('h2')?.textContent || '';
+            const scenarioHTML = caseIntro.querySelector('.scenario')?.innerHTML || '';
+            const vitalsHTML = caseIntro.querySelector('.vitals')?.innerHTML || '';
+
+            const ecgSource = caseIntro.querySelector('.ecg-strip canvas');
+            let ecgHTML = '';
+            if (ecgSource) {
+              const rhythm = ecgSource.getAttribute('data-rhythm');
+              const color = ecgSource.getAttribute('data-ecg-color') || '#60a5fa';
+              const label = caseIntro.querySelector('.ecg-label')?.textContent || '';
+              ecgHTML = `
+                <div class="sidebar-ecg">
+                  <div class="ecg-strip">
+                    <div class="ecg-label">${label}</div>
+                    <canvas data-rhythm="${rhythm}" data-ecg-color="${color}"></canvas>
+                  </div>
+                </div>`;
+            }
+
+            sidebar.innerHTML = `
+              <div class="sidebar-case-label">${caseNumText}</div>
+              <div class="sidebar-case-title">${titleText}</div>
+              <div class="sidebar-scenario">${scenarioHTML}</div>
+              ${vitalsHTML ? `<div class="sidebar-vitals">${vitalsHTML}</div>` : ''}
+              ${ecgHTML}
+            `;
+
+            qSlide.insertBefore(sidebar, qSlide.firstChild);
+          }
+        }
+      }
+    }
+
     // ===== NAVIGATION =====
     function showSlide(index) {
       activeMonitors.forEach(m => m.stop());
@@ -2502,16 +2714,22 @@
 
       const activeSlide = document.getElementById(slides[index]);
       if (activeSlide) {
-        const canvas = activeSlide.querySelector('canvas[data-rhythm]');
-        if (canvas) {
-          if (!canvas.id) canvas.id = 'ecg-canvas-' + index;
+        prepareQuestionSlide(slides[index]);
+        const canvases = activeSlide.querySelectorAll('canvas[data-rhythm]');
+        canvases.forEach((canvas, idx) => {
+          if (!canvas.id) canvas.id = 'ecg-canvas-' + index + '-' + idx;
           const rhythm = canvas.getAttribute('data-rhythm');
           const color = canvas.getAttribute('data-ecg-color') || '#60a5fa';
           const monitor = new ECGMonitor(canvas.id, rhythm, color);
           monitor.start();
           activeMonitors.push(monitor);
-        }
+        });
       }
+
+      const prevBtn = document.getElementById('btn-prev-float');
+      const nextBtn = document.getElementById('btn-next-float');
+      if (prevBtn) prevBtn.disabled = (index === 0);
+      if (nextBtn) nextBtn.disabled = (index === slides.length - 1);
 
       updateProgressBar();
       updateStatusBar();

@@ -677,12 +677,162 @@
       font-family: 'JetBrains Mono', monospace;
       font-size: 11px;
       color: #60a5fa;
-      z-index: 2;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      background: rgba(5, 5, 16, 0.7);
-      padding: 2px 8px;
-      border-radius: 4px;
+    /* ===== MOBILE RESPONSIVE MEDIA QUERIES ===== */
+    @media (max-width: 900px) {
+      html, body {
+        overflow-y: auto !important;
+        height: auto !important;
+      }
+      
+      body {
+        align-items: flex-start;
+      }
+      
+      #stage {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh;
+        transform: none !important;
+        overflow: visible !important;
+        position: relative;
+        padding-bottom: 60px;
+      }
+      
+      .slide {
+        position: relative;
+        height: auto !important;
+        min-height: calc(100vh - 60px);
+        padding: 16px 14px 70px 14px;
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+      }
+      
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        display: flex;
+      }
+      
+      /* Case Intro Slide on Mobile */
+      .case-intro {
+        padding: 20px 16px;
+      }
+      .case-intro h2 {
+        font-size: 24px;
+      }
+      .case-intro .scenario {
+        font-size: 16px;
+      }
+      .case-intro .vitals ul {
+        grid-template-columns: 1fr;
+      }
+      .case-intro .vitals li {
+        font-size: 14px;
+      }
+      
+      /* Question Slide on Mobile */
+      .question-slide {
+        border-radius: 14px;
+      }
+      
+      .scenario-sidebar {
+        padding: 14px 16px;
+        gap: 8px;
+      }
+      .scenario-sidebar .header-top-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .scenario-sidebar .sidebar-case-title {
+        font-size: 18px;
+      }
+      .scenario-sidebar .sidebar-scenario {
+        font-size: 15px;
+        padding: 8px 12px;
+      }
+      .scenario-sidebar .sidebar-vitals ul {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+      .scenario-sidebar .sidebar-vitals li {
+        font-size: 13px;
+      }
+      .scenario-sidebar .sidebar-ecg {
+        width: 100%;
+        height: 40px;
+      }
+      
+      .question-panel {
+        padding: 16px 14px;
+      }
+      .question-text {
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .option-card {
+        font-size: 15px;
+        padding: 12px 14px;
+      }
+      .explanation-panel {
+        padding: 14px 16px;
+      }
+      .explanation-panel h4 {
+        font-size: 17px;
+      }
+      .explanation-panel p {
+        font-size: 14px;
+      }
+      
+      /* Status Bar on Mobile */
+      #status-bar {
+        padding: 8px 12px;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: space-between;
+      }
+      #status-bar .status-item {
+        font-size: 13px;
+      }
+      #status-bar .status-center {
+        gap: 8px;
+      }
+      .status-nav-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+      .btn-reset {
+        padding: 4px 10px;
+        font-size: 12px;
+      }
+
+      /* Title Slide on Mobile */
+      .title-slide h1 {
+        font-size: 36px;
+      }
+      .title-slide .subtitle {
+        font-size: 20px;
+      }
+      .title-slide .instruction {
+        font-size: 16px;
+        padding: 16px 20px;
+      }
+
+      /* Completion Slide on Mobile */
+      .completion-slide h2 {
+        font-size: 32px;
+      }
+      .completion-slide .final-score {
+        font-size: 54px;
+      }
+      .completion-slide p {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -2629,6 +2779,10 @@
     // ===== STAGE SCALING =====
     function scaleStage() {
       const stage = document.getElementById('stage');
+      if (window.innerWidth <= 900) {
+        stage.style.transform = 'none';
+        return;
+      }
       const scaleX = window.innerWidth / 1920;
       const scaleY = window.innerHeight / 1080;
       const scale = Math.min(scaleX, scaleY);

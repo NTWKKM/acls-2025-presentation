@@ -23,7 +23,7 @@ NEUTRAL_CASE_TITLES = {
     15: "Refractory Out-of-Hospital Cardiac Arrest"
 }
 
-# ECG SVG Generator (Height 56px - Perfect balance)
+# ECG SVG Generator (Height 56px for perfectly balanced A4 layout)
 def generate_ecg_svg(rhythm_type, width=650, height=56, stroke='#10b981'):
     random.seed(42)
     points = []
@@ -120,6 +120,40 @@ def neutralize_scenario(text):
 def neutralize_vitals(vitals_html):
     return re.sub(r'<li><strong>Rhythm:</strong> .*?</li>', '<li><strong>Rhythm:</strong> Refer to ECG Strip</li>', vitals_html)
 
+# Neutralize explicit rhythm giveaways in question stems
+def neutralize_question(qtext):
+    # Case 1
+    qtext = re.sub(r'มี VF บนมอนิเตอร์', 'ติดมอนิเตอร์พบคลื่นไฟฟ้าหัวใจดังกล่าว', qtext)
+    qtext = re.sub(r'หากมอนิเตอร์ยังเป็น VF', 'หากมอนิเตอร์ยังคงพบคลื่นหัวใจเดิม', qtext)
+    # Case 2
+    qtext = re.sub(r'เมื่อยืนยันว่าคลื่นไฟฟ้าหัวใจเป็น Asystole', 'เมื่อยืนยันคลื่นไฟฟ้าหัวใจตามที่แสดงบนมอนิเตอร์', qtext)
+    qtext = re.sub(r'การยืนยันภาวะ True Asystole', 'การยืนยันลักษณะคลื่นไฟฟ้าหัวใจบนมอนิเตอร์', qtext)
+    qtext = re.sub(r'ผู้ป่วย Asystole', 'ผู้ป่วยรายนี้', qtext)
+    # Case 3
+    qtext = re.sub(r'ผู้ป่วย PEA\?', 'ผู้ป่วยคลำชีพจรไม่ได้รายนี้?', qtext)
+    # Case 4
+    qtext = re.sub(r'ผู้ป่วยมีภาวะ Symptomatic Bradycardia \(มีชีพจรแต่หัวใจเต้นช้าและมีสัญญาณช็อก\)', 'ผู้ป่วยมีสัญญาณ Hypoperfusion และคลื่นไฟฟ้าหัวใจตามที่แสดง', qtext)
+    # Case 5
+    qtext = re.sub(r'ผู้ป่วยเป็น Monomorphic Wide-Complex Tachycardia ที่', 'หากผู้ป่วยรายนี้มีคลื่นไฟฟ้าหัวใจตามที่แสดงบนมอนิเตอร์ และ', qtext)
+    # Case 6
+    qtext = re.sub(r'ผู้ป่วยมี AF with RVR ร่วมกับ', 'ผู้ป่วยมีคลื่นไฟฟ้าหัวใจตามที่แสดง ร่วมกับ', qtext)
+    qtext = re.sub(r'ใน Atrial Fibrillation ครั้งแรก', 'ในภาวะคลื่นหัวใจลักษณะนี้เป็นครั้งแรก', qtext)
+    # Case 7
+    qtext = re.sub(r'ในการรักษา Torsades de Pointes', 'ในการรักษาคลื่นไฟฟ้าหัวใจลักษณะนี้', qtext)
+    qtext = re.sub(r'เกิด Torsades de Pointes แบบ Pulseless', 'เกิดคลื่นไฟฟ้าหัวใจลักษณะนี้แบบ Pulseless', qtext)
+    qtext = re.sub(r'ไม่ให้เกิด Torsades de Pointes กลับเป็นซ้ำ', 'ไม่ให้เกิดคลื่นไฟฟ้าหัวใจผิดปกติลักษณะนี้กลับเป็นซ้ำ', qtext)
+    # Case 10
+    qtext = re.sub(r'เกิด VF Arrest', 'เกิด Cardiac Arrest', qtext)
+    qtext = re.sub(r'เปลี่ยนเป็น Asystole หรือ Severe Bradycardia', 'เปลี่ยนเป็นคลื่นหัวใจแบบ Non-shockable หรือเต้นช้ามาก', qtext)
+    # Case 11
+    qtext = re.sub(r'ผู้ป่วยเป็น SVT ที่คงที่', 'ผู้ป่วยมีคลื่นไฟฟ้าหัวใจตามที่แสดงและคงที่', qtext)
+    qtext = re.sub(r'คลื่นยังเป็น SVT 190/นาที', 'คลื่นยังคงเต้นเร็ว 190/นาที', qtext)
+    # Case 13
+    qtext = re.sub(r'ในภาวะ Hyperkalemic Cardiac Arrest', 'ในภาวะ Cardiac Arrest จากสาเหตุนี้', qtext)
+    # Case 14
+    qtext = re.sub(r'ที่มี VF คืออะไร', 'ที่มี Shockable Rhythm คืออะไร', qtext)
+    return qtext
+
 # Parse slides
 parts = content.split('<div class="slide"')
 cases_data = {}
@@ -179,9 +213,11 @@ for part in parts[1:]:
         opts = re.findall(r'<div class="option-card" data-correct="(true|false)">(.*?)</div>', part)
         exp_m = re.search(r'<div class="explanation-panel">(.*?)</div>\s*<div class="nav-buttons"', part, re.DOTALL)
         
+        q_text = q_m.group(1).strip() if q_m else ''
         q_obj = {
             'id': slide_type,
-            'question': q_m.group(1).strip() if q_m else '',
+            'question': q_text,
+            'question_neutral': neutralize_question(q_text),
             'options': [{'correct': opt[0] == 'true', 'text': opt[1].strip()} for opt in opts],
             'explanation': exp_m.group(1).strip() if exp_m else ''
         }
@@ -558,9 +594,10 @@ def generate_html_doc(with_answers=True):
     <div class="questions-section">
 """
         for idx, q in enumerate(c['questions'], 1):
+            q_text_disp = q['explanation'] if False else (q['question'] if with_answers else q['question_neutral'])
             html_out += f"""
       <div class="question-block">
-        <div class="q-title">Q{idx}. {q['question']}</div>
+        <div class="q-title">Q{idx}. {q_text_disp}</div>
         <div class="options-list">
 """
             for opt in q['options']:
@@ -602,4 +639,4 @@ with open('cases/acls-2025-cases-answers.html', 'w', encoding='utf-8') as f:
 with open('cases/acls-2025-cases-no-answers.html', 'w', encoding='utf-8') as f:
     f.write(generate_html_doc(with_answers=False))
 
-print("Generated comfortably balanced 1-page per case print HTML templates successfully!")
+print("Generated HTML print templates with neutralized question stems successfully!")

@@ -4,6 +4,25 @@ import re, json, math, random, subprocess, os
 with open('cases/acls-2025-cases.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
+# Neutral Case Titles for Exam / Questions-Only Version (Clinical Presentation Titles)
+NEUTRAL_CASE_TITLES = {
+    1: "Sudden Collapse in Emergency Department",
+    2: "Unresponsive Patient Found at Home",
+    3: "Sudden Post-operative Collapse",
+    4: "Dizziness, Diaphoresis & Hypoperfusion",
+    5: "Chest Tightness & Palpitations with History of IHD",
+    6: "Severe Dyspnea & Acute Pulmonary Edema",
+    7: "Recurrent Syncope in Patient on Diuretics",
+    8: "Submersion Injury & Cardiac Arrest",
+    9: "Post-Cardiac Arrest Care & Hemodynamic Support",
+    10: "Post-CABG Cardiac Arrest in ICU",
+    11: "Sudden Palpitations in Young Adult",
+    12: "Maternal Collapse at 32 Weeks Gestation",
+    13: "Collapse in End-Stage Renal Disease Patient",
+    14: "Collapse in Patient with Mechanical Circulatory Support (LVAD)",
+    15: "Refractory Out-of-Hospital Cardiac Arrest"
+}
+
 # ECG SVG Generator
 def generate_ecg_svg(rhythm_type, width=650, height=75, stroke='#10b981'):
     random.seed(42)
@@ -490,8 +509,9 @@ def generate_html_doc(with_answers=True):
 
     for cnum in sorted(cases_data.keys()):
         c = cases_data[cnum]
+        title_text = c['title'] if with_answers else NEUTRAL_CASE_TITLES.get(cnum, c['title'])
         html_out += f"""
-        <div class="toc-item"><strong>Case {cnum}:</strong> {c.get('title', '')}</div>"""
+        <div class="toc-item"><strong>Case {cnum}:</strong> {title_text}</div>"""
 
     html_out += """
       </div>
@@ -504,7 +524,7 @@ def generate_html_doc(with_answers=True):
     for cnum in sorted(cases_data.keys()):
         c = cases_data[cnum]
         
-        # Determine scenario text & vitals text
+        case_title = c['title'] if with_answers else NEUTRAL_CASE_TITLES.get(cnum, c['title'])
         scen_text = c['scenario_neutral'] if not with_answers else c['scenario']
         vitals_text = c['vitals_neutral'] if not with_answers else c['vitals']
         
@@ -524,7 +544,7 @@ def generate_html_doc(with_answers=True):
     <div class="case-header">
       <div class="case-num-title">
         <div class="c-label">{c.get('number', f'Case {cnum}')}</div>
-        <h2>{c.get('title', '')}</h2>
+        <h2>{case_title}</h2>
       </div>
       <div>{c.get('diff_tag', '')}</div>
     </div>
@@ -586,4 +606,4 @@ with open('cases/acls-2025-cases-answers.html', 'w', encoding='utf-8') as f:
 with open('cases/acls-2025-cases-no-answers.html', 'w', encoding='utf-8') as f:
     f.write(generate_html_doc(with_answers=False))
 
-print("Generated HTML print templates with embedded SVG ECG strips successfully!")
+print("Generated HTML print templates with neutral clinical titles successfully!")

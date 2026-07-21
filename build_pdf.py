@@ -1,10 +1,107 @@
-import re, json, subprocess, os
+import re, json, math, random, subprocess, os
 
 # Read source file
 with open('cases/acls-2025-cases.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Split by slide div
+# ECG SVG Generator
+def generate_ecg_svg(rhythm_type, width=650, height=75, stroke='#10b981'):
+    random.seed(42)
+    points = []
+    mid = height / 2.0
+    
+    for x in range(width):
+        t = x
+        y = 0
+        if rhythm_type == 'vf':
+            y = math.sin(t*0.2)*18 + math.sin(t*0.55)*10 + math.sin(t*1.1)*5 + (random.random()-0.5)*8
+        elif rhythm_type == 'asystole':
+            y = (random.random()-0.5)*1.5
+        elif rhythm_type == 'pea':
+            mod = t % 70
+            if mod < 4: y = -15
+            elif mod < 8: y = 25
+            else: y = (random.random()-0.5)*1.5
+        elif rhythm_type == 'bradycardia':
+            mod = t % 150
+            if mod < 4: y = -8
+            elif mod < 7: y = -18
+            elif mod < 12: y = 30
+            elif mod < 16: y = -6
+            elif mod > 40 and mod < 60: y = -8 * math.sin((mod-40)/20*math.pi)
+            else: y = (random.random()-0.5)*1.5
+        elif rhythm_type == 'torsades':
+            cycle = t % 160
+            envelope = math.sin(cycle / 160.0 * math.pi)
+            y = envelope * (math.sin(cycle * 0.35) * 22 + math.sin(cycle * 0.7) * 14) + (random.random()-0.5)*3
+        elif rhythm_type == 'hyperK':
+            mod = t % 65
+            if mod < 4: y = -12
+            elif mod < 10: y = 25
+            elif mod > 20 and mod < 45: y = -22 * math.sin((mod-20)/25*math.pi)
+            else: y = (random.random()-0.5)*1.5
+        elif rhythm_type == 'afrvr':
+            mod = (t + int(math.sin(t*0.05)*10)) % 30
+            if mod < 3: y = -15
+            elif mod < 6: y = 28
+            else: y = (random.random()-0.5)*3
+        elif rhythm_type == 'svt':
+            mod = t % 28
+            if mod < 3: y = -18
+            elif mod < 7: y = 32
+            else: y = (random.random()-0.5)*1.5
+        elif rhythm_type == 'pacing':
+            mod = t % 50
+            if mod < 2: y = 35
+            elif mod < 5: y = -25
+            elif mod < 10: y = 20
+            else: y = (random.random()-0.5)*1.5
+        else: # nsr
+            mod = t % 60
+            if mod < 4: y = -6
+            elif mod < 7: y = -22
+            elif mod < 11: y = 32
+            elif mod < 14: y = -8
+            elif mod > 25 and mod < 40: y = -6 * math.sin((mod-25)/15*math.pi)
+            else: y = (random.random()-0.5)*1.5
+            
+        points.append(f"{x},{mid - y:.2f}")
+    
+    path_d = "M " + " L ".join(points)
+    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" style="background: #090d16; border-radius: 6px; border: 1px solid #334155; margin-top: 8px; display: block;">
+      <defs>
+        <pattern id="grid-{rhythm_type}" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(37,99,235,0.18)" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid-{rhythm_type})" />
+      <path d="{path_d}" fill="none" stroke="{stroke}" stroke-width="2" stroke-linejoin="round" />
+    </svg>'''
+    return svg
+
+# Neutralize explicit rhythm giveaways in scenario text
+def neutralize_scenario(text):
+    text = re.sub(r'มอนิเตอร์แสดงคลื่น Ventricular Fibrillation \(VF\)', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'พบคลื่น Asystole \(เส้นตรง\)', 'พบคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'พบ Pulseless Electrical Activity \(PEA\) อัตรา 110/นาที', 'พบคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง อัตราประมาณ 110/นาที', text)
+    text = re.sub(r'มอนิเตอร์แสดง Sinus Bradycardia อัตรา 36 ครั้ง/นาที', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง Monomorphic VT', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง AF with RVR', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง Torsades de Pointes', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'ติดมอนิเตอร์พบคลื่น Asystole', 'ติดมอนิเตอร์พบคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง Sinus Rhythm', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง SVT', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'มอนิเตอร์แสดง PEA', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'ติดมอนิเตอร์พบคลื่น Sine Wave อัตรา 45/นาที QRS กว้างมาก', 'ติดมอนิเตอร์พบคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    text = re.sub(r'เกิด PEA arrest', 'เกิด cardiac arrest', text)
+    text = re.sub(r'มอนิเตอร์ยังคงเป็น Asystole เส้นตรง', 'มอนิเตอร์แสดงคลื่นไฟฟ้าหัวใจดังแสดงในแถบ ECG ด้านล่าง', text)
+    return text
+
+# Neutralize rhythm text in vitals
+def neutralize_vitals(vitals_html):
+    return re.sub(r'<li><strong>Rhythm:</strong> .*?</li>', '<li><strong>Rhythm:</strong> Refer to ECG Strip</li>', vitals_html)
+
+# Parse slides
 parts = content.split('<div class="slide"')
 cases_data = {}
 
@@ -27,6 +124,9 @@ for part in parts[1:]:
         obj_m = re.search(r'<div class="objective">(.*?)</div>', part, re.DOTALL)
         scen_m = re.search(r'<p class="scenario">(.*?)</p>', part, re.DOTALL)
         vitals_m = re.search(r'<div class="vitals">(.*?)</div>\s*<div class="ecg-strip"', part, re.DOTALL)
+        rhythm_m = re.search(r'data-rhythm="([^"]+)"', part)
+        color_m = re.search(r'data-ecg-color="([^"]+)"', part)
+        label_m = re.search(r'<div class="ecg-label">(.*?)</div>', part)
         
         num_text = num_m.group(1).strip() if num_m else f'Case {case_num}'
         diff_tag = ''
@@ -37,12 +137,24 @@ for part in parts[1:]:
                 diff_tag = '<span class="tag tag-advanced">Advanced</span>'
             num_text = re.sub(r'<span class="difficulty-tag[^"]*">.*?</span>', '', num_text, flags=re.DOTALL).strip()
         
+        rhythm = rhythm_m.group(1) if rhythm_m else 'nsr'
+        color = color_m.group(1) if color_m else '#10b981'
+        label = label_m.group(1) if label_m else 'ECG LEAD II'
+        
+        scen_text = scen_m.group(1).strip() if scen_m else ''
+        vitals_text = vitals_m.group(1).strip() if vitals_m else ''
+        
         cases_data[case_num]['title'] = title_m.group(1).strip() if title_m else ''
         cases_data[case_num]['number'] = num_text
         cases_data[case_num]['diff_tag'] = diff_tag
         cases_data[case_num]['objective'] = obj_m.group(1).strip() if obj_m else ''
-        cases_data[case_num]['scenario'] = scen_m.group(1).strip() if scen_m else ''
-        cases_data[case_num]['vitals'] = vitals_m.group(1).strip() if vitals_m else ''
+        cases_data[case_num]['scenario'] = scen_text
+        cases_data[case_num]['scenario_neutral'] = neutralize_scenario(scen_text)
+        cases_data[case_num]['vitals'] = vitals_text
+        cases_data[case_num]['vitals_neutral'] = neutralize_vitals(vitals_text)
+        cases_data[case_num]['rhythm'] = rhythm
+        cases_data[case_num]['color'] = color
+        cases_data[case_num]['label'] = label
     else:
         q_m = re.search(r'<p class="question-text">(.*?)</p>', part, re.DOTALL)
         opts = re.findall(r'<div class="option-card" data-correct="(true|false)">(.*?)</div>', part)
@@ -72,7 +184,7 @@ def generate_html_doc(with_answers=True):
   <style>
     @page {{
       size: A4;
-      margin: 15mm 15mm 18mm 15mm;
+      margin: 14mm 15mm 16mm 15mm;
       @bottom-right {{
         content: counter(page);
       }}
@@ -172,7 +284,7 @@ def generate_html_doc(with_answers=True):
     .case-header {{
       border-bottom: 3px solid #2563eb;
       padding-bottom: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -211,33 +323,46 @@ def generate_html_doc(with_answers=True):
       border-left: 4px solid #0284c7;
       padding: 10px 14px;
       border-radius: 0 8px 8px 0;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       font-size: 13.5px;
       color: #0369a1;
     }}
 
     .scenario-box {{
       background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
       border-radius: 10px;
       padding: 14px 18px;
-      margin-bottom: 16px;
-      font-size: 15px;
+      margin-bottom: 14px;
+      font-size: 14.5px;
       line-height: 1.55;
       color: #0f172a;
+    }}
+
+    .ecg-container {{
+      margin-top: 10px;
+      position: relative;
+    }}
+    .ecg-strip-header {{
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+      text-transform: uppercase;
     }}
 
     .vitals-box {{
       background: #fff;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 20px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
     }}
     .vitals-box h4 {{
-      font-size: 13.5px;
+      font-size: 13px;
       color: #2563eb;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }}
@@ -245,7 +370,7 @@ def generate_html_doc(with_answers=True):
       list-style: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 6px 16px;
+      gap: 4px 16px;
     }}
     .vitals-box li {{
       font-size: 13px;
@@ -258,23 +383,23 @@ def generate_html_doc(with_answers=True):
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      padding: 14px 18px;
-      margin-bottom: 16px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
       page-break-inside: avoid;
     }}
 
     .q-title {{
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #0f1e3d;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }}
 
     .options-list {{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
-      margin-bottom: 12px;
+      gap: 6px 12px;
+      margin-bottom: 10px;
     }}
 
     .opt-item {{
@@ -378,6 +503,22 @@ def generate_html_doc(with_answers=True):
 
     for cnum in sorted(cases_data.keys()):
         c = cases_data[cnum]
+        
+        # Determine scenario text & vitals text
+        scen_text = c['scenario_neutral'] if not with_answers else c['scenario']
+        vitals_text = c['vitals_neutral'] if not with_answers else c['vitals']
+        
+        # SVG Strip
+        svg_code = generate_ecg_svg(c['rhythm'], width=650, height=75, stroke=c['color'])
+        ecg_label_str = c['label'] if with_answers else "ECG STRIP - MONITOR LEAD II"
+        
+        ecg_block = f"""
+    <div class="ecg-container">
+      <div class="ecg-strip-header">ECG Monitor: {ecg_label_str}</div>
+      {svg_code}
+    </div>
+"""
+
         html_out += f"""
   <div class="case-card">
     <div class="case-header">
@@ -392,10 +533,11 @@ def generate_html_doc(with_answers=True):
 
     <div class="scenario-box">
       <strong>Clinical Scenario:</strong><br>
-      {c.get('scenario', '')}
+      {scen_text}
+      {ecg_block}
     </div>
 
-    {f'<div class="vitals-box">{c["vitals"]}</div>' if c.get('vitals') else ''}
+    {f'<div class="vitals-box">{vitals_text}</div>' if vitals_text else ''}
 
     <div class="questions-section">
 """
@@ -444,4 +586,4 @@ with open('cases/acls-2025-cases-answers.html', 'w', encoding='utf-8') as f:
 with open('cases/acls-2025-cases-no-answers.html', 'w', encoding='utf-8') as f:
     f.write(generate_html_doc(with_answers=False))
 
-print("Generated HTML print templates successfully!")
+print("Generated HTML print templates with embedded SVG ECG strips successfully!")

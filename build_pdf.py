@@ -23,8 +23,8 @@ NEUTRAL_CASE_TITLES = {
     15: "Refractory Out-of-Hospital Cardiac Arrest"
 }
 
-# ECG SVG Generator
-def generate_ecg_svg(rhythm_type, width=650, height=48, stroke='#10b981'):
+# ECG SVG Generator (Height 56px - Perfect balance)
+def generate_ecg_svg(rhythm_type, width=650, height=56, stroke='#10b981'):
     random.seed(42)
     points = []
     mid = height / 2.0
@@ -33,68 +33,68 @@ def generate_ecg_svg(rhythm_type, width=650, height=48, stroke='#10b981'):
         t = x
         y = 0
         if rhythm_type == 'vf':
-            y = math.sin(t*0.2)*12 + math.sin(t*0.55)*6 + math.sin(t*1.1)*3 + (random.random()-0.5)*5
+            y = math.sin(t*0.2)*14 + math.sin(t*0.55)*7 + math.sin(t*1.1)*4 + (random.random()-0.5)*6
         elif rhythm_type == 'asystole':
             y = (random.random()-0.5)*1.2
         elif rhythm_type == 'pea':
             mod = t % 70
-            if mod < 4: y = -10
-            elif mod < 8: y = 18
+            if mod < 4: y = -12
+            elif mod < 8: y = 20
             else: y = (random.random()-0.5)*1.2
         elif rhythm_type == 'bradycardia':
             mod = t % 150
             if mod < 4: y = -6
-            elif mod < 7: y = -12
-            elif mod < 12: y = 20
-            elif mod < 16: y = -4
-            elif mod > 40 and mod < 60: y = -6 * math.sin((mod-40)/20*math.pi)
+            elif mod < 7: y = -14
+            elif mod < 12: y = 24
+            elif mod < 16: y = -5
+            elif mod > 40 and mod < 60: y = -7 * math.sin((mod-40)/20*math.pi)
             else: y = (random.random()-0.5)*1.2
         elif rhythm_type == 'torsades':
             cycle = t % 160
             envelope = math.sin(cycle / 160.0 * math.pi)
-            y = envelope * (math.sin(cycle * 0.35) * 15 + math.sin(cycle * 0.7) * 10) + (random.random()-0.5)*2
+            y = envelope * (math.sin(cycle * 0.35) * 18 + math.sin(cycle * 0.7) * 11) + (random.random()-0.5)*2
         elif rhythm_type == 'hyperK':
             mod = t % 65
-            if mod < 4: y = -8
-            elif mod < 10: y = 18
-            elif mod > 20 and mod < 45: y = -15 * math.sin((mod-20)/25*math.pi)
+            if mod < 4: y = -10
+            elif mod < 10: y = 20
+            elif mod > 20 and mod < 45: y = -18 * math.sin((mod-20)/25*math.pi)
             else: y = (random.random()-0.5)*1.2
         elif rhythm_type == 'afrvr':
             mod = (t + int(math.sin(t*0.05)*10)) % 30
-            if mod < 3: y = -10
-            elif mod < 6: y = 20
+            if mod < 3: y = -12
+            elif mod < 6: y = 22
             else: y = (random.random()-0.5)*2
         elif rhythm_type == 'svt':
             mod = t % 28
-            if mod < 3: y = -12
-            elif mod < 7: y = 22
+            if mod < 3: y = -14
+            elif mod < 7: y = 25
             else: y = (random.random()-0.5)*1.2
         elif rhythm_type == 'pacing':
             mod = t % 50
-            if mod < 2: y = 25
-            elif mod < 5: y = -18
-            elif mod < 10: y = 15
+            if mod < 2: y = 28
+            elif mod < 5: y = -20
+            elif mod < 10: y = 16
             else: y = (random.random()-0.5)*1.2
         else: # nsr
             mod = t % 60
-            if mod < 4: y = -4
-            elif mod < 7: y = -15
-            elif mod < 11: y = 22
+            if mod < 4: y = -5
+            elif mod < 7: y = -18
+            elif mod < 11: y = 25
             elif mod < 14: y = -6
-            elif mod > 25 and mod < 40: y = -4 * math.sin((mod-25)/15*math.pi)
+            elif mod > 25 and mod < 40: y = -5 * math.sin((mod-25)/15*math.pi)
             else: y = (random.random()-0.5)*1.2
             
         points.append(f"{x},{mid - y:.2f}")
     
     path_d = "M " + " L ".join(points)
-    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" style="background: #090d16; border-radius: 5px; border: 1px solid #334155; margin-top: 4px; display: block;">
+    svg = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg" style="background: #090d16; border-radius: 6px; border: 1px solid #334155; margin-top: 6px; display: block;">
       <defs>
-        <pattern id="grid-{rhythm_type}" width="16" height="16" patternUnits="userSpaceOnUse">
-          <path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(37,99,235,0.18)" stroke-width="0.5"/>
+        <pattern id="grid-{rhythm_type}" width="18" height="18" patternUnits="userSpaceOnUse">
+          <path d="M 18 0 L 0 0 0 18" fill="none" stroke="rgba(37,99,235,0.18)" stroke-width="0.5"/>
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid-{rhythm_type})" />
-      <path d="{path_d}" fill="none" stroke="{stroke}" stroke-width="1.8" stroke-linejoin="round" />
+      <path d="{path_d}" fill="none" stroke="{stroke}" stroke-width="2" stroke-linejoin="round" />
     </svg>'''
     return svg
 
@@ -203,7 +203,7 @@ def generate_html_doc(with_answers=True):
   <style>
     @page {{
       size: A4;
-      margin: 10mm 12mm 10mm 12mm;
+      margin: 11mm 13mm 11mm 13mm;
       @bottom-right {{
         content: counter(page);
       }}
@@ -214,12 +214,12 @@ def generate_html_doc(with_answers=True):
       font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
       color: #1e293b;
       background: #ffffff;
-      line-height: 1.45;
-      font-size: 13px;
+      line-height: 1.48;
+      font-size: 13.5px;
     }}
 
     .cover-page {{
-      padding: 30px 20px;
+      padding: 35px 20px;
       text-align: center;
       page-break-after: always;
       display: flex;
@@ -233,45 +233,45 @@ def generate_html_doc(with_answers=True):
       background: #eff6ff;
       color: #2563eb;
       border: 1px solid #bfdbfe;
-      padding: 5px 14px;
+      padding: 6px 16px;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 1px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }}
 
     .cover-title {{
       font-family: 'Sora', 'Sarabun', sans-serif;
-      font-size: 32px;
+      font-size: 34px;
       font-weight: 700;
       color: #0f1e3d;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       line-height: 1.2;
     }}
 
     .cover-subtitle {{
-      font-size: 16px;
+      font-size: 17px;
       color: #64748b;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
       font-weight: 500;
     }}
 
     .toc-box {{
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 20px 24px;
+      border-radius: 12px;
+      padding: 22px 28px;
       text-align: left;
       max-width: 750px;
       margin: 0 auto;
     }}
 
     .toc-title {{
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
       color: #0f1e3d;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       border-bottom: 2px solid #2563eb;
       padding-bottom: 6px;
     }}
@@ -279,18 +279,18 @@ def generate_html_doc(with_answers=True):
     .toc-grid {{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
+      gap: 8px 22px;
     }}
 
     .toc-item {{
-      font-size: 13px;
+      font-size: 13.5px;
       color: #334155;
     }}
     .toc-item strong {{
       color: #2563eb;
     }}
 
-    /* CASE SECTION (STRICT 1 PAGE PER CASE) */
+    /* CASE SECTION (COMFORTABLY BALANCED 1 PAGE PER CASE) */
     .case-card {{
       page-break-after: always;
       page-break-inside: avoid;
@@ -312,14 +312,14 @@ def generate_html_doc(with_answers=True):
 
     .case-num-title h2 {{
       font-family: 'Sora', 'Sarabun', sans-serif;
-      font-size: 18px;
+      font-size: 19px;
       color: #0f1e3d;
       font-weight: 700;
-      line-height: 1.2;
+      line-height: 1.25;
     }}
 
     .case-num-title .c-label {{
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 700;
       color: #2563eb;
       text-transform: uppercase;
@@ -329,9 +329,9 @@ def generate_html_doc(with_answers=True):
 
     .tag {{
       display: inline-block;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 2px 8px;
+      padding: 2.5px 9px;
       border-radius: 10px;
       text-transform: uppercase;
     }}
@@ -340,11 +340,11 @@ def generate_html_doc(with_answers=True):
 
     .objective-box {{
       background: #f0f9ff;
-      border-left: 3px solid #0284c7;
-      padding: 6px 10px;
+      border-left: 3.5px solid #0284c7;
+      padding: 7px 12px;
       border-radius: 0 6px 6px 0;
       margin-bottom: 8px;
-      font-size: 12px;
+      font-size: 12.5px;
       color: #0369a1;
     }}
 
@@ -352,23 +352,23 @@ def generate_html_doc(with_answers=True):
       background: #f8fafc;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 10px 14px;
       margin-bottom: 8px;
       font-size: 13.5px;
-      line-height: 1.45;
+      line-height: 1.5;
       color: #0f172a;
     }}
 
     .ecg-container {{
-      margin-top: 4px;
+      margin-top: 5px;
       position: relative;
     }}
     .ecg-strip-header {{
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 700;
       color: #64748b;
       letter-spacing: 0.5px;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
       text-transform: uppercase;
     }}
 
@@ -376,7 +376,7 @@ def generate_html_doc(with_answers=True):
       background: #fff;
       border: 1px solid #cbd5e1;
       border-radius: 6px;
-      padding: 6px 12px;
+      padding: 7px 14px;
       margin-bottom: 10px;
     }}
     .vitals-box h4 {{
@@ -386,10 +386,10 @@ def generate_html_doc(with_answers=True):
       list-style: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px 12px;
+      gap: 3px 14px;
     }}
     .vitals-box li {{
-      font-size: 12px;
+      font-size: 12.5px;
       color: #334155;
     }}
     .vitals-box li strong {{ color: #0f172a; }}
@@ -399,40 +399,40 @@ def generate_html_doc(with_answers=True):
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      padding: 6px 10px;
-      margin-bottom: 6px;
+      padding: 7px 12px;
+      margin-bottom: 8px;
       page-break-inside: avoid;
     }}
 
     .q-title {{
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
       color: #0f1e3d;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }}
 
     .options-list {{
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4px 10px;
+      gap: 5px 12px;
       margin-bottom: 0;
     }}
 
     .opt-item {{
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 5px;
       border: 1px solid #cbd5e1;
-      font-size: 12px;
+      font-size: 12.5px;
       color: #334155;
       background: #f8fafc;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }}
 
     .opt-checkbox {{
-      width: 12px;
-      height: 12px;
+      width: 13px;
+      height: 13px;
       border: 1.5px solid #94a3b8;
       border-radius: 3px;
       display: inline-block;
@@ -525,8 +525,8 @@ def generate_html_doc(with_answers=True):
         scen_text = c['scenario_neutral'] if not with_answers else c['scenario']
         vitals_text = c['vitals_neutral'] if not with_answers else c['vitals']
         
-        # SVG Strip (height 44px for 1-page fit)
-        svg_code = generate_ecg_svg(c['rhythm'], width=650, height=44, stroke=c['color'])
+        # SVG Strip (height 56px for perfectly comfortable balance)
+        svg_code = generate_ecg_svg(c['rhythm'], width=650, height=56, stroke=c['color'])
         ecg_label_str = c['label'] if with_answers else "ECG STRIP - MONITOR LEAD II"
         
         ecg_block = f"""
@@ -602,4 +602,4 @@ with open('cases/acls-2025-cases-answers.html', 'w', encoding='utf-8') as f:
 with open('cases/acls-2025-cases-no-answers.html', 'w', encoding='utf-8') as f:
     f.write(generate_html_doc(with_answers=False))
 
-print("Generated 1-page per case print HTML templates successfully!")
+print("Generated comfortably balanced 1-page per case print HTML templates successfully!")

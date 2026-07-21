@@ -23,5 +23,9 @@
 5. **Compact ECG Waveform Engine & Dynamic Case Mapping**: Ported the canvas-based `ECGMonitor` waveform engine into the case scenarios module for real-time rhythm rendering (VF, Asystole, PEA, Bradycardia, SVT, AF with RVR, Torsades, Hyperkalemia). Implemented dynamic slide array construction from `caseMap` to prevent state drift.
 6. **Offline-First IndexedDB CPR Engine with Extensible Simulation Event Bus**: Created `ACLS2025_CPR_DB` for browser-local persistence of real clinical CPR cases without remote API dependencies. Exposed `window.CPRRecorderEventBus` so future Simulation Mode (interactive ECG monitor, ETCO2, shock-driven rhythm shifts) can seamlessly connect with the CPR recorder.
 7. **Bi-directional BroadcastChannel Real-Time Simulation Synchronization**: Adopted `BroadcastChannel('ACLS_SIM_CHANNEL')` to sync shock delivery, drug administration, and rhythm transitions between the CPR Recorder and external/pop-out Bedside Vital Sign Monitor windows with zero latency and zero external server overhead.
+8. **HTML Data-Neutral Metadata & Automated Leak Verification Pipeline**: Embedded `data-neutral` attributes into `cases/acls-2025-cases.html` to establish a single source of truth for both interactive teaching mode and blinded exam mode. Updated `build_pdf.py` to extract `data-neutral` attributes for objectives, scenarios, and question stems, and added an automated `verify_no_leaks()` post-build assertion check to guarantee 100% rhythm giveaway neutralization across all 15 cases.
+9. **Question Type Diversification & Clinical Reasoning Architecture**: Extended question slide structure and `build_pdf.py` renderer to support **Algorithm Sequencing** (chronological step ordering), **Multi-Select Care Bundles** (Select All That Apply), and **Two-Stage Situational Decision Branching**, measuring multi-dimensional clinical reasoning in both web and printable formats.
+
+
 
 

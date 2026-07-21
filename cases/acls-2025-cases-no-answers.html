@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ACLS 2025 Case Handbook (Questions Only)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page);
+      }
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .cover-page {
+      padding: 40px 20px;
+      text-align: center;
+      page-break-after: always;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 90vh;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #2563eb;
+      border: 1px solid #bfdbfe;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+
+    .cover-title {
+      font-family: 'Sora', 'Sarabun', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: #0f1e3d;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .cover-subtitle {
+      font-size: 18px;
+      color: #64748b;
+      margin-bottom: 40px;
+      font-weight: 500;
+    }
+
+    .toc-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px 30px;
+      text-align: left;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .toc-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f1e3d;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 8px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+    }
+
+    .toc-item {
+      font-size: 14px;
+      color: #334155;
+    }
+    .toc-item strong {
+      color: #2563eb;
+    }
+
+    /* CASE SECTION */
+    .case-card {
+      page-break-after: always;
+      padding-top: 10px;
+    }
+
+    .case-card:last-child {
+      page-break-after: avoid;
+    }
+
+    .case-header {
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .case-num-title h2 {
+      font-family: 'Sora', 'Sarabun', sans-serif;
+      font-size: 22px;
+      color: #0f1e3d;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .case-num-title .c-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .tag-core { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+    .tag-advanced { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+
+    .objective-box {
+      background: #f0f9ff;
+      border-left: 4px solid #0284c7;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      color: #0369a1;
+    }
+
+    .scenario-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: #0f172a;
+    }
+
+    .vitals-box {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .vitals-box h4 {
+      font-size: 13.5px;
+      color: #2563eb;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .vitals-box ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 16px;
+    }
+    .vitals-box li {
+      font-size: 13px;
+      color: #334155;
+    }
+    .vitals-box li strong { color: #0f172a; }
+
+    /* QUESTION ITEM */
+    .question-block {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      page-break-inside: avoid;
+    }
+
+    .q-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f1e3d;
+      margin-bottom: 12px;
+    }
+
+    .options-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .opt-item {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      font-size: 13.5px;
+      color: #334155;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .opt-checkbox {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #94a3b8;
+      border-radius: 3px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .opt-item.correct {
+      background: #f0fdf4;
+      border-color: #22c55e;
+      color: #15803d;
+      font-weight: 600;
+    }
+    .opt-item.correct::after {
+      content: " ✓ (Correct)";
+      color: #16a34a;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    .exp-box {
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 10px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #475569;
+    }
+
+    .exp-box h4 {
+      font-size: 13px;
+      color: #2563eb;
+      margin-bottom: 4px;
+    }
+
+    .distractor-notes {
+      margin-top: 6px;
+      padding-left: 16px;
+    }
+    .distractor-notes li {
+      font-size: 12.5px;
+      color: #64748b;
+      margin-bottom: 2px;
+    }
+
+    .key-teaching {
+      background: #eff6ff;
+      border-left: 3px solid #2563eb;
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: #1e40af;
+    }
+    .key-teaching strong { display: block; font-size: 11px; text-transform: uppercase; color: #2563eb; }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div>
+      <span class="cover-badge">AHA 2025 GUIDELINES COMPLIANT</span>
+      <h1 class="cover-title">ACLS 2025 Interactive Case Handbook</h1>
+      <p class="cover-subtitle">Student Worksheet / Question Bank (Without Answers)</p>
+    </div>
+    
+    <div class="toc-box">
+      <div class="toc-title">Table of Contents</div>
+      <div class="toc-grid">
+
+        <div class="toc-item"><strong>Case 1:</strong> Shockable Rhythm: Ventricular Fibrillation</div>
+        <div class="toc-item"><strong>Case 2:</strong> Non-shockable Rhythm: Asystole</div>
+        <div class="toc-item"><strong>Case 3:</strong> PEA with Reversible Cause (Massive PE)</div>
+        <div class="toc-item"><strong>Case 4:</strong> Symptomatic Bradycardia</div>
+        <div class="toc-item"><strong>Case 5:</strong> Wide-Complex Tachycardia</div>
+        <div class="toc-item"><strong>Case 6:</strong> AF with RVR (Unstable Tachycardia)</div>
+        <div class="toc-item"><strong>Case 7:</strong> Torsades de Pointes (Polymorphic VT)</div>
+        <div class="toc-item"><strong>Case 8:</strong> Drowning Arrest</div>
+        <div class="toc-item"><strong>Case 9:</strong> Post-ROSC Management</div>
+        <div class="toc-item"><strong>Case 10:</strong> Post-Cardiac Surgery Arrest</div>
+        <div class="toc-item"><strong>Case 11:</strong> SVT (Narrow-Complex Tachycardia)</div>
+        <div class="toc-item"><strong>Case 12:</strong> Cardiac Arrest in Pregnancy</div>
+        <div class="toc-item"><strong>Case 13:</strong> PEA from Hyperkalemia</div>
+        <div class="toc-item"><strong>Case 14:</strong> LVAD Patient in Arrest</div>
+        <div class="toc-item"><strong>Case 15:</strong> Termination of Resuscitation (TOR / Ethics)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASES DATA -->
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 1 of 15</div>
+        <h2>Shockable Rhythm: Ventricular Fibrillation</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> สามารถจัดการ VF/pVT ตาม Single Shock Strategy (120-200J Biphasic), CPR 2 นาทีทันทีหลังช็อต และการให้ยาตามลำดับ</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 62 ปี หมดสติกะทันหันในห้องฉุกเฉิน พยาบาลเห็นเหตุการณ์และเริ่มตรวจชีพจรทันที ไม่พบชีพจร มอนิเตอร์แสดงคลื่น Ventricular Fibrillation (VF)
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> Ventricular Fibrillation (coarse VF)</li><li><strong>BP:</strong> Unobtainable</li><li><strong>Witnessed:</strong> Yes — collapse observed in ED</li><li><strong>SpO2:</strong> Unobtainable</li><li><strong>EtCO2:</strong> 12 mmHg (during initial CPR)</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. หลังจากยืนยันว่าผู้ป่วยไม่มีชีพจร (pulseless) และมี VF บนมอนิเตอร์ ควรทำอะไรเป็นอันดับแรก?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ Epinephrine 1mg IV ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. เริ่ม CPR และเตรียม Defibrillate เร็วที่สุด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ออกซิเจน 100% ก่อน แล้วค่อยช็อต</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Synchronized Cardioversion ที่ 200J</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. พลังงานที่เหมาะสมสำหรับการช็อตครั้งแรกด้วย Biphasic Defibrillator คือเท่าไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. 360J (Monophasic dose)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. 100J (ตั้งต่ำไว้ก่อนเพื่อเซฟหัวใจ)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Manufacturer recommended (120-200J)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. 200J แน่นอนเท่ากันทุกเครื่อง</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หลังจากช็อตครั้งที่ 2 และทำ CPR ครบ 2 นาที หากมอนิเตอร์ยังเป็น VF ควรให้ยาอะไรเป็นอันดับแรก?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Epinephrine 1mg IV/IO</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Amiodarone 300mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Atropine 1mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Magnesium Sulfate 2g IV</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 2 of 15</div>
+        <h2>Non-shockable Rhythm: Asystole</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ระบุ rhythm Asystole, ให้ Epinephrine ทันทีที่เปิด IV ได้, และค้นหาสาเหตุแก้ไขได้ (H's & T's)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยหญิงอายุ 75 ปี ถูกพบล้มอยู่ที่พื้นบ้าน ไม่รู้สึกตัว ทีมกู้ชีพมาถึงและติดมอนิเตอร์ พบคลื่น Asystole (เส้นตรง) คลำชีพจร carotid ไม่พบ
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> Asystole (flatline verified in 2 leads)</li><li><strong>BP:</strong> Unobtainable</li><li><strong>Location:</strong> Out-of-hospital collapse</li><li><strong>SpO2:</strong> Unobtainable</li><li><strong>Airway:</strong> BVM ventilation with 100% O2</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. เมื่อยืนยันว่าคลื่นไฟฟ้าหัวใจเป็น Asystole ควรดำเนินการอย่างไรเป็นอันดับแรก?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ช็อตไฟฟ้า 200J ทันทีเพื่อกระตุ้นหัวใจ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. เริ่ม CPR คุณภาพสูง + ให้ Epinephrine 1mg IV/IO เร็วที่สุด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Atropine 1mg IV ทุก 3 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ใส่ Transcutaneous Pacing (TCP) ทันที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. ขั้นตอนสำคัญในการยืนยันภาวะ True Asystole (ป้องกันการวินิจฉัย Fine VF ผิด) คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ตรวจสอบการต่อสายลีด, สวิตช์เปิดเครื่อง, และเพิ่ม Gain/Amplification</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ฉีด Epinephrine 5mg เพื่อขยายคลื่นหัวใจ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ช็อตลองดู 1 ครั้งที่ 360J</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. หยุด CPR 1 นาทีเพื่อสังเกตคลื่นไฟฟ้าช้าๆ</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. การจัดการหลักที่สำคัญที่สุดในระหว่างการ CPR ผู้ป่วย Asystole คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ค้นหาและแก้ไขสาเหตุ H's & T's ที่ผันกลับได้</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Sodium Bicarbonate ทุก 5 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. เปลี่ยนผู้กดหน้าอกทุก 5 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Hyperventilation 30 ครั้ง/นาที</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 3 of 15</div>
+        <h2>PEA with Reversible Cause (Massive PE)</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมิน PEA, ค้นหาสาเหตุ PE (Massive Pulmonary Embolism), และพิจารณา Thrombolytic Therapy ในกรณีสงสัย PE</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 58 ปี หลังผ่าตัดใหญ่เปลี่ยนข้อสะโพกเมื่อวานนี้ จู่ๆ หมดสติ พยาบาลติดมอนิเตอร์พบ Pulseless Electrical Activity (PEA) อัตรา 110/นาที แต่คลำชีพจรไม่ได้
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> Sinus Tachycardia on monitor (Rate 110/min)</li><li><strong>BP:</strong> Unobtainable</li><li><strong>History:</strong> Post-op Total Hip Arthroplasty (POD 1), DVT history</li><li><strong>SpO2:</strong> Unobtainable (Severe cyanosis before collapse)</li><li><strong>EtCO2:</strong> 8 mmHg (sudden drop)</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ข้อใดเป็นขั้นตอนแรกในการกู้ชีพผู้ป่วย PEA?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ช็อตไฟฟ้าทันทีที่ 200J</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. เริ่ม CPR คุณภาพสูง + ให้ Epinephrine 1mg IV/IO เร็วที่สุด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Amiodarone 300mg IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Synchronized Cardioversion</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. จากประวัติและลักษณะทางคลินิก สาเหตุในกลุ่ม H's & T's ที่สงสัยมากที่สุดในเคสนี้คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Tension Pneumothorax</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Pulmonary Thrombosis (Massive PE)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Cardiac Tamponade</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Hyperkalemia</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หากสงสัยว่า PEA arrest เกิดจาก Massive Pulmonary Embolism และการกู้ชีพปกติยังไม่เกิด ROSC ควรอภิปรายพิจารณาการรักษาเฉพาะอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ Fibrinolytic therapy (e.g. Alteplase IV) ในระหว่าง CPR</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Calcium Gluconate 10ml IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Amiodarone 150mg drip</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ยุติการกู้ชีพทันทีเนื่องจากอัตราตายสูง</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 4 of 15</div>
+        <h2>Symptomatic Bradycardia</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมินและจัดการ Symptomatic Bradycardia ตามลำดับ (Atropine 1mg → Transcutaneous Pacing / Dopamine / Epinephrine infusion)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 68 ปี มีอาการหน้ามืด เวียนศีรษะ เหงื่อแตก มอนิเตอร์แสดง Sinus Bradycardia อัตรา 36 ครั้ง/นาที ความดันโลหิต 78/46 mmHg รู้สึกตัวสับสนเล็กน้อย
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> 36 bpm (Weak, Bradycardia)</li><li><strong>Rhythm:</strong> Sinus Bradycardia</li><li><strong>BP:</strong> 78/46 mmHg (Symptomatic Hypotension)</li><li><strong>Mental State:</strong> Confusion / Lethargy</li><li><strong>SpO2:</strong> 93% on room air</li><li><strong>Signs of Shock:</strong> Cool clammy skin, capillary refill 4s</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ผู้ป่วยมีภาวะ Symptomatic Bradycardia (มีชีพจรแต่หัวใจเต้นช้าและมีสัญญาณช็อก) ยาตัวแรกที่ควรให้คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Epinephrine 1mg IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Atropine 1mg IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Amiodarone 150mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Adenosine 6mg IV push</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากให้ Atropine 1mg ไปแล้ว 2 ครั้ง (รวม 2mg) แต่ HR ยังคง 36/นาที และ BP 76/44 mmHg ขั้นตอนถัดไปตามอัลกอริทึมคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ Atropine ต่อจนครบ 10mg</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ทำ Transcutaneous Pacing (TCP) หรือเริ่ม Epinephrine / Dopamine infusion</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ทำ Synchronized Cardioversion</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ช็อตไฟฟ้า 200J</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. ในการทำ Transcutaneous Pacing (TCP) อัตราการเต้นเป้าหมาย (Pacing Rate) และการยืนยัน Electrical & Mechanical Capture ควรตั้งค่าอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ตั้ง Rate 60-80 bpm และยืนยัน pulse ที่ femoral/radial ให้ตรงกับ pacing spike</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ตั้ง Rate 120 bpm เพื่อเร่งความดันอย่างรวดเร็ว</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ดูเฉพาะคลื่นบนมอนิเตอร์ ไม่ต้องคลำชีพจรจริง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ตั้ง Current (mA) ที่ต่ำที่สุดโดยไม่ต้องเพิ่มขึ้น</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 5 of 15</div>
+        <h2>Wide-Complex Tachycardia</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมินความคงที่ (Stability) ใน Wide-Complex Tachycardia และเลือกใช้ Antiarrhythmic drugs หรือ Cardioversion ได้ถูกต้อง</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 55 ปี มีประวัติ Ischemic Heart Disease แน่นหน้าอก ใจสั่น มอนิเตอร์แสดง Monomorphic Wide-Complex Tachycardia อัตรา 175 ครั้ง/นาที สัญญาณชีพ: BP 125/82 mmHg รู้สึกตัวดี ไม่มี signs of shock
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> 175 bpm (Regular, Wide QRS)</li><li><strong>Rhythm:</strong> Monomorphic VT (QRS >0.12s)</li><li><strong>BP:</strong> 125/82 mmHg (Hemodynamically Stable)</li><li><strong>Mental State:</strong> Alert, fully conscious</li><li><strong>SpO2:</strong> 97% on room air</li><li><strong>Symptoms:</strong> Mild palpitations, no heart failure signs</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ผู้ป่วยเป็น Monomorphic Wide-Complex Tachycardia ที่ Hemodynamically Stable (ความดันปกติ รู้สึกตัวดี) การรักษาที่เหมาะสมคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Immediate Unsynchronized Defibrillation 200J</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Antiarrhythmic Infusion เช่น Amiodarone 150mg IV drip ใน 10 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Atropine 1mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ CPR ทันที 2 นาที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากในระหว่างหยดยา Amiodarone ผู้ป่วยเกิดอาการซึมลง เหงื่อแตก ความดันโลหิตตกเหลือ 78/45 mmHg (กลายเป็น Unstable) ควรปรับแผนอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Immediate Synchronized Cardioversion (100J Biphasic)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. หยุดยาและรอสังเกตอาการ 30 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Epinephrine 1mg IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. เริ่มทำ CPR ทันที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. ขั้นตอนความปลอดภัยที่สำคัญที่สุดในการทำ Synchronized Cardioversion คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. กดปุ่ม SYNC บนเครื่องและตรวจสอบว่ามีสัญลักษณ์จับ R-wave บนคลื่นไฟฟ้า</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ตั้งพลังงานสูงสุด 360J ตั้งแต่ครั้งแรกเสมอ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. กดปล่อยพลังงานขณะคลื่นอยู่ในช่วง T-wave</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ปลดสายมอนิเตอร์ออกก่อนช็อต</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 6 of 15</div>
+        <h2>AF with RVR (Unstable Tachycardia)</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ระบุภาวะ Unstable AF with RVR และทำ Immediate Synchronized Cardioversion รวมถึงการวางแผนควบคุม rate/rhythm ต่อเนื่อง</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยหญิงอายุ 72 ปี มีประวัติความดันโลหิตสูง เกิดอาการแน่นหน้าอก หายใจเหนื่อยหอบฉับพลัน ตรวจร่างกายพบ ปอดมี crepitation สองข้าง (Pulmonary edema) สัญญาณชีพ: BP 80/50 mmHg, HR 180 ครั้ง/นาที มอนิเตอร์แสดง Atrial Fibrillation with Rapid Ventricular Response (AF with RVR)
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> 180 bpm (Irregularly irregular, Narrow QRS)</li><li><strong>Rhythm:</strong> AF with RVR</li><li><strong>BP:</strong> 80/50 mmHg (Unstable / Hypotension)</li><li><strong>Lungs:</strong> Bilateral wet rales (Acute Pulmonary Edema)</li><li><strong>SpO2:</strong> 88% on room air</li><li><strong>Symptoms:</strong> Severe dyspnea, ischemic chest pain</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ผู้ป่วยมี AF with RVR ร่วมกับมีสัญญาณ Unstable (ความดันตก + น้ำท่วมปอด + แน่นหน้าอก) การรักษาอันดับแรกคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ Diltiazem 15mg IV push ช้าๆ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Metoprolol 5mg IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ทำ Immediate Synchronized Cardioversion (120-200J Biphasic)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Carotid Sinus Massage</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. พลังงานที่แนะนำสำหรับการทำ Synchronized Cardioversion ใน Atrial Fibrillation ครั้งแรกคือเท่าไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. 50J Biphasic</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. 120-200J Biphasic (หรือ 200J Monophasic)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. 360J Monophasic</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Adenosine 6mg แทนการใช้ไฟฟ้า</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หลังจาก Cardioversion สำเร็จ คลื่นเปลี่ยนเป็น Sinus Rhythm (HR 85/นาที) ความดันโลหิตขึ้นมาเป็น 110/70 mmHg ขั้นตอนการจัดการต่อเนื่องที่สำคัญคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ประเมินและค้นหาสาเหตุชักนำ (e.g. Electrolytes, Ischemia) และพิจารณาให้ยารักษาอัตราเต้นเมื่อข้อบ่งชี้เหมาะสม</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Epinephrine 1mg IV เพื่อรักษาความดันให้สูงขึ้นอีก</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ทำ Cardioversion ซ้ำทันทีเพื่อป้องกันการกลับเป็นซ้ำ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้ผู้ป่วยกลับบ้านทันที</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 7 of 15</div>
+        <h2>Torsades de Pointes (Polymorphic VT)</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> จำแนก Polymorphic VT (Torsades de Pointes), ให้ Magnesium Sulfate 1-2g IV, และแก้ไขปัจจัยเสี่ยง (QTc prolongation)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยหญิงอายุ 60 ปี มีประวัติรับประทานยา Antiarrhythmic และขับปัสสาวะ เกิดอาการวูบหมดสติ พยาบาลติดมอนิเตอร์พบคลื่น Polymorphic Ventricular Tachycardia ที่มีลักษณะหมุนวนรอบเกน (Torsades de Pointes) ตรวจพบ QTc ก่อนหน้ายาว 540 ms
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless during episodes / Weak</li><li><strong>Rhythm:</strong> Torsades de Pointes (Polymorphic VT)</li><li><strong>BP:</strong> Unobtainable during episode</li><li><strong>ECG Hx:</strong> Prolonged QTc interval (540 ms)</li><li><strong>Labs Hx:</strong> Hypokalemia (K+ 2.9 mEq/L), Hypomagnesemia</li><li><strong>Meds:</strong> On Erythromycin and Furosemide</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ยาตัวเลือกแรกที่เฉพาะเจาะจงในการรักษา Torsades de Pointes คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Amiodarone 300mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Magnesium Sulfate 1-2g IV push/infusion</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Procainamide 500mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Diltiazem 15mg IV</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากผู้ป่วยเกิด Torsades de Pointes แบบ Pulseless (ไม่มีชีพจร) การรักษาด้วยไฟฟ้าที่ถูกต้องคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Synchronized Cardioversion ที่ 50J</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Immediate Unsynchronized High-Energy Defibrillation</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Transcutaneous Pacing ที่ 60 bpm</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้ Atropine 1mg IV ก่อนช็อต</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. การป้องกันไม่ให้เกิด Torsades de Pointes กลับเป็นซ้ำในระยะยาว คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. แก้ไขระดับ K+ และ Mg2+ ในเลือดให้ปกติ และหยุดยาที่ทำให้ QTc ยาว</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Amiodarone drip ต่อเนื่อง 24 ชั่วโมง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. จำกัดการให้ออกซิเจน</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ฉีด Adenosine 12mg ทุก 4 ชั่วโมง</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 8 of 15</div>
+        <h2>Drowning Arrest</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ปรับกระบวนการกู้ชีพในภาวะจมน้ำ (Ventilation-First CPR, 5 initial rescue breaths, airway management)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      เด็กวัยรุ่นอายุ 17 ปี ถูกช่วยขึ้นมาจากสระน้ำหลังจมน้ำนานประมาณ 8 นาที ไม่รู้สึกตัว ไม่หายใจ คลำชีพจรไม่ได้ มอนิเตอร์แสดง Asystole
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> Asystole</li><li><strong>Submersion:</strong> Estimated 8 minutes in fresh water</li><li><strong>Airway:</strong> Filled with foam/secretions, Apneic</li><li><strong>Temperature:</strong> 34.5 °C (Hypothermia)</li><li><strong>SpO2:</strong> Unobtainable</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. การปรับเปลี่ยนลำดับ CPR ที่สำคัญที่สุดในผู้ป่วย Cardiac Arrest จากการจมน้ำ (Drowning) คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Compression-only CPR โดยไม่ต้องช่วยหายใจ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ช่วยหายใจ 5 ครั้งแรกก่อน (Ventilation-first) แล้วตามด้วย CPR 30:2</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. กระแทกหน้าท้อง (Heimlich maneuver) เพื่อไล่น้ำออกจากปอดก่อน</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้ Epinephrine 1mg ก่อนช่วยหายใจ</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. กลไกหลักที่ทำให้เกิด Cardiac Arrest ในผู้ป่วยจมน้ำคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Severe Hypoxia และ Asphyxia</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Primary Ventricular Fibrillation จากน้ำเข้าเส้นเลือด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Massive Electrolyte Imbalance ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Air Embolism ในสมอง</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. การตั้งค่าเป้าหมายการให้ออกซิเจนและการช่วยหายใจในระหว่างและหลังเกิด ROSC ในผู้ป่วยจมน้ำคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ออกซิเจน 100% ในระหว่าง CPR และปรับให้ SpO2 อยู่ช่วง 92-98% หลังเกิด ROSC</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ออกซิเจน 21% (Room air) เพื่อป้องกันปอดอักเสบ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ช่วยหายใจด้วยอัตราเร็วกว่า 30 ครั้ง/นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. รักษา SpO2 ให้ได้ 100% ตลอดเวลาหลัง ROSC</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 9 of 15</div>
+        <h2>Post-ROSC Management</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> บริหารจัดการหลัง ROSC ตามเป้าหมาย (BP ≥90/60, SpO2 92-98%, Normocapnia, TTM 32-36°C, Coronary Angiography)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 52 ปี หลังได้รับ CPR และ ช็อตไฟฟ้า 1 ครั้งจาก VF arrest สามารถเกิด ROSC คลื่นหัวใจเปลี่ยนเป็น Sinus Rhythm อัตรา 78/นาที แต่ยังไม่รู้สึกตัว (Comatose, GCS 5) ความดันโลหิต 82/50 mmHg
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> 78 bpm (Sinus Rhythm)</li><li><strong>BP:</strong> 82/50 mmHg (Post-ROSC Hypotension)</li><li><strong>GCS:</strong> E1V1M3 (5 - Comatose)</li><li><strong>SpO2:</strong> 99% on 100% FiO2</li><li><strong>EtCO2:</strong> 38 mmHg</li><li><strong>ECG 12-lead:</strong> ST-segment elevation in V1-V4 (Anterior STEMI)</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. เป้าหมายการจัดการความดันโลหิต (Hemodynamic goal) หลังเกิด ROSC คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. รักษาระดับ Systolic BP ≥90 mmHg หรือ MAP ≥65 mmHg</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ปล่อยให้ Systolic BP อยู่ช่วง 70-80 mmHg เพื่อให้หัวใจพัก</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. เร่งความดันให้ Systolic BP >180 mmHg ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. หยุดสารน้ำและยาคุมความดันทั้งหมด</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. ข้อแนะนำเกี่ยวกับการควบคุมอุณหภูมิร่างกาย (Targeted Temperature Management: TTM) ในผู้ป่วยที่ไม่รู้สึกตัวหลัง ROSC คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. คุมอุณหภูมิให้อยู่ช่วง 32°C ถึง 36°C (หรือป้องกันไข้ <37.5°C) ต่อเนื่องอย่างน้อย 24 ชั่วโมง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. อบอุ่นร่างกายให้ร้อนถึง 38.5°C ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ทำการคูลลิ่งให้ลดลงต่ำกว่า 30°C</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ TTM เฉพาะผู้ป่วยที่ arrest ในโรงพยาบาลเท่านั้น</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. เป้าหมายการปรับการช่วยหายใจและออกซิเจน (Ventilation & Oxygenation) หลัง ROSC คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ปรับให้ออกซิเจน SpO2 ช่วง 92-98% และคุม PaCO2 35-45 mmHg (Normocapnia)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ออกซิเจน 100% ตลอดเวลาให้ SpO2 ได้ 100%</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. คุม PaCO2 ให้ต่ำกว่า 25 mmHg (Hyperventilation)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. คุม PaCO2 ให้สูงกว่า 60 mmHg</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q4. ผล EKG 12-lead หลัง ROSC พบ ST-segment elevation ใน V1-V4 (Anterior STEMI) การจัดการที่ต้องทำทันทีคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ส่งทำ Emergency Coronary Angiography (CAG / PCI) ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. รอสังเกตอาการใน ICU 48 ชั่วโมงก่อนส่งฉีดสี</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ยกเลิกการฉีดสีเพราะผู้ป่วยยังไม่รู้สึกตัว</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้ยาละลายลิ่มเลือดแล้วไม่ต้องฉีดสี</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 10 of 15</div>
+        <h2>Post-Cardiac Surgery Arrest</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ปรับกระบวนการกู้ชีพหลังผ่าตัดเปิดอก: 3 Stacked Shocks, Epicardial Pacing, Emergency Resternotomy ภายใน 5-10 นาที</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 65 ปี หลังผ่าตัดทำทำทางเบี่ยงหลอดเลือดหัวใจ (CABG) วันที่ 2 ใน ICU จู่ๆ เกิด VF arrest เห็นบนมอนิเตอร์ต่อหน้าพยาบาล ผู้ป่วยมี Epicardial pacing wires ติดไว้อยู่แล้ว
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Status:</strong> POD 2 post-CABG</li><li><strong>Rhythm:</strong> Ventricular Fibrillation (witnessed on ICU monitor)</li><li><strong>Location:</strong> Cardiovascular ICU</li><li><strong>Pacing Wires:</strong> Epicardial pacing wires in place</li><li><strong>Chest Drain:</strong> 100 mL/hr serosanguinous output</li><li><strong>BP:</strong> Unobtainable</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ในผู้ป่วยเกิด VF Arrest ติดต่อกันบนมอนิเตอร์ ICU หลังผ่าตัดหัวใจ (Post-cardiac surgery) คำแนะนำพิเศษสำหรับการช็อตไฟฟ้าคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. เริ่ม CPR ทันที 2 นาทีก่อนช็อต</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ 3 Stacked Shocks ติดต่อกันทันที ก่อนเริ่มทำ CPR หากช็อตแรกๆ ยังไม่หลุด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Epinephrine 1mg IV ก่อนช็อต</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Pacing ทันที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากผู้ป่วยเปลี่ยนเป็น Asystole หรือ Severe Bradycardia และมี Epicardial Pacing Wires ติดอยู่อย่างพร้อมใช้งาน ควรทำอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. เริ่ม CPR กดหน้าอกแรงๆ ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ทำ Immediate Epicardial Pacing ผ่าน Wires ทันทีที่ตั้งค่าพลังงานสูงสุด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Atropine 1mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้ Epinephrine 1mg IV push</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หากทำ CPR และช็อตไฟฟ้าแล้วผู้ป่วยยังคงไม่เกิด ROSC ภายใน 5-10 นาที (Refractory arrest / สงสัย Cardiac Tamponade) ขั้นตอนวิกฤตที่ต้องดำเนินการคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ให้ Epinephrine ซ้ำทุก 1 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ให้ Amiodarone 300mg ซ้ำอีก 3 รอบ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. พิจารณาทำ Emergency Resternotomy และ Internal Cardiac Massage ภายใน 5 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ประกาศเสียชีวิตทันที</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 11 of 15</div>
+        <h2>SVT (Narrow-Complex Tachycardia)</h2>
+      </div>
+      <div><span class="tag tag-core">Core</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมินและรักษา SVT (Regular Narrow-Complex Tachycardia): Vagal Maneuvers → Adenosine 6mg/12mg → Synchronized Cardioversion (หาก Unstable)</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยหญิงอายุ 35 ปี ไม่มีโรคประจำตัว เกิดอาการใจสั่นฉับพลัน แน่นหน้าอกเล็กน้อย รู้สึกตัวดี สัญญาณชีพ: HR 190 ครั้ง/นาที, BP 110/70 mmHg มอนิเตอร์แสดง Regular Narrow-Complex Tachycardia โดยไม่เห็น P wave
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> 190 bpm (Regular, Narrow QRS <0.12s)</li><li><strong>Rhythm:</strong> SVT (Supraventricular Tachycardia)</li><li><strong>BP:</strong> 110/70 mmHg (Hemodynamically Stable)</li><li><strong>Mental State:</strong> Alert and oriented</li><li><strong>SpO2:</strong> 98% on room air</li><li><strong>Symptoms:</strong> Sudden onset palpitations, mild chest discomfort</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ผู้ป่วยเป็น SVT ที่คงที่ (Hemodynamically Stable) หัตถการแรกที่ไม่ใช้ยาที่ควรทำคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Vagal Maneuvers (เช่น Modified Valsalva Maneuver)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ทำ Synchronized Cardioversion 100J ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ให้ Epinephrine 1mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. นวดหลอดเลือดคอสองข้างพร้อมกัน (Bilateral Carotid Massage)</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากทำ Vagal Maneuvers แล้วไม่สำเร็จ ยาตัวเลือกแรกที่ต้องให้คืออะไรและใช้วิธีการฉีดอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Adenosine 6mg Rapid IV Push ตามด้วย Saline Flush 20mL ทันที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Adenosine 1mg Slow IV Push ใน 5 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Amiodarone 300mg IV Bolus</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Atropine 1mg IV Push</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หากฉีด Adenosine 6mg เข็มแรกแล้ว คลื่นยังเป็น SVT 190/นาที ขนาดยา Adenosine เข็มที่ 2 ที่ต้องให้คือเท่าไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Adenosine 12mg Rapid IV Push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ฉีด Adenosine 6mg ซ้ำขนาดเดิม</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Metoprolol 50mg IV push เร็วๆ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Verapamil 20mg IV push</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q4. หากผู้ป่วยเปลี่ยนเป็น Unstable (ความดันตกเหลือ 75/40 mmHg ซึมลง แน่นหน้าอกรุนแรง) การจัดการด่วนคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Synchronized Cardioversion (50-100J Biphasic)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ทำ Vagal Maneuver ซ้ำอีก 3 รอบ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. หยด Amiodarone drip ใน 1 ชั่วโมง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. เริ่มกดหน้าอก CPR</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 12 of 15</div>
+        <h2>Cardiac Arrest in Pregnancy</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ปรับเปลี่ยนการกู้ชีพในสตรีตั้งครรภ์: Left Uterine Displacement (LUD), Early Advanced Airway, Resuscitative Hysterotomy 5-minute rule</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      หญิงตั้งครรภ์อายุ 28 ปี อายุครรภ์ 32 สัปดาห์ (GA 32 weeks) เกิดหมดสติฉับพลันใน ER ทีมกู้ชีพเริ่ม CPR มอนิเตอร์แสดง Pulseless Electrical Activity (PEA)
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> PEA</li><li><strong>Gestational Age:</strong> 32 weeks (Fundal height above umbilicus)</li><li><strong>Airway:</strong> Severely edematous, high aspiration risk</li><li><strong>BP:</strong> Unobtainable</li><li><strong>Fetal Heart Rate:</strong> Not evaluated during maternal arrest</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. การจัดท่าทางร่างกายพิเศษที่จำเป็นอย่างยิ่งระหว่างการทำ CPR ในหญิงตั้งครรภ์ (GA ≥20 สัปดาห์) คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Manual Left Uterine Displacement (LUD) เพื่อปลดล็อคการกดทับ Aortocaval</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ผลักมดลูกไปทางขวา (Right Uterine Displacement)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. จัดท่า Trendelenburg ยกเท้าสูง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. จัดท่านอนคว่ำ (Prone position)</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. ข้อพิจารณาเรื่องการจัดการทางเดินหายใจ (Airway Management) ในสตรีตั้งครรภ์หัวใจหยุดเต้นคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ใส่ท่อช่วยหายใจด่วน (Early Endotracheal Intubation) โดยใช้ท่อขนาดเล็กกว่าปกติ 0.5-1.0 mm</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ห้ามใส่ท่อช่วยหายใจ ให้ใช้เฉพาะ BVM เท่านั้น</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ใช้ท่อช่วยหายใจขนาดใหญ่กว่าปกติ เช่น 8.5 mm</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ช่วยหายใจด้วยอัตราเร็วกว่า 30 ครั้ง/นาที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หากทำ CPR และกู้ชีพเต็มที่แล้วไม่เกิด ROSC ภายในกี่นาที ควรทำ Resuscitative Hysterotomy (Perimortem Cesarean Delivery)?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Resuscitative Hysterotomy ภายใน 5 นาทีหลัง arrest (เตรียมอุปกรณ์ที่นาทีที่ 4)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. รอให้ครบ 30 นาทีก่อน</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ทำเฉพาะเมื่อทารกในครรภ์เสียชีวิตแล้วเท่านั้น</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ห้ามทำผ่าตัดในห้องฉุกเฉิน</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q4. ขนาดยา Epinephrine และยา ACLS อื่นๆ ในสตรีตั้งครรภ์หัวใจหยุดเต้น ควรปรับเปลี่ยนอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ใช้ขนาดยา ACLS มาตรฐานเท่าผู้ใหญ่ปกติ (Epinephrine 1mg IV/IO q3-5min)</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ลดยาลงครึ่งหนึ่งเพื่อความปลอดภัยของทารก</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. งดการให้ Epinephrine เด็ดขาด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ให้เฉพาะ Dopamine เท่านั้น</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 13 of 15</div>
+        <h2>PEA from Hyperkalemia</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> วินิจฉัย Hyperkalemia-induced Cardiac Arrest (Sine wave / PEA) และให้ Calcium Gluconate/Chloride เพื่อ Membrane Stabilization</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 58 ปี เป็นไตวายเรื้อรัง (CKD stage 5) ขาดการฟอกเลือด 1 สัปดาห์ เกิดหมดสติฉับพลัน มอนิเตอร์แสดงคลื่นไฟฟ้ากว้างมากคล้าย Sine wave ตรวจไม่พบชีพจร (PEA arrest) ผลเลือดด่วน K+ 8.5 mEq/L
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Pulse:</strong> Pulseless</li><li><strong>Rhythm:</strong> PEA / Wide QRS Sine Wave</li><li><strong>BP:</strong> Unobtainable</li><li><strong>Renal Hx:</strong> CKD Stage 5 on HD (Missed dialysis x 1 week)</li><li><strong>Labs:</strong> K+ 8.5 mEq/L, pH 7.10, HCO3 12 mEq/L</li><li><strong>ECG Hx:</strong> Peaked T waves → QRS widening → Sine wave</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ยาตัวเลือกแรกที่สำคัญที่สุดในการป้องการและรักษาเยื่อหุ้มหัวใจ (Membrane Stabilization) ในภาวะ Hyperkalemic Cardiac Arrest คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Calcium Gluconate 10% (15-30 mL) หรือ Calcium Chloride IV push</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Regular Insulin 10 units + 50% Glucose</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Sodium Bicarbonate 50 mEq IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Kayexalate Oral Powder</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. กลไกการออกฤทธิ์ของ Calcium ในภาวะ Severe Hyperkalemia คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. หักล้างฤทธิ์ไฟฟ้าที่เยื่อหุ้มเซลล์ (Antagonize membrane excitability) โดยไม่ลดระดับ K+ ในเลือด</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ดึง K+ กลับเข้าเซลล์กล้ามเนื้อ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ขับ K+ ออกทางปัสสาวะอย่างรวดเร็ว</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ปรับค่า pH ในเลือดให้เป็นด่าง</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. หลังจากให้ Calcium เพื่อรักษาเยื่อหุ้มหัวใจแล้ว ยาชุดถัดไปที่ต้องให้เพื่อดึง K+ เข้าสู่ภายในเซลล์คือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Regular Insulin 10 units IV + 50% Dextrose 50 mL IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. Amiodarone 300mg IV</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. Furosemide 80mg IV push ในผู้ป่วยไตวายแฟลต</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. Atropine 1mg IV push</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 14 of 15</div>
+        <h2>LVAD Patient in Arrest</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมินและกู้ชีพผู้ป่วยใส่เครื่องพยุงหัวใจห้องซ้าย (LVAD): ประเมิน LVAD hum, หลีกเลี่ยง Pulse/BP ปกติ, ทำ CPR อย่างระมัดระวัง</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 60 ปี ใส่เครื่องพยุงหัวใจห้องซ้ายชนิด Continuous-flow LVAD (HeartMate 3) หมดสติในวอร์ด ญาติระบุว่าหัวใจล้มเหลว พยาบาลคลำชีพจร radial/carotid ไม่ได้ มอนิเตอร์แสดง VF
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Device:</strong> Continuous-flow LVAD (HeartMate 3)</li><li><strong>Pulse:</strong> Non-palpable (Expected in continuous-flow LVAD)</li><li><strong>Rhythm:</strong> Ventricular Fibrillation on monitor</li><li><strong>Pump Sound:</strong> No pump hum audible on auscultation</li><li><strong>MAP:</strong> Unobtainable via manual cuff</li><li><strong>Alarms:</strong> LVAD Controller Low Flow / Beeping Alarm</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ขั้นตอนประเมินแรกสุดที่สำคัญที่สุดเมื่อพบผู้ป่วย LVAD หมดสติและคลำชีพจรไม่ได้คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ฟังเสียงเครื่อง LVAD hum/vibration ที่ยอดอก และเช็คสายไฟ/แบตเตอรี่ controller</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. เริ่มกดหน้าอก CPR ทันที 100 ครั้ง/นาทีโดยไม่ดูเครื่อง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ช็อตไฟฟ้าทันที 360J</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. เจาะเลือดส่งตรวจทันที</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หากฟังไม่ได้ยินเสียงปั๊ม LVAD (No pump hum) เช็คสายไฟแล้ว และผู้ป่วยไม่รู้สึกตัว หายใจเฮือก การทำ CPR มีข้อพิจารณาอย่างไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. เริ่มทำ CPR กดหน้าอกตามแนวทาง ACLS มาตรฐานอย่างระมัดระวัง</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ห้ามทำ CPR เด็ดขาดในผู้ป่วย LVAD ทุกกรณี</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. กระแทกหน้าท้องแทนการกดหน้าอก</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ทำ Pacing อย่างเดียว</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. ข้อควรระวังเกี่ยวกับการช็อตไฟฟ้า (Defibrillation) ในผู้ป่วย LVAD ที่มี VF คืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ทำ Defibrillation ได้ตามปกติ แต่ต้องติดแผ่น Pad ให้ห่างจากตัวเครื่อง/Controller อย่างน้อย 2-3 cm</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ห้ามช็อตไฟฟ้าภายนอกเพราะจะทำลายระบบคอมพิวเตอร์ LVAD</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. ช็อตไฟฟ้าได้เฉพาะพลังงานต่ำ 10J เท่านั้น</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ต้องถอดแบตเตอรี่ LVAD ออกก่อนช็อตเสมอ</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="case-card">
+    <div class="case-header">
+      <div class="case-num-title">
+        <div class="c-label">Case 15 of 15</div>
+        <h2>Termination of Resuscitation (TOR / Ethics)</h2>
+      </div>
+      <div><span class="tag tag-advanced">Advanced</span></div>
+    </div>
+
+    <div class="objective-box"><strong>Learning Objective:</strong> ประเมินเกณฑ์ ALS Termination of Resuscitation (TOR) Rule, การสื่อสารกับญาติอย่างมีมนุษยธรรม, และการบันทึกเอกสารทางจริยธรรม</div>
+
+    <div class="scenario-box">
+      <strong>Clinical Scenario:</strong><br>
+      ผู้ป่วยชายอายุ 78 ปี มีโรคประจำตัว ESRD และ Severe Heart Failure เกิด Unwitnessed Out-of-Hospital Arrest ทีมกู้ชีพทำ CPR รวม 45 นาที ให้ Epinephrine 7 doses ใส่ท่อช่วยหายใจเรียบร้อย คลื่นไฟฟ้าเป็น Asystole ต่อเนื่อง ค่า EtCO2 ต่ำกว่า 10 mmHg ตลอด 20 นาทีหลังสุด
+    </div>
+
+    <div class="vitals-box"><h4>Vital Signs & Findings</h4>
+          <ul>
+            <li><strong>Rhythm:</strong> Asystole (Persisting >45 minutes)</li><li><strong>CPR Duration:</strong> 45 minutes high-quality CPR</li><li><strong>Epinephrine:</strong> 7 mg total administered</li><li><strong>EtCO2:</strong> <10 mmHg (constantly for 20+ mins)</li><li><strong>Arrest Type:</strong> Unwitnessed Out-of-Hospital Arrest</li><li><strong>Pupils:</strong> Fixed and dilated, no brainstem reflexes</li>
+          </ul></div>
+
+    <div class="questions-section">
+
+      <div class="question-block">
+        <div class="q-title">Q1. ข้อใดเป็นเกณฑ์ตาม ALS Termination of Resuscitation (TOR) Rule ที่สนับสนุนการพิจารณายุติการกู้ชีพ (Stop CPR)?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. Arrest ไม่มีผู้เห็นเหตุการณ์, ไม่มีการช็อตไฟฟ้า, ไม่เกิด ROSC หลังกู้ชีพเต็มที่, และ EtCO2 <10 mmHg ต่อเนื่องเกิน 20 นาที</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ต้องทำ CPR ต่อเนื่องให้ครบ 2 ชั่วโมงเสมอไม่ว่ากรณีใดๆ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. อายุผู้ป่วยมากกว่า 60 ปีเพียงอย่างเดียว</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ญาติไม่อยู่ในห้องฉุกเฉิน</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q2. หลักการสื่อสารที่ถูกต้องและเหมาะสมเมื่อแจ้งการยุติการกู้ชีพแก่ครอบครัวผู้ป่วยคือข้อใด?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. อธิบายขั้นตอนการกู้ชีพอย่างตรงไปตรงมาด้วยความเห็นอกเห็นใจ ยืนยันการเสียชีวิตชัดเจน และเปิดโอกาสให้ซักถาม</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. ใช้คำพูดคลุมเครือ เช่น 'ผู้ป่วยกำลังพักผ่อนสบายแล้ว'</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. เดินออกจากห้องทันทีโดยไม่พูดอะไร</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ตำหนิครอบครัวว่าโทรแจ้งกู้ชีพช้าเกินไป</span></div>
+        </div>
+
+      </div>
+
+      <div class="question-block">
+        <div class="q-title">Q3. สิ่งสำคัญที่ต้องบันทึกในรายงานทางการแพทย์ (Medical Documentation) หลังการยุติการกู้ชีพคืออะไร?</div>
+        <div class="options-list">
+
+          <div class="opt-item"><span class="opt-checkbox"></span><span>A. ระยะเวลา CPR, ขนาดยารวม, คลื่นหัวใจ, ค่า EtCO2, เหตุผลทางคลินิกในการ TOR, เวลาระบุเสียชีวิต และการแจ้งญาติ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>B. บันทึกเพียงแค่ 'ผู้ป่วยเสียชีวิตแล้ว' สั้นๆ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>C. บันทึกเวลากด CPR เวลาเดียวพอ</span></div>
+          <div class="opt-item"><span class="opt-checkbox"></span><span>D. ไม่ต้องบันทึกหากผู้ป่วยไม่มีประกันภัย</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

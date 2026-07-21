@@ -28,7 +28,6 @@ for part in parts[1:]:
         scen_m = re.search(r'<p class="scenario">(.*?)</p>', part, re.DOTALL)
         vitals_m = re.search(r'<div class="vitals">(.*?)</div>\s*<div class="ecg-strip"', part, re.DOTALL)
         
-        # Clean up tags in case_number (like difficulty-tag)
         num_text = num_m.group(1).strip() if num_m else f'Case {case_num}'
         diff_tag = ''
         if 'difficulty-tag' in num_text:
@@ -57,34 +56,38 @@ for part in parts[1:]:
         }
         cases_data[case_num]['questions'].append(q_obj)
 
-# Generate HTML for PDF export
-html_out = """<!DOCTYPE html>
+# Helper function to generate HTML document
+def generate_html_doc(with_answers=True):
+    subtitle_type = "Complete Handbook with Explanations & Answer Key" if with_answers else "Student Worksheet / Question Bank (Without Answers)"
+    doc_title = "ACLS 2025 Case Handbook (With Answers)" if with_answers else "ACLS 2025 Case Handbook (Questions Only)"
+
+    html_out = f"""<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ACLS 2025 - Case Scenarios & Question Bank Handbook</title>
+  <title>{doc_title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
   <style>
-    @page {
+    @page {{
       size: A4;
       margin: 15mm 15mm 18mm 15mm;
-      @bottom-right {
+      @bottom-right {{
         content: counter(page);
-      }
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      }}
+    }}
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     
-    body {
+    body {{
       font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
       color: #1e293b;
       background: #ffffff;
       line-height: 1.6;
       font-size: 14px;
-    }
+    }}
 
-    .cover-page {
+    .cover-page {{
       padding: 40px 20px;
       text-align: center;
       page-break-after: always;
@@ -92,9 +95,9 @@ html_out = """<!DOCTYPE html>
       flex-direction: column;
       justify-content: center;
       min-height: 90vh;
-    }
+    }}
 
-    .cover-badge {
+    .cover-badge {{
       display: inline-block;
       background: #eff6ff;
       color: #2563eb;
@@ -105,24 +108,25 @@ html_out = """<!DOCTYPE html>
       font-size: 13px;
       letter-spacing: 1px;
       margin-bottom: 20px;
-    }
+    }}
 
-    .cover-title {
+    .cover-title {{
       font-family: 'Sora', 'Sarabun', sans-serif;
-      font-size: 36px;
+      font-size: 34px;
       font-weight: 700;
       color: #0f1e3d;
       margin-bottom: 12px;
       line-height: 1.2;
-    }
+    }}
 
-    .cover-subtitle {
+    .cover-subtitle {{
       font-size: 18px;
       color: #64748b;
       margin-bottom: 40px;
-    }
+      font-weight: 500;
+    }}
 
-    .toc-box {
+    .toc-box {{
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 12px;
@@ -130,79 +134,79 @@ html_out = """<!DOCTYPE html>
       text-align: left;
       max-width: 750px;
       margin: 0 auto;
-    }
+    }}
 
-    .toc-title {
+    .toc-title {{
       font-size: 18px;
       font-weight: 700;
       color: #0f1e3d;
       margin-bottom: 16px;
       border-bottom: 2px solid #2563eb;
       padding-bottom: 8px;
-    }
+    }}
 
-    .toc-grid {
+    .toc-grid {{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px 24px;
-    }
+    }}
 
-    .toc-item {
+    .toc-item {{
       font-size: 14px;
       color: #334155;
-    }
-    .toc-item strong {
+    }}
+    .toc-item strong {{
       color: #2563eb;
-    }
+    }}
 
     /* CASE SECTION */
-    .case-card {
+    .case-card {{
       page-break-after: always;
       padding-top: 10px;
-    }
+    }}
 
-    .case-card:last-child {
+    .case-card:last-child {{
       page-break-after: avoid;
-    }
+    }}
 
-    .case-header {
+    .case-header {{
       border-bottom: 3px solid #2563eb;
       padding-bottom: 12px;
       margin-bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-    }
+    }}
 
-    .case-num-title h2 {
+    .case-num-title h2 {{
       font-family: 'Sora', 'Sarabun', sans-serif;
       font-size: 22px;
       color: #0f1e3d;
       font-weight: 700;
       line-height: 1.3;
-    }
+    }}
 
-    .case-num-title .c-label {
+    .case-num-title .c-label {{
       font-size: 13px;
       font-weight: 700;
       color: #2563eb;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 4px;
-    }
+    }}
 
-    .tag {
+    .tag {{
       display: inline-block;
       font-size: 11px;
       font-weight: 700;
       padding: 3px 10px;
       border-radius: 12px;
       text-transform: uppercase;
-    }
-    .tag-core { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
-    .tag-advanced { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    }}
+    .tag-core {{ background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }}
+    .tag-advanced {{ background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }}
 
-    .objective-box {
+    .objective-box {{
       background: #f0f9ff;
       border-left: 4px solid #0284c7;
       padding: 10px 14px;
@@ -210,9 +214,9 @@ html_out = """<!DOCTYPE html>
       margin-bottom: 16px;
       font-size: 13.5px;
       color: #0369a1;
-    }
+    }}
 
-    .scenario-box {
+    .scenario-box {{
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
@@ -221,105 +225,118 @@ html_out = """<!DOCTYPE html>
       font-size: 15px;
       line-height: 1.55;
       color: #0f172a;
-    }
+    }}
 
-    .vitals-box {
+    .vitals-box {{
       background: #fff;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       padding: 12px 16px;
       margin-bottom: 20px;
-    }
-    .vitals-box h4 {
+    }}
+    .vitals-box h4 {{
       font-size: 13.5px;
       color: #2563eb;
       margin-bottom: 8px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-    }
-    .vitals-box ul {
+    }}
+    .vitals-box ul {{
       list-style: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 6px 16px;
-    }
-    .vitals-box li {
+    }}
+    .vitals-box li {{
       font-size: 13px;
       color: #334155;
-    }
-    .vitals-box li strong { color: #0f172a; }
+    }}
+    .vitals-box li strong {{ color: #0f172a; }}
 
     /* QUESTION ITEM */
-    .question-block {
+    .question-block {{
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
       padding: 14px 18px;
       margin-bottom: 16px;
       page-break-inside: avoid;
-    }
+    }}
 
-    .q-title {
+    .q-title {{
       font-size: 15px;
       font-weight: 700;
       color: #0f1e3d;
       margin-bottom: 12px;
-    }
+    }}
 
-    .options-list {
+    .options-list {{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px 12px;
       margin-bottom: 12px;
-    }
+    }}
 
-    .opt-item {
+    .opt-item {{
       padding: 8px 12px;
       border-radius: 6px;
       border: 1px solid #cbd5e1;
       font-size: 13.5px;
       color: #334155;
       background: #f8fafc;
-    }
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
 
-    .opt-item.correct {
+    .opt-checkbox {{
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #94a3b8;
+      border-radius: 3px;
+      display: inline-block;
+      flex-shrink: 0;
+    }}
+
+    .opt-item.correct {{
       background: #f0fdf4;
       border-color: #22c55e;
       color: #15803d;
       font-weight: 600;
-    }
-    .opt-item.correct::after {
+    }}
+    .opt-item.correct::after {{
       content: " ✓ (Correct)";
       color: #16a34a;
       font-weight: 700;
-    }
+      margin-left: auto;
+    }}
 
-    .exp-box {
+    .exp-box {{
       background: #f8fafc;
       border-top: 1px solid #e2e8f0;
       padding-top: 10px;
       margin-top: 8px;
       font-size: 13px;
       color: #475569;
-    }
+    }}
 
-    .exp-box h4 {
+    .exp-box h4 {{
       font-size: 13px;
       color: #2563eb;
       margin-bottom: 4px;
-    }
+    }}
 
-    .distractor-notes {
+    .distractor-notes {{
       margin-top: 6px;
       padding-left: 16px;
-    }
-    .distractor-notes li {
+    }}
+    .distractor-notes li {{
       font-size: 12.5px;
       color: #64748b;
       margin-bottom: 2px;
-    }
+    }}
 
-    .key-teaching {
+    .key-teaching {{
       background: #eff6ff;
       border-left: 3px solid #2563eb;
       padding: 8px 12px;
@@ -327,8 +344,8 @@ html_out = """<!DOCTYPE html>
       margin-top: 8px;
       font-size: 12.5px;
       color: #1e40af;
-    }
-    .key-teaching strong { display: block; font-size: 11px; text-transform: uppercase; color: #2563eb; }
+    }}
+    .key-teaching strong {{ display: block; font-size: 11px; text-transform: uppercase; color: #2563eb; }}
   </style>
 </head>
 <body>
@@ -338,7 +355,7 @@ html_out = """<!DOCTYPE html>
     <div>
       <span class="cover-badge">AHA 2025 GUIDELINES COMPLIANT</span>
       <h1 class="cover-title">ACLS 2025 Interactive Case Handbook</h1>
-      <p class="cover-subtitle">Complete Clinical Case Scenarios & Question Bank (15 Cases / 47 Questions)</p>
+      <p class="cover-subtitle">{subtitle_type}</p>
     </div>
     
     <div class="toc-box">
@@ -346,12 +363,12 @@ html_out = """<!DOCTYPE html>
       <div class="toc-grid">
 """
 
-for cnum in sorted(cases_data.keys()):
-    c = cases_data[cnum]
-    html_out += f"""
+    for cnum in sorted(cases_data.keys()):
+        c = cases_data[cnum]
+        html_out += f"""
         <div class="toc-item"><strong>Case {cnum}:</strong> {c.get('title', '')}</div>"""
 
-html_out += """
+    html_out += """
       </div>
     </div>
   </div>
@@ -359,9 +376,9 @@ html_out += """
   <!-- CASES DATA -->
 """
 
-for cnum in sorted(cases_data.keys()):
-    c = cases_data[cnum]
-    html_out += f"""
+    for cnum in sorted(cases_data.keys()):
+        c = cases_data[cnum]
+        html_out += f"""
   <div class="case-card">
     <div class="case-header">
       <div class="case-num-title">
@@ -382,34 +399,49 @@ for cnum in sorted(cases_data.keys()):
 
     <div class="questions-section">
 """
-    for idx, q in enumerate(c['questions'], 1):
-        html_out += f"""
+        for idx, q in enumerate(c['questions'], 1):
+            html_out += f"""
       <div class="question-block">
         <div class="q-title">Q{idx}. {q['question']}</div>
         <div class="options-list">
 """
-        for opt in q['options']:
-            correct_cls = ' correct' if opt['correct'] else ''
+            for opt in q['options']:
+                if with_answers:
+                    correct_cls = ' correct' if opt['correct'] else ''
+                    checkbox_html = ''
+                else:
+                    correct_cls = ''
+                    checkbox_html = '<span class="opt-checkbox"></span>'
+
+                html_out += f"""
+          <div class="opt-item{correct_cls}">{checkbox_html}<span>{opt['text']}</span></div>"""
+            
             html_out += f"""
-          <div class="opt-item{correct_cls}">{opt['text']}</div>"""
-        
-        html_out += f"""
         </div>
-        {f'<div class="exp-box">{q["explanation"]}</div>' if q.get('explanation') else ''}
+"""
+            if with_answers and q.get('explanation'):
+                html_out += f"""
+        <div class="exp-box">{q['explanation']}</div>"""
+            
+            html_out += """
       </div>
 """
-    html_out += """
+        html_out += """
     </div>
   </div>
 """
 
-html_out += """
+    html_out += """
 </body>
 </html>
 """
+    return html_out
 
-# Write to print HTML
-with open('cases/acls-2025-cases-print.html', 'w', encoding='utf-8') as f:
-    f.write(html_out)
+# Generate HTMLs
+with open('cases/acls-2025-cases-answers.html', 'w', encoding='utf-8') as f:
+    f.write(generate_html_doc(with_answers=True))
 
-print("Generated cases/acls-2025-cases-print.html successfully!")
+with open('cases/acls-2025-cases-no-answers.html', 'w', encoding='utf-8') as f:
+    f.write(generate_html_doc(with_answers=False))
+
+print("Generated HTML print templates successfully!")
